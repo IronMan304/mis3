@@ -19,19 +19,16 @@
 					</ul>
 				</li>
 
-				<li>
-					<a href="/appointment"><span class="menu-side"><i class="fa-solid fa-calendar-day"></i></span>
-						<span>Appointments</span>
+				<li class="submenu">
+					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
+						<span>Tool Management</span> <span class="menu-arrow"></span>
 					</a>
-				</li>
-				<li>
-					<a href="/booking"><span class="menu-side"><i class="fa-solid fa-calendar-check"></i></span>
-						<span>Booking</span></a>
-				</li>
 
-				<li>
-					<a href="/billing"><span class="menu-side"><i class="fa-solid fa-wallet"></i></span>
-						<span>Billing</span></a>
+					<ul style="display: none;">
+
+						<li><a href="/user">Users</a></li>
+						<li><a href="/borrower">Norsunian</a></li>
+					</ul>
 				</li>
 
 				<li>

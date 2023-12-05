@@ -7,11 +7,11 @@
     });
   });
 
-  window.livewire.on('closeDepartmentModal', () => {
-    $('#departmentModal').modal('hide');
+  window.livewire.on('closeBorrowerModal', () => {
+    $('#borrowerModal').modal('hide');
   });
 
-  window.livewire.on('openDepartmentModal', () => {
-    $('#departmentModal').modal('show');
+  window.livewire.on('openBorrowerModal', () => {
+    $('#borrowerModal').modal('show');
   });
 </script>

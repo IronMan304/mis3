@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Borrower\BorrowerList;
 use App\Http\Livewire\User\UserList;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -33,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('user', UserList::class);
+    Route::get('borrower', BorrowerList::class);
     
     Route::get('role', RoleList::class);
     Route::get('permission', PermissionList::class);
