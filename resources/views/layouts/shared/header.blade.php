@@ -25,10 +25,10 @@
 		</a>
 	</div>
 	<a id="toggle_btn" href="#"><img src="{{ asset('assets/img/icons/bar-icon.svg') }}" alt></a>
-	@if (!auth()->user()->hasRole('Patient'))
+
 		<a id="mobile_btn" class="mobile_btn float-start" href="#sidebar"><img
 				src="{{ asset('assets/img/icons/bar-icon.svg') }}" alt></a>
-	@endif
+
 	<div class="top-nav-search mob-view">
 		<form>
 			<input type="text" class="form-control" placeholder="Search here">
@@ -46,8 +46,8 @@
 
 			<a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
 				<div class="user-names">
-					<h5>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h5>
-					<span class="text-capitalize">{{ auth()->user()->roles[0]->name }}</span>
+					{{--<h5>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h5>
+					<span class="text-capitalize">{{ auth()->user()->roles[0]->name }}</span>--}}
 				</div>
 				<span class="user-img">
 					<img src="{{ asset('assets/img/user-06.jpg') }}" alt="Admin">

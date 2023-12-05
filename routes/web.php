@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Livewire\User\UserList;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
+use App\Http\Livewire\Authentication\PermissionList;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,10 +27,15 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('user', UserList::class);
+    
     Route::get('role', RoleList::class);
+    Route::get('permission', PermissionList::class);
 });
 
 require __DIR__.'/auth.php';
