@@ -2,22 +2,23 @@
 
 
 use App\Http\Livewire\Sex\SexList;
+use App\Http\Livewire\Tool\ToolList;
+use App\Http\Livewire\Type\TypeList;
 use App\Http\Livewire\User\UserList;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Course\CourseList;
+
+use App\Http\Livewire\Source\SourceList;
+
+
 use App\Http\Livewire\College\CollegeList;
 use App\Http\Controllers\ProfileController;
-
 use App\Http\Livewire\Borrower\BorrowerList;
 
-
+use App\Http\Livewire\Category\CategoryList;
 use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Livewire\Authentication\PermissionList;
-
-use App\Http\Livewire\Category\CategoryList;
-use App\Http\Livewire\Type\TypeList;
-use App\Http\Livewire\Tool\ToolList;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('categories', CategoryList::class);
     Route::get('types', TypeList::class);
     Route::get('tools', ToolList::class);
+    Route::get('sources', SourceList::class);
     
     Route::get('role', RoleList::class);
     Route::get('permission', PermissionList::class);

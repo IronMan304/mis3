@@ -16,4 +16,13 @@ class Type extends Model
     protected $table = 'types';
     protected $primaryKey = 'id';
     protected $fillable = [ 'category_id', 'description' ];
+
+    public function category(){
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    public function tools(){
+        return $this->hasMany(Tool::class);
+    }
+
 }

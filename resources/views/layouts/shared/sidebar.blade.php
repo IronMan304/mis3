@@ -24,7 +24,7 @@
 				</li>
 
 				<li>
-					<a href="/ekonsulta"><span class="menu-side"><i class="fa-solid fa-stethoscope"></i></span>
+					<a href="/tools"><span class="menu-side"><i class="fa-solid fa-stethoscope"></i></span>
 						<span>Tool Management</span>
 					</a>
 				</li>
@@ -58,6 +58,7 @@
 						<li><a href="/sexes">Sex</a></li>
 						<li><a href="/categories">Category</a></li>
 						<li><a href="/types">Type</a></li>
+						<li><a href="/sources">Source</a></li>
 					</ul>
 				</li>
 

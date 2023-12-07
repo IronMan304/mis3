@@ -16,7 +16,8 @@ class CategoryList extends Component
         'refreshParentCategory' => '$refresh',
         'deleteCategory',
         'editCategory',
-        'deleteConfirmCategory'
+        'deleteConfirmCategory',
+        'recoverCategory' => '$refresh', 
     ];
 
     public function updatingSearch()
@@ -39,10 +40,33 @@ class CategoryList extends Component
 
     public function deleteCategory($categoryId)
     {
-        Category::destroy($categoryId);
+        $category = Category::find($categoryId);
 
-        $action = 'error';
-        $message = 'Successfully Deleted';
+        if ($category) {
+            $category->delete();
+            $action = 'error';
+            $message = 'Successfully Deleted';
+        } else {
+            $action = 'error';
+            $message = 'Category not found';
+        }
+
+        $this->emit('flashAction', $action, $message);
+        $this->emit('refreshTable');
+    }
+
+    public function recoverCategory($categoryId)
+    {
+        $category = Category::withTrashed()->find($categoryId);
+
+        if ($category) {
+            $category->restore();
+            $action = 'success';
+            $message = 'Successfully Recovered';
+        } else {
+            $action = 'error';
+            $message = 'Category not found or already recovered';
+        }
 
         $this->emit('flashAction', $action, $message);
         $this->emit('refreshTable');
@@ -51,7 +75,7 @@ class CategoryList extends Component
     public function render()
     {
         if (empty($this->search)) {
-            $categories  = Category::all();
+            $categories  = Category::with('types.tools')->get();
         } else {
             $categories  = Category::where('description', 'LIKE', '%' . $this->search . '%')->get();
         }

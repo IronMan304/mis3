@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('source_id')->references('id')->on('sources');
             $table->unsignedBigInteger('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('types');
-            $table->string('brand');
+            $table->string('brand'); // should be nullable
             $table->string('property_number');
             $table->string('barcode')->nullable();
             $table->softDeletes();

@@ -45,18 +45,26 @@
 						<table class="table border-0 custom-table comman-table datatable mb-0">
 							<thead>
 								<tr>
-									<td style="width: 70%">Type</td>
-									<td style="width: 30%">Action</td>
+									<th>Category</th>
+									<td>Type</td>
+									<th>Quantity</th>
+									<!-- <td style="width: 30%">Action</td> -->
 								</tr>
 							</thead>
 							<tbody>
 								@foreach ($types as $type)
 									<tr>
 										<td>
+											{{ $type->category->description}}
+										</td>
+										<td>
 											{{ $type->description }}
 										</td>
+										<td>
+											{{ $type->tools->count()}}
+										</td>
 
-										<td class="text-center">
+										<!-- <td class="text-center">
 											<div class="btn-group" role="group">
 												<button type="button" class="btn btn-primary btn-sm mx-1"
 													wire:click="editType({{ $type->id }})" title="Edit">
@@ -66,7 +74,7 @@
 													<i class="fa fa-trash"></i>
 												</a>
 											</div>
-										</td>
+										</td> -->
 
 									</tr>
 								@endforeach

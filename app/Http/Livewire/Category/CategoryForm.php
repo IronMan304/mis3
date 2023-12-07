@@ -55,6 +55,52 @@ class CategoryForm extends Component
         $this->emit('refreshTable');
     }
 
+     // Soft delete category
+     public function deleteCategory()
+     {
+         if ($this->categoryId) {
+             $category = Category::find($this->categoryId);
+ 
+             if ($category) {
+                 $category->delete();
+                 $action = 'error';
+                 $message = 'Successfully Deleted';
+             } else {
+                 $action = 'error';
+                 $message = 'Category not found';
+             }
+ 
+             $this->emit('flashAction', $action, $message);
+             $this->resetInputFields();
+             $this->emit('closeCategoryModal');
+             $this->emit('refreshParentCategory');
+             $this->emit('refreshTable');
+         }
+     }
+ 
+     // Recover soft-deleted category
+     public function recoverCategory()
+     {
+         if ($this->categoryId) {
+             $category = Category::withTrashed()->find($this->categoryId);
+ 
+             if ($category) {
+                 $category->restore();
+                 $action = 'success';
+                 $message = 'Successfully Recovered';
+             } else {
+                 $action = 'error';
+                 $message = 'Category not found or already recovered';
+             }
+ 
+             $this->emit('flashAction', $action, $message);
+             $this->resetInputFields();
+             $this->emit('closeCategoryModal');
+             $this->emit('refreshParentCategory');
+             $this->emit('refreshTable');
+         }
+     }
+
     public function render()
     {
         return view('livewire.category.category-form');
