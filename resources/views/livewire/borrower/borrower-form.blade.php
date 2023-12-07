@@ -52,15 +52,29 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-					<div class="form-group local-forms">
-						<label>
-							Contact Number
+                    <div class="form-group local-forms">
+                        <label>
+                            Contact Number
+                            <span class="login-danger">*</span>
+                        </label>
+                        <input class="form-control" type="text" wire:model="contact_number" placeholder />
+                    </div>
+                </div>
+                <div class="col-md-4">
+				<div class="form-group local-forms">
+						<label>Gender
 							<span class="login-danger">*</span>
 						</label>
-						<input class="form-control" type="text" wire:model="contact_number" placeholder />
+						<select class="form-control select" wire:model="sex_id">
+							@foreach ($sexes as $sex)
+								<option value="{{ $sex->id }}">
+									{{ $sex->description }}
+								</option>
+							@endforeach
+						</select>
 					</div>
 				</div>
-                
+
 
             </div>
         </div>

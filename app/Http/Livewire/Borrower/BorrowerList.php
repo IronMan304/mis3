@@ -26,6 +26,15 @@ class BorrowerList extends Component
 
     public function createBorrower()
     {
+        // $borrower = Borrower::with([
+        //     'sex',
+        //     'college',
+        //     'course',
+        //     'status',
+        // ])
+        // ->first();
+        
+        // dd($borrower);
         $this->emit('resetInputFields');
         $this->emit('openBorrowerModal');
     }
@@ -56,8 +65,11 @@ class BorrowerList extends Component
             $borrowers  = Borrower::where('firs_name', 'LIKE', '%' . $this->search . '%')->get();
         }
 
+        // $borrower = Borrower::with('sex')->get();
+
         return view('livewire.borrower.borrower-list', [
-            'borrowers' => $borrowers
+            'borrowers' => $borrowers,
+            // "borrower" => $borrower
         ]);
     }
 }

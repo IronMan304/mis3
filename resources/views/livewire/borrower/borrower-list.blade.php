@@ -20,55 +20,59 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<div class="department-table-blk">
-								<div class="doctor-table-blk">
-									<h3>Borrower List</h3>
-									<div class="doctor-search-blk">
-										<div class="add-group">
-											<a wire:click="createBorrower" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
-											</a>
+									<div class="doctor-table-blk">
+										<h3>Borrower List</h3>
+										<div class="doctor-search-blk">
+											<div class="add-group">
+												<a wire:click="createBorrower" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
+												</a>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-auto text-end float-end ms-auto download-grp">
-								<div class="top-nav-search table-search-blk">
-									<form>
-										<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search"
-											name="search">
-										<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
-									</form>
+								<div class="col-auto text-end float-end ms-auto download-grp">
+									<div class="top-nav-search table-search-blk">
+										<form>
+											<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search" name="search">
+											<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
+										</form>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="table-responsive">
-						<table class="table border-0 custom-table comman-table datatable mb-0">
-							<thead>
-								<tr>
-									<td>Borrower</td>
-                                    <th>Id Number</th>
-                                    <th>Contact Number</th>
-									<td>Action</td>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach ($borrowers as $borrower)
+						<div class="table-responsive">
+							<table id="borrower-table" class="table border-0 custom-table comman-table datatable mb-0">
+								<thead>
+									<tr>
+										<td>Borrower</td>
+										<th>Id Number</th>
+										<th>Contact Number</th>
+										<th>Sex</th>
+										<td>Action</td>
+							
+									</tr>
+								</thead>
+								<tbody>
+
+									@foreach ($borrowers as $borrower)
 									<tr>
 										<td>
 											{{ $borrower->first_name }} {{ $borrower->middle_name }} {{ $borrower->last_name }}
- 										</td>
-                                        <td>
-                                            {{ $borrower->id_number}}
-                                        </td>
-                                        <td>
-                                            {{ $borrower->contact_number}}
-                                        </td>
+										</td>
+										<td>
+											{{ $borrower->id_number}}
+										</td>
+										<td>
+											{{ $borrower->contact_number}}
+										</td>
+										<td>
+											{{ $borrower->sex->description}}
+										</td>
 
 										<td class="text-center">
 											<div class="btn-group" role="group">
-												<button type="button" class="btn btn-primary btn-sm mx-1"
-													wire:click="editBorrower({{ $borrower->id }})" title="Edit">
+												<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editBorrower({{ $borrower->id }})" title="Edit">
 													<i class='fa fa-pen-to-square'></i>
 												</button>
 												<a class="btn btn-danger btn-sm mx-1" wire:click="deleteBorrower({{ $borrower->id }})" title="Delete">
@@ -78,23 +82,22 @@
 										</td>
 
 									</tr>
-								@endforeach
-							</tbody>
-						</table>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-{{-- Modal --}}
+	{{-- Modal --}}
 
-<div wire.ignore.self class="modal fade" id="borrowerModal" tabindex="-1" role="dialog"
-	aria-labelledby="borrowerModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-	<div class="modal-dialog modal-dialog-centered">
-		<livewire:borrower.borrower-form />
+	<div wire.ignore.self class="modal fade" id="borrowerModal" tabindex="-1" role="dialog" aria-labelledby="borrowerModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:borrower.borrower-form />
+		</div>
 	</div>
-</div>
-@section('custom_script')
+	@section('custom_script')
 	@include('layouts.scripts.borrower-scripts')
-@endsection
+	@endsection

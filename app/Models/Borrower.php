@@ -20,8 +20,30 @@ class Borrower extends Model
         'middle_name',
         'last_name',
         'contact_number',
-        'sex',
-        'reported_at',
+        'sex_id',
+        'college_id',
+        'course_id',
+        'status_id',
     ];
+
+    public function sex()
+    {
+        return $this->belongsTo(Sex::class, 'sex_id', 'id');
+    }
+
+    // public function college()
+    // {
+    //     return $this->belongsTo(College::class, 'college_id', 'id');
+    // }
+
+    // public function course()
+    // {
+    //     return $this->belongsTo(Course::class, 'course_id', 'id');
+    // }
+
+    // public function status()
+    // {
+    //     return $this->belongsTo(Status::class, 'status_id', 'id');
+    // }
 
 }
