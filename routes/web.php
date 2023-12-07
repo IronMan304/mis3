@@ -11,10 +11,11 @@ use App\Http\Livewire\Course\CourseList;
 use App\Http\Livewire\Source\SourceList;
 
 
+use App\Http\Livewire\Status\StatusList;
 use App\Http\Livewire\College\CollegeList;
 use App\Http\Controllers\ProfileController;
-use App\Http\Livewire\Borrower\BorrowerList;
 
+use App\Http\Livewire\Borrower\BorrowerList;
 use App\Http\Livewire\Category\CategoryList;
 use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
@@ -54,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('types', TypeList::class);
     Route::get('tools', ToolList::class);
     Route::get('sources', SourceList::class);
+    Route::get('statuses', StatusList::class);
     
     Route::get('role', RoleList::class);
     Route::get('permission', PermissionList::class);
