@@ -57,6 +57,7 @@ class ToolForm extends Component
         ]);
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
+        $data['status_id'] = 1;
 
         if ($this->toolId) {
             Tool::whereId($this->toolId)->first()->update($data);
@@ -66,6 +67,7 @@ class ToolForm extends Component
 
             // When creating a new tool, set the 'user_id'
             $data['user_id'] = auth()->user()->id;
+            $data['status_id'];
 
             Tool::create($data);
             $action = 'store';

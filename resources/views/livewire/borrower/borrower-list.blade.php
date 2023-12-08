@@ -49,8 +49,10 @@
 										<th>Id Number</th>
 										<th>Contact Number</th>
 										<th>Sex</th>
+										<th>College</th>
+										<th>Course</th>
 										<td>Action</td>
-							
+
 									</tr>
 								</thead>
 								<tbody>
@@ -68,6 +70,12 @@
 										</td>
 										<td>
 											{{ $borrower->sex->description}}
+										</td>
+										<td>
+											{{ $borrower->college->description}}
+										</td>
+										<td>
+											{{ $borrower->course->description}}
 										</td>
 
 										<td class="text-center">
@@ -88,16 +96,17 @@
 						</div>
 					</div>
 				</div>
+				{{-- Modal --}}
+
+				<div wire.ignore.self class="modal fade" id="borrowerModal" tabindex="-1" role="dialog" aria-labelledby="borrowerModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+					<div class="modal-dialog modal-dialog-centered">
+						<livewire:borrower.borrower-form />
+					</div>
+				</div>
+				@section('custom_script')
+				@include('layouts.scripts.borrower-scripts')
+				@endsection
+
 			</div>
 		</div>
 	</div>
-	{{-- Modal --}}
-
-	<div wire.ignore.self class="modal fade" id="borrowerModal" tabindex="-1" role="dialog" aria-labelledby="borrowerModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered">
-			<livewire:borrower.borrower-form />
-		</div>
-	</div>
-	@section('custom_script')
-	@include('layouts.scripts.borrower-scripts')
-	@endsection

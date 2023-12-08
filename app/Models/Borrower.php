@@ -31,15 +31,20 @@ class Borrower extends Model
         return $this->belongsTo(Sex::class, 'sex_id', 'id');
     }
 
-    // public function college()
-    // {
-    //     return $this->belongsTo(College::class, 'college_id', 'id');
-    // }
+    public function college()
+    {
+        return $this->belongsTo(College::class, 'college_id', 'id');
+    }
 
-    // public function course()
-    // {
-    //     return $this->belongsTo(Course::class, 'course_id', 'id');
-    // }
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_id', 'id');
+    }
+
+    public function requests()
+    {
+        return $this->hasMany(Request::class, 'borrower_id', 'id');
+    }
 
     // public function status()
     // {

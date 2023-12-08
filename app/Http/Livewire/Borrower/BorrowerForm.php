@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Borrower;
 
 use App\Models\Sex;
+use App\Models\Course;
+use App\Models\College;
 use Livewire\Component;
 use App\Models\Borrower;
 
@@ -51,7 +53,7 @@ class BorrowerForm extends Component
             'contact_number' => 'required',
             'sex_id' => 'nullable',
             'college_id' => 'nullable',
-            'course_id' => 'nullable',
+            'course_id' => 'required',
             'status_id' => 'nullable',
         ]);
 
@@ -75,8 +77,12 @@ class BorrowerForm extends Component
     public function render()
     {
         $sexes = Sex::all();
+        $colleges = College::all();
+        $courses = Course::where('college_id', $this->college_id)->get();
         return view('livewire.borrower.borrower-form', [
-            'sexes' => $sexes
+            'sexes' => $sexes,
+            'colleges' => $colleges,
+            'courses' => $courses
         ]);
     }
 }

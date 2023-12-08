@@ -15,7 +15,7 @@
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>
                             Id Number
@@ -24,7 +24,7 @@
                         <input class="form-control" type="text" wire:model="id_number" placeholder />
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>
                             First name
@@ -33,7 +33,7 @@
                         <input class="form-control" type="text" wire:model="first_name" placeholder />
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>
                             Middle name
@@ -42,7 +42,7 @@
                         <input class="form-control" type="text" wire:model="middle_name" placeholder />
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>
                             Last name
@@ -51,7 +51,7 @@
                         <input class="form-control" type="text" wire:model="last_name" placeholder />
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>
                             Contact Number
@@ -60,20 +60,52 @@
                         <input class="form-control" type="text" wire:model="contact_number" placeholder />
                     </div>
                 </div>
-                <div class="col-md-4">
-				<div class="form-group local-forms">
-						<label>Gender
-							<span class="login-danger">*</span>
-						</label>
-						<select class="form-control select" wire:model="sex_id">
-							@foreach ($sexes as $sex)
-								<option value="{{ $sex->id }}">
-									{{ $sex->description }}
-								</option>
-							@endforeach
-						</select>
-					</div>
-				</div>
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Gender
+                            <span class="login-danger">*</span>
+                        </label>
+                        <select class="form-control select" wire:model="sex_id">
+                            @foreach ($sexes as $sex)
+                            <option value="{{ $sex->id }}">
+                                {{ $sex->description }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>College
+                            <span class="login-danger">*</span>
+                        </label>
+                        <select class="form-control select" wire:model="college_id">
+                        <option value="" disabled selected>Select a College</option>
+                            @foreach ($colleges as $college)
+                            <option value="{{ $college->id }}">
+                                {{ $college->description }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Course
+                            <span class="login-danger">*</span>
+                        </label>
+                        <select class="form-control select" wire:model="course_id">
+                        <option value="" disabled selected>Select a Course</option>
+                            @foreach ($courses as $course)
+                            <option value="{{ $course->id }}">
+                                {{ $course->description }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
 
             </div>

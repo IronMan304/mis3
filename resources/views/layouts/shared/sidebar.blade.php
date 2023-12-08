@@ -7,7 +7,7 @@
 						<span>Dashboard</span></a>
 				</li>
 				<li>
-					<a href="/"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
+					<a href="/requests"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
 						<span>Request</span></a>
 				</li>
 

@@ -48,8 +48,9 @@
                                     <td>Barcode</td>
                                     <th>Property Number</th>
 									<td>Brand</td>
-                                    <th>Date Added</th>
+                                    <th>Date Updated</th>
                                     <th>Added By</th>
+                                    <th>Status</th>
 									<td>Action</td>
 								</tr>
 							</thead>
@@ -72,6 +73,10 @@
                                         
                                         <td> ({{ $tool->user->position ?? 'N/A' }}) {{ $tool->user->first_name ?? '' }} {{ $tool->user->last_name ?? '' }}</td>
 
+                                        <td>
+                                            {{ $tool->status->description ?? ''}}
+                                        </td>
+
 
 										<td class="text-center">
 											<div class="btn-group" role="group">
@@ -79,9 +84,9 @@
 													wire:click="editTool({{ $tool->id }})" title="Edit">
 													<i class='fa fa-pen-to-square'></i>
 												</button>
-												<a class="btn btn-danger btn-sm mx-1" wire:click="deleteTool({{ $tool->id }})" title="Delete">
+												<!-- <a class="btn btn-danger btn-sm mx-1" wire:click="deleteTool({{ $tool->id }})" title="Delete">
 													<i class="fa fa-trash"></i>
-												</a>
+												</a> -->
 											</div>
 										</td>
 

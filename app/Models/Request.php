@@ -16,4 +16,18 @@ class Request extends Model
     protected $table = 'requests';
     protected $primaryKey = 'id';
     protected $fillable = [ 'tool_id', 'user_id', 'borrower_id', 'status_id' ];
+
+    public function borrower(){
+        return $this->belongsTo(Borrower::class, 'borrower_id', 'id');
+    }
+
+    public function tool(){
+        return $this->belongsTo(Tool::class, 'tool_id', 'id');
+    }
+
+    public function tool_keys()
+    {
+        return $this->hasMany(ToolRequest::class, 'request_id');
+    }
+
 }
