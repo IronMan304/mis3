@@ -23,10 +23,17 @@
 					</ul>
 				</li>
 
-				<li>
-					<a href="/tools"><span class="menu-side"><i class="fa-solid fa-stethoscope"></i></span>
-						<span>Tool Management</span>
+				<li class="submenu">
+					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
+						<span>Tool Management</span> <span class="menu-arrow"></span>
 					</a>
+
+					<ul style="display: none;">
+
+						<li><a href="/categories">Category</a></li>
+						<li><a href="/types">Type</a></li>
+						<li><a href="/tools">Tool</a></li>
+					</ul>
 				</li>
 
 		

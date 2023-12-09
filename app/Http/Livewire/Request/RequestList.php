@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire\Request;
 
+use App\Models\Tool;
+use App\Models\Status;
 use App\Models\Request;
 use Livewire\Component;
-use App\Models\Tool;
 
 class RequestList extends Component
 {
@@ -69,9 +70,11 @@ class RequestList extends Component
         }
 
         $tools = Tool::all();
+        $statuses = Status::all();
         return view('livewire.request.request-list', [
             'requests' => $requests,
-            'tools' => $tools
+            'tools' => $tools,
+            'statuses' => $statuses
         ]);
     }
 }

@@ -53,10 +53,10 @@ class RequestForm extends Component
             'user_id' => 'nullable',
             'borrower_id' => 'required',
             'toolItems.*.toolId' => 'nullable',
-            // 'status_id' => 'required'
         ]);
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
+      
 
         if ($this->requestId) {
             $request = Request::whereId($this->requestId)->first()->update($data);
@@ -67,7 +67,7 @@ class RequestForm extends Component
         } else {
             // When creating a new tool, set the 'user_id'
             $data['user_id'] = auth()->user()->id;
-            //$data['user_id'] = 6;
+          
 
             // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
             foreach ($this->toolItems as $item) {
@@ -114,6 +114,7 @@ class RequestForm extends Component
             ToolRequest::create([
                 'request_id' => $request->id,
                 'tool_id' => $toolId,
+                'status_id' => 6,
             ]);
         }
     }
