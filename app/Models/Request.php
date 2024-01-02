@@ -29,9 +29,14 @@ class Request extends Model
         return $this->belongsTo(Status::class, 'status_id', 'id');
     }
 
+    // public function tool_keys()
+    // {
+    //     return $this->hasMany(ToolRequest::class, 'request_id');
+    // }
+
     public function tool_keys()
     {
-        return $this->hasMany(ToolRequest::class, 'request_id');
+        return $this->hasMany(ToolRequest::class);
     }
 
     public function user()

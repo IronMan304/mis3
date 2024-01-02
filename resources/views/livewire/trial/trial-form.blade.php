@@ -17,7 +17,7 @@
             <div class="row">
 
                 <div class="col-md-12" wire:ignore>
-                    <select  id="description" class="form-control select">
+                    <select id="description" class="form-control select">
                         <option value="Apple">Apple</option>
                         <option value="Samsung">Samsung</option>
                         <option value="HTC">HTC</option>

@@ -115,10 +115,3 @@
         </div>
     </form>
 </div>
-'id_number' => 'required',
-'first_name' => 'required',
-'middle_name' => 'nullable',
-'last_name' => 'required',
-'contact_number' => 'required',
-'sex' => 'required',
-'reported_at' => 'nullable',

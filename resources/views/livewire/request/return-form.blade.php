@@ -1,8 +1,8 @@
-<div class="modal-content" id="modal-content">
+<div class="modal-content" id="modal-content" >
     
     <div class="modal-header">
         <h1 class="modal-title fs-5">
-            @if ($requestId)
+            @if ($returnId)
             Edit Request
             @else
             Add Request
@@ -21,7 +21,7 @@
                         <label>Borrower
                          
                         </label>
-                        <select class="form-control select" id="borrower_id" wire:model="borrower_id">
+                        <select class="form-control select" id="borrower_id" wire:model="borrower_id" disabled>
                             <option value="" disabled selected>Select a Borrower</option>
                             @foreach ($borrowers as $borrower)
                             <option value="{{ $borrower->id }}">
@@ -37,20 +37,21 @@
                         <label>Tool
                            
                         </label>
-                        <select class="form-control select" id="toolItems" multiple wire:model="toolItems">
+                        <select class="form-control select" id="toolItems" multiple  wire:model="toolItems">
                             <option value="" disabled >Select a Tool</option>
-                            @foreach ($tools as $tool)
-                            <option value="{{ $tool->id }}">
-                                ({{$tool->brand}}) 
-                            </option>
-                            @endforeach
+                            @forelse ($toolItems as $toolItem)
+                @if ($toolItem['toolId'])
+                    @php
+                        $selectedTool = \App\Models\Tool::find($toolItem['toolId']);
+                    @endphp
+                    <li>{{ $selectedTool->name }} - {{ $selectedTool->brand }} - {{ $selectedTool->model }}</li>
+                @endif
+            @empty
+                <p>No tools selected</p>
+            @endforelse
                         </select>
                     </div>
                 </div>
-
-
-               
-
 
             </div>
         </div>
@@ -58,7 +59,7 @@
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </form>
-  
+
     <script>
         document.addEventListener('livewire:load', function() {
             $('#borrower_id').select2({
@@ -96,5 +97,4 @@
             });
         });
     </script>
-
 </div>

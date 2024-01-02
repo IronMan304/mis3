@@ -1,1 +1,1 @@
-<img src="{{ asset('assets/img/logo-full.png') }}" alt="Diagcare" style="width:420px; height:100%">
+<img src="{{ asset('assets/img/logo1-full.png') }}" alt="MIS" style="width:420px; height:100%">

@@ -26,25 +26,28 @@ class RequestForm extends Component
         $this->reset();
         $this->resetValidation();
         $this->resetErrorBag();
+        //$this->dispatchBrowserEvent('resetSelect2', ['id' => 'tools']);
     }
 
-    //edit
-    public function requestId($requestId)
-    {
-        $this->requestId = $requestId;
-        $request = Request::whereId($requestId)->first();
-        $this->tool_id = $request->tool_id;
-        $this->borrower_id = $request->borrower_id;
-        //$this->status_id = $request->status_id;
-        if ($request->tool_keys != null) {
-            $this->toolItems = collect($request->tool_keys)->map(function ($toolKey) {
-                return ['toolId' => $toolKey->tool_id];
-            })->toArray();
-        } else {
-            // If no branches are associated with the user, initialize an empty array
-            $this->toolItems = [];
-        }
+
+ // edit
+public function requestId($requestId)
+{
+    $this->requestId = $requestId;
+    $request = Request::whereId($requestId)->first();
+    $this->tool_id = $request->tool_id;
+    $this->borrower_id = $request->borrower_id;
+
+    if ($request->tool_keys != null) {
+        $this->toolItems = collect($request->tool_keys)->map(function ($toolKey) {
+            return ['toolId' => $toolKey['tool_id']]; // Change here
+        })->toArray();
+    } else {
+        // If no branches are associated with the user, initialize an empty array
+        $this->toolItems = [];
     }
+}
+
 
     //store
     public function store()
@@ -52,31 +55,28 @@ class RequestForm extends Component
         $data = $this->validate([
             'user_id' => 'nullable',
             'borrower_id' => 'required',
-            'toolItems.*.toolId' => 'nullable',
+            'toolItems' => 'required|array',
         ]);
+
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
-      
 
         if ($this->requestId) {
             $request = Request::whereId($this->requestId)->first()->update($data);
-
             $this->updateToolRequest($request);
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
-            // When creating a new tool, set the 'user_id'
+            // When creating a new tool request, set the 'user_id'
             $data['user_id'] = auth()->user()->id;
-          
 
-            // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
-            foreach ($this->toolItems as $item) {
-                $toolId = isset($item['toolId']) ? $item['toolId'] : null;
-                Tool::where('id', $toolId)->update(['status_id' => 2]);
-            }
-
+            // Create the request
             $request = Request::create($data);
 
+            // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
+            Tool::whereIn('id', $this->toolItems)->update(['status_id' => 2]);
+
+            // Create the tool request relationships
             $this->createToolRequest($request);
 
             $action = 'store';
@@ -109,8 +109,7 @@ class RequestForm extends Component
 
     private function createToolRequest($request)
     {
-        foreach ($this->toolItems as $item) {
-            $toolId = isset($item['toolId']) ? $item['toolId'] : null;
+        foreach ($this->toolItems as $toolId) {
             ToolRequest::create([
                 'request_id' => $request->id,
                 'tool_id' => $toolId,
@@ -121,8 +120,11 @@ class RequestForm extends Component
 
     private function updateToolRequest($request)
     {
-        $request->tool_keys()->delete(); // Remove existing relationships
-        $this->createDoctorDepartments($request); // Create new relationships
+        // Remove existing tool request relationships
+        $request->toolRequests()->delete();
+
+        // Create new tool request relationships
+        $this->createToolRequest($request);
     }
 
     public function addTool()

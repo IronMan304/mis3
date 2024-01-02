@@ -38,14 +38,12 @@ class RequestList extends Component
         $this->emit('requestId', $this->requestId);
         $this->emit('openRequestModal');
     }
-
-    public function returnRequest($requestId)
+    public function returnRequest($returnId)
     {
-        $this->requestId = $requestId;
-        $this->emit('requestId', $this->requestId);
-        $this->emit('openRequestModal');
+        $this->requestId = $returnId;
+        $this->emit('returnId', $this->requestId);
+        $this->emit('openReturnModal');
     }
-
     public function deleteRequest($requestId)
     {
         Request::destroy($requestId);

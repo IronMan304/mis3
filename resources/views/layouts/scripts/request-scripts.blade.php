@@ -14,4 +14,16 @@
   window.livewire.on('openRequestModal', () => {
     $('#requestModal').modal('show');
   });
+
+  window.livewire.on('closeReturnModal', () => {
+    $('#returnModal').modal('hide');
+  });
+
+  window.livewire.on('openReturnModal', () => {
+    $('#returnModal').modal('show');
+  });
+
 </script>
+
+
+    
