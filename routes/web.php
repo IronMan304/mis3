@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Livewire\Trial\TrialList;
 use App\Models\Request;
 use App\Http\Livewire\Sex\SexList;
 use App\Http\Livewire\Tool\ToolList;
@@ -62,6 +63,8 @@ Route::middleware('auth')->group(function () {
     
     Route::get('role', RoleList::class);
     Route::get('permission', PermissionList::class);
+
+    Route::get('trials', TrialList::class);
 });
 
 require __DIR__.'/auth.php';

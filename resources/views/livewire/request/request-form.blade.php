@@ -1,5 +1,9 @@
 <div class="modal-content">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/css/multi-select-tag.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include Select2 CSS and JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <div class="modal-header">
         <h1 class="modal-title fs-5">
             @if ($requestId)
@@ -21,7 +25,7 @@
                         <label>Borrower
                             <span class="login-danger">*</span>
                         </label>
-                        <select class="form-control select" wire:model="borrower_id">
+                        <select class="form-control select" wire:model="borrower_id" id="borrower">
                             <option value="" disabled selected>Select a Borrower</option>
                             @foreach ($borrowers as $borrower)
                             <option value="{{ $borrower->id }}">
@@ -101,8 +105,18 @@
     <button type="submit" class="btn btn-primary">Save</button>
 </div>
 </form>
-<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/js/multi-select-tag.js"></script>
-<script>
-    new MultiSelectTag('tools')  // id
-</script>
+@script()
+        <script>
+            $(document).ready(function() {
+                $('#borrower').select2();
+                $('#borrower').on('change', function() {
+                    let data = $(this).val();
+                    console.log(data);
+                    // $wire.set('companies', data, false);
+                    // $wire.companies = data;
+                    @this.companies = data;
+                });
+            });
+        </script>
+    @endscript
 </div>
