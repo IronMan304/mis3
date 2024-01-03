@@ -40,7 +40,8 @@
                         <select class="form-control select" id="return_toolItems" wire:model="return_toolItems" multiple>
                             <option value="" selected>Select a Tool to return</option>
                             @foreach($tool_requests as $tool_request)
-                            @if($tool_request->request_id == $returnId)
+                            @if($tool_request->request_id == $returnId && $tool_request->status_id == 6)
+                          
                             <option value="{{ $tool_request->tools->id }}">
                                 {{ $tool_request->tools->brand }}
                             </option>

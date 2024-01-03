@@ -8,6 +8,8 @@ use App\Models\Request;
 use App\Models\Tool;
 use App\Models\ToolRequest;
 use Livewire\Component;
+use Carbon\Carbon;
+
 
 class ReturnForm extends Component
 {
@@ -61,16 +63,30 @@ class ReturnForm extends Component
 
         if ($this->returnId) {
            // Update the main request data
-        $request = Request::whereId($this->returnId)->first();
-        $request->update($data);
+    $request = Request::whereId($this->returnId)->first();
+    $request->update($data);
 
-        // Update the status_id for the returned tools in the ToolRequest table
-        ToolRequest::where('request_id', $this->returnId)
-            ->whereIn('tool_id', $this->return_toolItems)
-            ->update(['status_id' => 7]);
+    // Update the status_id and returned_at for the returned tools in the ToolRequest table
+    foreach ($this->return_toolItems as $toolId) {
+        $toolRequest = ToolRequest::where('request_id', $this->returnId)
+            ->where('tool_id', $toolId)
+            ->first();
 
-        $action = 'edit';
-        $message = 'Successfully Updated';
+        if ($toolRequest->returned_at == null) {
+            $toolRequest->update([
+                'status_id' => 7,
+                'returned_at' => Carbon::now()->setTimezone('Asia/Manila'),  // Update the returned_at timestamp for the specific tool
+            ]);
+        } else {
+            $toolRequest->update([
+                'status_id' => 7,
+            ]);
+        }
+    }
+
+
+            $action = 'edit';
+            $message = 'Successfully Updated';
         } else {
             Request::create($data);
             $action = 'store';

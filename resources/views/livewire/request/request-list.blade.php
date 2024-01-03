@@ -110,7 +110,7 @@
 										@if ($request->tool_keys)
 										@foreach ($request->tool_keys as $toolKey)
 										@if($toolKey->created_at != $toolKey->updated_at)
-										{{ $toolKey->updated_at }}<br>
+										{{ $toolKey->returned_at }}<br>
 										({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
 										@if (!$loop->last)
 										<p>-------------------</p>
@@ -126,15 +126,26 @@
 
 									<td class="text-center">
 										<div class="btn-group" role="group">
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editRequest({{ $request->id }})" title="Edit">
+											{{--<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editRequest({{ $request->id }})" title="Edit">
 												<i class='fa fa-pen-to-square'></i>
-											</button>
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return">
-												Return
-											</button>
-											<a class="btn btn-danger btn-sm mx-1" wire:click="deleteRequest({{ $request->id }})" title="Delete">
+											</button>--}}
+											@if ($request->tool_keys)
+    @php $returnButtonShown = false; @endphp
+
+    @foreach ($request->tool_keys as $toolKey)
+        @if($toolKey->status_id == 6 && !$returnButtonShown)
+            @php $returnButtonShown = true; @endphp
+            <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return">
+                Return
+            </button>
+        @endif
+    @endforeach
+@endif
+
+									
+											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteRequest({{ $request->id }})" title="Delete">
 												<i class="fa fa-trash"></i>
-											</a>
+											</a>--}}
 										</div>
 									</td>
 

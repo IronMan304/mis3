@@ -15,7 +15,7 @@ class ToolRequest extends Model
 
     protected $table = 'tool_requests';
     protected $primaryKey = 'id';
-    protected $fillable = ['tool_id', 'request_id', 'status_id'];
+    protected $fillable = ['tool_id', 'request_id', 'status_id', 'returned_at'];
 
     public function tools()
     {
