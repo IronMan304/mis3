@@ -22,7 +22,7 @@
                          
                         </label>
                         <select class="form-control select" id="borrower_id" wire:model="borrower_id">
-                            <option value="" disabled selected>Select a Borrower</option>
+                            <option value=""  selected>Select a Borrower</option>
                             @foreach ($borrowers as $borrower)
                             <option value="{{ $borrower->id }}">
                                 ({{$borrower->first_name}}) {{ $borrower->last_name }}
@@ -38,7 +38,7 @@
                            
                         </label>
                         <select class="form-control select" id="toolItems" multiple wire:model="toolItems">
-                            <option value="" disabled >Select a Tool</option>
+                            <option value="" selected >Select a Tool</option>
                             @foreach ($tools as $tool)
                             <option value="{{ $tool->id }}">
                                 ({{$tool->brand}}) 

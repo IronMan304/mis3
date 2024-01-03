@@ -49,7 +49,7 @@
 									<td>Tool</td>
 									<th>Status</th>
 									<th>Date Borrowed</th>
-									<th>Liable</th>
+									<th>Date Returned</th>
 									<td>Action</td>
 								</tr>
 							</thead>
@@ -102,11 +102,25 @@
 										@endif
 									</td>
 
-									<td>{{ $request->updated_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}</td>
-
-									<td> ({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}</td>
+									<td>{{ $request->updated_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}<br>
+										({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
+									</td>
 
 									<td>
+										@if ($request->tool_keys)
+										@foreach ($request->tool_keys as $toolKey)
+										@if($toolKey->created_at != $toolKey->updated_at)
+										{{ $toolKey->updated_at }}<br>
+										({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
+										@if (!$loop->last)
+										<p>-------------------</p>
+										@endif
+										@endif
+										@endforeach
+										@else
+										No Tools Assigned
+										@endif
+									</td>
 
 
 
@@ -119,8 +133,8 @@
 												Return
 											</button>
 											<a class="btn btn-danger btn-sm mx-1" wire:click="deleteRequest({{ $request->id }})" title="Delete">
-													<i class="fa fa-trash"></i>
-												</a>
+												<i class="fa fa-trash"></i>
+											</a>
 										</div>
 									</td>
 

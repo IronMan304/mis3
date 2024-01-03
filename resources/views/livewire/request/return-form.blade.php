@@ -3,7 +3,7 @@
     <div class="modal-header">
         <h1 class="modal-title fs-5">
             @if ($returnId)
-            Edit Request
+            Return Tool
             @else
             Add Request
             @endif
@@ -21,7 +21,7 @@
                         <label>Borrower
 
                         </label>
-                        <select class="form-control select" id="returner_id" wire:model="borrower_id">
+                        <select class="form-control select" id="returner_id" wire:model="borrower_id" disabled>
                             <option value="" selected>Select a Borrower</option>
                             @foreach ($borrowers as $borrower)
                             <option value="{{ $borrower->id }}">
@@ -32,11 +32,11 @@
                     </div>
                 </div>
 
-                <h1>Return ID: {{ $returnId }}</h1>
+                {{--<h1>Return ID: {{ $returnId }}</h1>--}}
 
                 <div class="col-md-12" >
                     <div class="form-group local-forms">
-                        <label>Tools</label>
+                        <label>Tools to be returned</label>
                         <select class="form-control select" id="return_toolItems" wire:model="return_toolItems" multiple>
                             <option value="" selected>Select a Tool to return</option>
                             @foreach($tool_requests as $tool_request)
@@ -51,13 +51,13 @@
                     </div>
                 </div>
 
-                @foreach($tool_requests as $tool_request)
+                {{--@foreach($tool_requests as $tool_request)
                 @if($tool_request->request_id == $returnId)
                 <p>
                     {{ $tool_request->tools->brand }}
                 </p>
                 @endif
-                @endforeach
+                @endforeach--}}
 
 
             </div>
