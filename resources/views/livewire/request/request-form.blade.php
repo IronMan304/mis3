@@ -60,41 +60,37 @@
     </form>
   
     <script>
-        document.addEventListener('livewire:load', function() {
-            $('#borrower_id').select2({
-                dropdownParent: $('#modal-content')
-            });
-
-            $('#borrower_id').on('change', function(e) {
-                let data = $(this).val();
-                console.log(data);
-                @this.set('borrower_id', data);
-            });
+    document.addEventListener('livewire:load', function() {
+        // Borrower Select2
+        $('#borrower_id').select2({
+            dropdownParent: $('#modal-content')
         });
 
-        document.addEventListener('livewire:update', function() {
-            $('#borrower_id').select2({
-                dropdownParent: $('#modal-content')
-            });
+        $('#borrower_id').on('change', function(e) {
+            let data = $(this).val();
+            console.log(data);
+            @this.set('borrower_id', data);
         });
 
-        document.addEventListener('livewire:load', function() {
-            $('#toolItems').select2({
-                dropdownParent: $('#modal-content')
-            });
-
-            $('#toolItems').on('change', function(e) {
-                let data = $(this).val();
-                console.log(data);
-                @this.set('toolItems', data);
-            });
+        // ToolItems Select2
+        $('#toolItems').select2({
+            dropdownParent: $('#modal-content')
         });
 
-        document.addEventListener('livewire:update', function() {
-            $('#toolItems').select2({
-                dropdownParent: $('#modal-content')
-            });
+        $('#toolItems').on('change', function(e) {
+            let data = $(this).val();
+            console.log(data);
+            @this.set('toolItems', data);
         });
-    </script>
+    });
+
+    document.addEventListener('livewire:update', function() {
+        // Refresh Select2 on Livewire update
+        $('#borrower_id, #toolItems').select2({
+            dropdownParent: $('#modal-content')
+        });
+    });
+</script>
+
 
 </div>

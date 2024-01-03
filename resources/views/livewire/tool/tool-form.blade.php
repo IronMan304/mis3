@@ -22,7 +22,7 @@
                             <span class="login-danger">*</span>
                         </label>
                         <select class="form-control select" wire:model="category_id">
-                            <option value="" disabled selected>Select a Category</option>
+                            <option value=""  selected>Select a Category</option>
                             @foreach ($categories as $category)
                             <option value="{{ $category->id }}">
                                 ({{$category->code}}) {{ $category->description }}
@@ -38,7 +38,7 @@
                             <span class="login-danger">*</span>
                         </label>
                         <select class="form-control select" wire:model="type_id">
-                            <option value="" disabled selected>Select a Type</option>
+                            <option value=""  selected>Select a Type</option>
                             @foreach ($types as $type)
                             <option value="{{ $type->id }}">
                                 ({{ $type->code }}) {{ $type->description }}
@@ -55,7 +55,7 @@
                             <span class="login-danger">*</span>
                         </label>
                         <select class="form-control select" wire:model="source_id">
-                            <option value="" disabled selected>Select a Source</option>
+                            <option value=""  selected>Select a Source</option>
                             @foreach ($sources as $source)
                             <option value="{{ $source->id }}">
                                 ({{$source->code}}) {{ $source->description }}

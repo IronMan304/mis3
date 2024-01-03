@@ -41,15 +41,15 @@
 					</div>
 
 					<div class="table-responsive">
-						<table class="table border-0 custom-table comman-table  mb-0">
+						<table class="table border-0 custom-table comman-table datatable mb-0">
 							<thead>
 								<tr>
+									<td>Request No.</td>
 									<td>Borrower</td>
 									<td>Category:Type</td>
 									<td>Tool</td>
-									<th>Status</th>
 									<th>Date Borrowed</th>
-									<th>Liable</th>
+									<th>Date Returned </th>
 									<td>Action</td>
 								</tr>
 							</thead>
@@ -57,57 +57,29 @@
 								@foreach ($requests as $request)
 								<tr>
 									<td>
-										{{ $request->borrower->first_name ?? '' }}
+										{{ $request->request_number }}
 									</td>
-
-
 									<td>
-										@if ($request->tool_keys)
-										@foreach ($request->tool_keys as $toolKey)
-										{{ $toolKey->tools->type->category->description }}: {{ $toolKey->tools->type->description }}
-										@if (!$loop->last)
-										<br>
-										@endif
-										@endforeach
+										{{ $request->borrower->first_name ?? ''}}
+									</td>
+									<td>
+										{{ $request->tool->category->description ?? ''}}: {{ $request->tool->type->description ?? ''}}
+									</td>
+									<td>
+										{{ $request->tool->brand ?? ''}}: {{ $request->tool->property_number ?? ''}}
+									</td>
+									<td>
+										{{ $request->created_at->setTimezone('Asia/Manila')->format('m-d-Y h:i:s A') ?? '' }} <br>
+										({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
+									</td>
+									<td>
+										@if($request->created_at != $request->updated_at)
+										{{ $request->updated_at->setTimezone('Asia/Manila')->format('m-d-Y h:i:s A') ?? '' }} <br>
+										({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
 										@else
-										No Tools Assigned
+										{{$request->status->description ?? ''}}
 										@endif
 									</td>
-
-									<td>
-										@if ($request->tool_keys)
-										@foreach ($request->tool_keys as $toolKey)
-										{{ $toolKey->tools->brand }}
-										@if (!$loop->last)
-										{{-- Add a Space or separator between department names --}}
-										<br>
-										@endif
-										@endforeach
-										@else
-										No Tools Assigned
-										@endif
-									</td>
-
-									<td>
-										@if ($request->tool_keys)
-										@foreach ($request->tool_keys as $toolKey)
-										{{ $toolKey->status->description ?? ''}}
-										@if (!$loop->last)
-										{{-- Add a Space or separator between department names --}}
-										<br>
-										@endif
-										@endforeach
-										@else
-										No Tools Assigned
-										@endif
-									</td>
-
-									<td>{{ $request->updated_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}</td>
-
-									<td> ({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}</td>
-
-									<td>
-
 
 
 									<td class="text-center">
@@ -115,12 +87,9 @@
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editRequest({{ $request->id }})" title="Edit">
 												<i class='fa fa-pen-to-square'></i>
 											</button>
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return">
-												Return
-											</button>
 											<a class="btn btn-danger btn-sm mx-1" wire:click="deleteRequest({{ $request->id }})" title="Delete">
-													<i class="fa fa-trash"></i>
-												</a>
+												<i class="fa fa-trash"></i>
+											</a>
 										</div>
 									</td>
 
@@ -133,21 +102,14 @@
 			</div>
 		</div>
 	</div>
-	{{-- Modal --}}
+</div>
+{{-- Modal --}}
 
-	<div wire.ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered">
-			<livewire:request.request-form />
-		</div>
-	</div>
-
-	<div wire.ignore.self class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered">
-			<livewire:request.return-form />
-		</div>
+<div wire.ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered">
+		<livewire:request.request-form1 />
 	</div>
 </div>
-
 @section('custom_script')
 @include('layouts.scripts.request-scripts')
 @endsection

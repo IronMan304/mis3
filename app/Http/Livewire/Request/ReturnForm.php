@@ -2,20 +2,21 @@
 
 namespace App\Http\Livewire\Request;
 
-use App\Models\Tool;
+use Illuminate\Support\Facades\Request as IlluminateRequest;
+use App\Models\Borrower;
 use App\Models\Request;
+use App\Models\Tool;
 use App\Models\ToolRequest;
 use Livewire\Component;
-use App\Models\Borrower;
 
 class ReturnForm extends Component
 {
-    public $returnId, $tool_id, $user_id, $borrower_id, $status_id;
-    public $toolItems = [];
+    public $returnId, $borrower_id;
+    public $return_toolItems = [];
     public $action = '';  //flash
     public $message = '';  //flash
-    public $search = '';
 
+    public $selectedTools = [];
     protected $listeners = [
         'returnId',
         'resetInputFields'
@@ -29,61 +30,49 @@ class ReturnForm extends Component
     }
 
     //edit
-    public function returnId($returnId)
+    public function returnId($requestId)
     {
-        $this->returnId = $returnId;
-        $request = Request::whereId($returnId)->first();
-        $this->tool_id = $request->tool_id;
-        $this->borrower_id = $request->borrower_id;
-        //$this->status_id = $request->status_id;
-        if ($request->tool_keys != null) {
-            $this->toolItems = collect($request->tool_keys)->map(function ($toolKey) {
-                return ['toolId' => $toolKey->tool_id];
-            })->toArray();
-        } else {
-            // If no branches are associated with the user, initialize an empty array
-            $this->toolItems = [];
-        }
+        $this->returnId = $requestId;
+        $return = Request::find($requestId);
+        $this->borrower_id = $return->borrower_id;
+
+        // Assuming there is a tools relationship in your Request model
+        $this->return_toolItems = $return->tool_keys->map(function ($tool) {
+            return $tool->tool_id;
+        })->toArray();
+
+        $this->selectedTools = $return->tool_keys->map(function ($tool) {
+            return $tool->tools;
+        })->flatten();
+        // $this->toolItems = $return->tools->map->id->toArray(); // A shorter version using arrow functions (PHP 7.4+)
+
+        //dd($this->toolItems);    
     }
 
     //store
     public function store()
     {
         $data = $this->validate([
-            'user_id' => 'nullable',
             'borrower_id' => 'required',
-            'toolItems.*.toolId' => 'nullable',
+            'return_toolItems' => 'required|array',
         ]);
-        // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
-
+        $data['status_id'] = 7;
 
         if ($this->returnId) {
-            foreach ($this->toolItems as $item) {
-                $toolId = isset($item['toolId']) ? $item['toolId'] : null;
-                Tool::where('id', $toolId)->update(['status_id' => 1]);
-            }
+           // Update the main request data
+        $request = Request::whereId($this->returnId)->first();
+        $request->update($data);
 
-            $request = Request::whereId($this->returnId)->first();
+        // Update the status_id for the returned tools in the ToolRequest table
+        ToolRequest::where('request_id', $this->returnId)
+            ->whereIn('tool_id', $this->return_toolItems)
+            ->update(['status_id' => 7]);
 
-            $this->updateToolRequest($request);
-            $action = 'edit';
-            $message = 'Successfully Updated';
+        $action = 'edit';
+        $message = 'Successfully Updated';
         } else {
-            // When creating a new tool, set the 'user_id'
-            $data['user_id'] = auth()->user()->id;
-
-
-            // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
-            foreach ($this->toolItems as $item) {
-                $toolId = isset($item['toolId']) ? $item['toolId'] : null;
-                Tool::where('id', $toolId)->update(['status_id' => 2]);
-            }
-
-            $request = Request::create($data);
-
-            $this->createToolRequest($request);
-
+            Request::create($data);
             $action = 'store';
             $message = 'Successfully Created';
         }
@@ -91,82 +80,31 @@ class ReturnForm extends Component
         $this->emit('flashAction', $action, $message);
         $this->resetInputFields();
         $this->emit('closeReturnModal');
-        $this->emit('refreshParentReturn');
+        $this->emit('refreshParentRequest');
         $this->emit('refreshTable');
     }
 
     public function render()
     {
-
-        if (empty($this->search)) {
-            $tools  = Tool::all();
-        } else {
-            $tools  = Tool::where('brand', 'LIKE', '%' . $this->search . '%')->get();
-        }
-        //$tools = Tool::where('status_id', 1)->get();
-        $tools = Tool::all();
         $borrowers = Borrower::all();
-        //$requests = Request::all();
+        $tools = Tool::all();
+        $tool_requests = ToolRequest::all();
+
+        // Eager load relationships and select the 'id' attribute
+
+        $requests  = Request::with('tool_keys.tools.type')->get();
+        // Inspect the loaded relationships
+
+        // Eager load relationships (Tool, Request, Status) and select specific attributes
+        $requests = ToolRequest::with(['tools', 'requests', 'status'])->get();
+        //dd($requests);
+        //dump($this->returnId);
+
         return view('livewire.request.return-form', [
-            'tools' => $tools,
             'borrowers' => $borrowers,
-            //'requests' => $requests
+            'tools' => $tools,
+            'requests' => $requests,
+            'tool_requests' => $tool_requests,
         ]);
     }
-
-    private function createToolRequest($request)
-    {
-        foreach ($this->toolItems as $item) {
-            $toolId = isset($item['toolId']) ? $item['toolId'] : null;
-            ToolRequest::create([
-                'request_id' => $request->id,
-                'tool_id' => $toolId,
-                'status_id' => 6,
-            ]);
-        }
-    }
-
-    private function updateToolRequest($request)
-    {
-        foreach ($this->toolItems as $item) {
-            $toolId = isset($item['toolId']) ? $item['toolId'] : null;
-
-            // Use the 'update' method to update the existing records
-            ToolRequest::where([
-                'request_id' => $request->id,
-                'tool_id' => $toolId,
-            ])->update([
-                'status_id' => 7, // Update the status_id here
-                // other fields you want to update
-            ]);
-        }
-    }
-
-
-    public function addTool()
-    {
-        $this->toolItems[] = [
-            'toolId' => null
-        ];
-    }
-
-    public function deleteTool($toolIndex)
-    {
-        unset($this->toolItems[$toolIndex]);
-        $this->toolItems = array_values($this->toolItems);
-    }
-
-    public function getToolIds()
-    {
-        return array_map(function ($item) {
-            return ['tool_id' => $item['toolId']];
-        }, $this->toolItems);
-    }
-        // Computed property to get selected tools
-   // Computed property to get selected tools
-   public function getSelectedToolsProperty()
-   {
-       // Filter tools based on selected tool ids in $toolItems
-       return Tool::whereIn('id', collect($this->toolItems)->pluck('toolId'))->get();
-   }
 }

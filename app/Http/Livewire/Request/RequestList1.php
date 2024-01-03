@@ -2,12 +2,10 @@
 
 namespace App\Http\Livewire\Request;
 
-use App\Models\Tool;
-use App\Models\Status;
 use App\Models\Request;
 use Livewire\Component;
 
-class RequestList extends Component
+class RequestList1 extends Component
 {
     public $requestId;
     public $search = '';
@@ -38,13 +36,7 @@ class RequestList extends Component
         $this->emit('requestId', $this->requestId);
         $this->emit('openRequestModal');
     }
-    public function returnRequest($requestId)
-    {
-        //dd($requestId);
-        $this->requestId = $requestId;
-        $this->emit('returnId', $this->requestId);
-        $this->emit('openReturnModal');
-    }
+
     public function deleteRequest($requestId)
     {
         Request::destroy($requestId);
@@ -58,22 +50,20 @@ class RequestList extends Component
 
     public function render()
     {
-        // $requests = Request::with('tool_keys.tools.type')->get();
-
-        // dd($requests);
-
-        if (empty($this->search)) {
-            $requests  = Request::with('tool_keys.tools.type')->get();
-        } else {
-            $requests  = Request::where('description', 'LIKE', '%' . $this->search . '%')->get();
-        }
-
-        $tools = Tool::all();
-        $statuses = Status::all();
-        return view('livewire.request.request-list', [
-            'requests' => $requests,
-            'tools' => $tools,
-            'statuses' => $statuses
+        $requests = Request::with(['borrower' => function ($query) {
+            $query->where('first_name', 'LIKE', '%' . $this->search . '%');
+        }])
+        ->where(function ($query) {
+            $query->where('request_number', 'LIKE', '%' . $this->search . '%')
+                  ->orWhereHas('borrower', function ($query) {
+                      $query->where('first_name', 'LIKE', '%' . $this->search . '%');
+                  });
+        })
+        ->get();
+    
+        return view('livewire.request.request-list1', [
+            'requests' => $requests
         ]);
     }
+    
 }

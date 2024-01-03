@@ -1,5 +1,5 @@
-<div class="modal-content" id="modal-content" >
-    
+<div class="modal-content" id="return-modal-content">
+
     <div class="modal-header">
         <h1 class="modal-title fs-5">
             @if ($returnId)
@@ -19,10 +19,10 @@
                 <div class="col-md-12" wire:ignore>
                     <div class="form-group local-forms">
                         <label>Borrower
-                         
+
                         </label>
-                        <select class="form-control select" id="borrower_id" wire:model="borrower_id" disabled>
-                            <option value="" disabled selected>Select a Borrower</option>
+                        <select class="form-control select" id="returner_id" wire:model="borrower_id">
+                            <option value="" selected>Select a Borrower</option>
                             @foreach ($borrowers as $borrower)
                             <option value="{{ $borrower->id }}">
                                 ({{$borrower->first_name}}) {{ $borrower->last_name }}
@@ -32,26 +32,33 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" wire:ignore>
-                    <div>
-                        <label>Tool
-                           
-                        </label>
-                        <select class="form-control select" id="toolItems" multiple  wire:model="toolItems">
-                            <option value="" disabled >Select a Tool</option>
-                            @forelse ($toolItems as $toolItem)
-                @if ($toolItem['toolId'])
-                    @php
-                        $selectedTool = \App\Models\Tool::find($toolItem['toolId']);
-                    @endphp
-                    <li>{{ $selectedTool->name }} - {{ $selectedTool->brand }} - {{ $selectedTool->model }}</li>
-                @endif
-            @empty
-                <p>No tools selected</p>
-            @endforelse
+                <h1>Return ID: {{ $returnId }}</h1>
+
+                <div class="col-md-12" >
+                    <div class="form-group local-forms">
+                        <label>Tools</label>
+                        <select class="form-control select" id="return_toolItems" wire:model="return_toolItems" multiple>
+                            <option value="" selected>Select a Tool to return</option>
+                            @foreach($tool_requests as $tool_request)
+                            @if($tool_request->request_id == $returnId)
+                            <option value="{{ $tool_request->tools->id }}">
+                                {{ $tool_request->tools->brand }}
+                            </option>
+                            @endif
+                            @endforeach
                         </select>
+
                     </div>
                 </div>
+
+                @foreach($tool_requests as $tool_request)
+                @if($tool_request->request_id == $returnId)
+                <p>
+                    {{ $tool_request->tools->brand }}
+                </p>
+                @endif
+                @endforeach
+
 
             </div>
         </div>
@@ -62,39 +69,36 @@
 
     <script>
         document.addEventListener('livewire:load', function() {
-            $('#borrower_id').select2({
-                dropdownParent: $('#modal-content')
+            // Borrower Select2
+            $('#returner_id').select2({
+                dropdownParent: $('#return-modal-content')
             });
 
-            $('#borrower_id').on('change', function(e) {
+            $('#returner_id').on('change', function(e) {
                 let data = $(this).val();
                 console.log(data);
-                @this.set('borrower_id', data);
+                @this.set('returner_id', data);
+            });
+
+            // ToolItems Select2
+            $('#return_toolItems').select2({
+                dropdownParent: $('#return-modal-content')
+            });
+
+            $('#return_toolItems').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('return_toolItems', data);
             });
         });
 
         document.addEventListener('livewire:update', function() {
-            $('#borrower_id').select2({
-                dropdownParent: $('#modal-content')
-            });
-        });
-
-        document.addEventListener('livewire:load', function() {
-            $('#toolItems').select2({
-                dropdownParent: $('#modal-content')
-            });
-
-            $('#toolItems').on('change', function(e) {
-                let data = $(this).val();
-                console.log(data);
-                @this.set('toolItems', data);
-            });
-        });
-
-        document.addEventListener('livewire:update', function() {
-            $('#toolItems').select2({
-                dropdownParent: $('#modal-content')
+            // Refresh Select2 on Livewire update
+            $('#returner_id, #return_toolItems').select2({
+                dropdownParent: $('#return-modal-content')
             });
         });
     </script>
+
+
 </div>
