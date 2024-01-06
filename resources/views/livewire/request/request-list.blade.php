@@ -130,21 +130,21 @@
 												<i class='fa fa-pen-to-square'></i>
 											</button>--}}
 											@if ($request->tool_keys)
-    @php $returnButtonShown = false; @endphp
+											@php $returnButtonShown = false; @endphp
 
-    @foreach ($request->tool_keys as $toolKey)
-        @if($toolKey->status_id == 6 && !$returnButtonShown)
-            @php $returnButtonShown = true; @endphp
-            <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return">
-                Return
-            </button>
-        @endif
-    @endforeach
-@endif
+											@foreach ($request->tool_keys as $toolKey)
+											@if($toolKey->status_id == 6 && !$returnButtonShown)
+											@php $returnButtonShown = true; @endphp
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return">
+												Return
+											</button>
+											@endif
+											@endforeach
+											@endif
 
-									
+
 											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteRequest({{ $request->id }})" title="Delete">
-												<i class="fa fa-trash"></i>
+											<i class="fa fa-trash"></i>
 											</a>--}}
 										</div>
 									</td>

@@ -15,6 +15,7 @@ class RequestForm extends Component
     public $action = '';  //flash
     public $message = '';  //flash
     public $search = '';
+    public $selectedTools = [];
 
     protected $listeners = [
         'requestId',
@@ -30,25 +31,23 @@ class RequestForm extends Component
     }
 
 
- // edit
-public function requestId($requestId)
-{
-    $this->requestId = $requestId;
-    $request = Request::whereId($requestId)->first();
-    $this->tool_id = $request->tool_id;
-    $this->borrower_id = $request->borrower_id;
+    // edit
+    public function requestId($requestId)
+    {
+        $this->requestId = $requestId;
+        $request = Request::with('tool_keys.tools')->findOrFail($requestId);
 
-    if ($request->tool_keys != null) {
-        $this->toolItems = collect($request->tool_keys)->map(function ($toolKey) {
-            return ['toolId' => $toolKey['tool_id']]; // Change here
-        })->toArray();
-    } else {
-        // If no branches are associated with the user, initialize an empty array
-        $this->toolItems = [];
+        $this->tool_id = $request->tool_id;
+        $this->borrower_id = $request->borrower_id;
+
+        // Populate toolItems with the IDs of associated tools
+        $this->toolItems = $request->tool_keys->pluck('tool_id')->toArray();
+
+        // Populate selectedTools with the associated tools
+        $this->selectedTools = $request->tool_keys->pluck('tools')->flatten();
+
+        // You might need to adjust other fields as per your application's requirements
     }
-
-
-}
 
 
     //store
@@ -64,8 +63,12 @@ public function requestId($requestId)
         $data['user_id'] = auth()->user()->id;
 
         if ($this->requestId) {
-            $request = Request::whereId($this->requestId)->first()->update($data);
+            $request = Request::findOrFail($this->requestId);
+            $request->update($data);
+
             $this->updateToolRequest($request);
+             // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
+             Tool::whereIn('id', $this->toolItems)->update(['status_id' => 2]);
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
@@ -94,7 +97,7 @@ public function requestId($requestId)
 
     public function render()
     {
-        
+
         if (empty($this->search)) {
             $tools  = Tool::all();
         } else {
@@ -122,12 +125,23 @@ public function requestId($requestId)
 
     private function updateToolRequest($request)
     {
+        // Get the previous tool IDs
+        $previousToolIds = $request->tool_keys->pluck('tool_id')->toArray();
+    
         // Remove existing tool request relationships
-        $request->toolRequests()->delete();
-
+        $request->tool_keys()->delete();
+    
         // Create new tool request relationships
         $this->createToolRequest($request);
+    
+        // Touch the Request model to update the updated_at timestamp
+        $request->touch();
+    
+        // Update the status_id of previously chosen tools back to 1
+        $toolsToReset = array_diff($previousToolIds, $this->toolItems);
+        Tool::whereIn('id', $toolsToReset)->update(['status_id' => 1]);
     }
+    
 
     public function addTool()
     {

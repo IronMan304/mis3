@@ -1,5 +1,5 @@
 <div class="modal-content" id="modal-content">
-    
+
     <div class="modal-header">
         <h1 class="modal-title fs-5">
             @if ($requestId)
@@ -19,10 +19,10 @@
                 <div class="col-md-12" wire:ignore>
                     <div class="form-group local-forms">
                         <label>Borrower
-                         
+
                         </label>
                         <select class="form-control select" id="borrower_id" wire:model="borrower_id">
-                            <option value=""  selected>Select a Borrower</option>
+                            <option value="" selected>Select a Borrower</option>
                             @foreach ($borrowers as $borrower)
                             <option value="{{ $borrower->id }}">
                                 ({{$borrower->first_name}}) {{ $borrower->last_name }}
@@ -31,25 +31,29 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="col-md-12" wire:ignore>
+                <div class="col-md-12">
                     <div>
-                        <label>Tool
-                           
-                        </label>
+                        <label>Tool</label>
                         <select class="form-control select" id="toolItems" multiple wire:model="toolItems">
-                            <option value="" selected >Select a Tool</option>
+                            <option value="" selected>Select a Tool</option>
                             @foreach ($tools as $tool)
+                            @if ($tool->status_id == 1)
                             <option value="{{ $tool->id }}">
-                                ({{$tool->brand}}) 
+                                ({{ $tool->brand }})
                             </option>
+                            @else
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Use
+                            </option>
+                            @endif
                             @endforeach
                         </select>
                     </div>
                 </div>
 
 
-               
+
+
 
 
             </div>
@@ -58,39 +62,39 @@
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </form>
-  
+
     <script>
-    document.addEventListener('livewire:load', function() {
-        // Borrower Select2
-        $('#borrower_id').select2({
-            dropdownParent: $('#modal-content')
+        document.addEventListener('livewire:load', function() {
+            // Borrower Select2
+            $('#borrower_id').select2({
+                dropdownParent: $('#modal-content')
+            });
+
+            $('#borrower_id').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('borrower_id', data);
+            });
+
+            // ToolItems Select2
+            $('#toolItems').select2({
+                dropdownParent: $('#modal-content')
+            });
+
+            $('#toolItems').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('toolItems', data);
+            });
         });
 
-        $('#borrower_id').on('change', function(e) {
-            let data = $(this).val();
-            console.log(data);
-            @this.set('borrower_id', data);
+        document.addEventListener('livewire:update', function() {
+            // Refresh Select2 on Livewire update
+            $('#borrower_id, #toolItems').select2({
+                dropdownParent: $('#modal-content')
+            });
         });
-
-        // ToolItems Select2
-        $('#toolItems').select2({
-            dropdownParent: $('#modal-content')
-        });
-
-        $('#toolItems').on('change', function(e) {
-            let data = $(this).val();
-            console.log(data);
-            @this.set('toolItems', data);
-        });
-    });
-
-    document.addEventListener('livewire:update', function() {
-        // Refresh Select2 on Livewire update
-        $('#borrower_id, #toolItems').select2({
-            dropdownParent: $('#modal-content')
-        });
-    });
-</script>
+    </script>
 
 
 </div>

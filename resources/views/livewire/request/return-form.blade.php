@@ -32,16 +32,35 @@
                     </div>
                 </div>
 
+                <div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>Condition</label>
+                        <select class="form-control select" wire:model="selectedConditionStatus">
+                            <option value="" selected>Condition of the tool</option>
+                            @foreach ($statuses as $status)
+                            @if($status->id == 1 || $status->id == 4)
+                            @if($status->id == 1)
+                            <option value="{{ $status->id }}">Good</option>
+                            @else
+                            <option value="{{ $status->id }}">{{ $status->description }}</option>
+                            @endif
+                            @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+
                 {{--<h1>Return ID: {{ $returnId }}</h1>--}}
 
-                <div class="col-md-12" >
+                <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Tools to be returned</label>
                         <select class="form-control select" id="return_toolItems" wire:model="return_toolItems" multiple>
                             <option value="" selected>Select a Tool to return</option>
                             @foreach($tool_requests as $tool_request)
                             @if($tool_request->request_id == $returnId && $tool_request->status_id == 6)
-                          
+
                             <option value="{{ $tool_request->tools->id }}">
                                 {{ $tool_request->tools->brand }}
                             </option>

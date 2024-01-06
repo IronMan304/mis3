@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Request;
 use Illuminate\Support\Facades\Request as IlluminateRequest;
 use App\Models\Borrower;
 use App\Models\Request;
+use App\Models\Status;
 use App\Models\Tool;
 use App\Models\ToolRequest;
 use Livewire\Component;
@@ -13,12 +14,15 @@ use Carbon\Carbon;
 
 class ReturnForm extends Component
 {
-    public $returnId, $borrower_id;
+    public $returnId, $borrower_id, $status_id, $selectedCondition, $selectedToolId;
     public $return_toolItems = [];
     public $action = '';  //flash
     public $message = '';  //flash
 
     public $selectedTools = [];
+    // Add this property to your Livewire component
+    public $selectedConditionStatus;
+
     protected $listeners = [
         'returnId',
         'resetInputFields'
@@ -59,34 +63,52 @@ class ReturnForm extends Component
             'return_toolItems' => 'required|array',
         ]);
         $data['user_id'] = auth()->user()->id;
-        $data['status_id'] = 7;
+        $data['status_id'] = 7; //for returning
 
         if ($this->returnId) {
-           // Update the main request data
-    $request = Request::whereId($this->returnId)->first();
-    $request->update($data);
+            // Update the main request data
+            $request = Request::whereId($this->returnId)->first();
+            $request->update($data);
 
-    // Update the status_id and returned_at for the returned tools in the ToolRequest table
-    foreach ($this->return_toolItems as $toolId) {
-        $toolRequest = ToolRequest::where('request_id', $this->returnId)
-            ->where('tool_id', $toolId)
-            ->first();
+            // Update the status_id and returned_at for the returned tools in the ToolRequest table
+            foreach ($this->return_toolItems as $toolId) {
+                $toolRequest = ToolRequest::where('request_id', $this->returnId)
+                    ->where('tool_id', $toolId)
+                    ->first();
 
-        if ($toolRequest->returned_at == null) {
-            $toolRequest->update([
-                'status_id' => 7,
-                'returned_at' => Carbon::now()->setTimezone('Asia/Manila'),  // Update the returned_at timestamp for the specific tool
-            ]);
-        } else {
-            $toolRequest->update([
-                'status_id' => 7,
-            ]);
-        }
-    }
+                if ($toolRequest->returned_at == null) {
+                    $toolRequest->update([
+                        'status_id' => 7,
+                        'returned_at' => Carbon::now()->setTimezone('Asia/Manila'),  // Update the returned_at timestamp for the specific tool
+                    ]);
+                } else {
+                    $toolRequest->update([
+                        'status_id' => 7,
+                    ]);
+                }
+            }
+            // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
+            //Tool::whereIn('id', $this->return_toolItems)->update(['status_id' => 1]);
 
+            // Get the tool IDs that should be updated
+            // $toolIdsToUpdate = ToolRequest::join('tools', 'tool_requests.tool_id', '=', 'tools.id')
+            //     ->whereIn('tool_requests.tool_id', $this->return_toolItems)
+            //     ->whereColumn('tool_requests.updated_at', '!=', 'tools.updated_at')
+            //     ->pluck('tool_requests.tool_id');
 
+            // // Update the tool status to 'Requested' (assuming 2 represents 'Requested') for the selected tools
+            // Tool::whereIn('id', $toolIdsToUpdate)->update(['status_id' => 1]);
+
+            foreach ($this->return_toolItems as $toolId) {
+                $tool = Tool::find($toolId);
+            
+                if ($tool->status_id == 2) {
+                    $tool->update(['status_id' => $this->selectedConditionStatus]);
+                }
+            }
+            
             $action = 'edit';
-            $message = 'Successfully Updated';
+            $message = 'Successfully Returned';
         } else {
             Request::create($data);
             $action = 'store';
@@ -96,7 +118,7 @@ class ReturnForm extends Component
         $this->emit('flashAction', $action, $message);
         $this->resetInputFields();
         $this->emit('closeReturnModal');
-        $this->emit('refreshParentRequest');
+        $this->emit('refreshParentReturn');
         $this->emit('refreshTable');
     }
 
@@ -115,12 +137,35 @@ class ReturnForm extends Component
         $requests = ToolRequest::with(['tools', 'requests', 'status'])->get();
         //dd($requests);
         //dump($this->returnId);
+        $statuses = Status::all();
 
         return view('livewire.request.return-form', [
             'borrowers' => $borrowers,
             'tools' => $tools,
             'requests' => $requests,
             'tool_requests' => $tool_requests,
+            'statuses' => $statuses,
+            'selectedConditionStatus' => $this->selectedConditionStatus,
         ]);
     }
+
+    //    public function updateStatusId()
+    // {
+    //     // Update $status_id based on the selected condition
+    //     if ($this->selectedCondition == 1) {
+    //         // Good condition
+    //         $this->status_id = 1;
+    //     } elseif ($this->selectedCondition == 4) {
+    //         // Another condition (adjust as needed)
+    //         $this->status_id = 4;
+    //     } else {
+    //         // Default value or handle other conditions
+    //         $this->status_id = null;
+    //     }
+
+    //     // Update the tool status to $this->status_id
+    //     Tool::whereIn('id', $this->return_toolItems)->update(['status_id' => $this->status_id]);
+    // }
+
+
 }

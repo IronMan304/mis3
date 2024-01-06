@@ -17,6 +17,7 @@ class RequestList extends Component
 
     protected $listeners = [
         'refreshParentRequest' => '$refresh',
+        'refreshParentReturn' => '$refresh',
         'deleteRequest',
         'editRequest',
         'deleteConfirmRequest'
