@@ -3,7 +3,7 @@
     <div class="modal-header">
         <h1 class="modal-title fs-5">
             @if ($returnId)
-            Return Tool
+            Return / Report Tool
             @else
             Add Request
             @endif
@@ -38,7 +38,7 @@
                         <select class="form-control select" wire:model="selectedConditionStatus">
                             <option value="" selected>Condition of the tool</option>
                             @foreach ($statuses as $status)
-                            @if($status->id == 1 || $status->id == 4)
+                            @if($status->id == 1 || $status->id == 3 || $status->id == 4)
                             @if($status->id == 1)
                             <option value="{{ $status->id }}">Good</option>
                             @else
@@ -55,9 +55,9 @@
 
                 <div class="col-md-12">
                     <div class="form-group local-forms">
-                        <label>Tools to be returned</label>
+                        <label>Tools</label>
                         <select class="form-control select" id="return_toolItems" wire:model="return_toolItems" multiple>
-                            <option value="" selected>Select a Tool to return</option>
+                            <option value="" selected>Select Tools</option>
                             @foreach($tool_requests as $tool_request)
                             @if($tool_request->request_id == $returnId && $tool_request->status_id == 6)
 
@@ -70,6 +70,15 @@
 
                     </div>
                 </div>
+
+                <div class="col-md-12">
+					<div class="form-group local-forms">
+						<label>
+							Description
+						</label>
+						<input class="form-control" type="text" wire:model="description" placeholder />
+					</div>
+				</div>
 
                 {{--@foreach($tool_requests as $tool_request)
                 @if($tool_request->request_id == $returnId)

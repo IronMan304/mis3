@@ -20,8 +20,34 @@ class RequestList extends Component
         'refreshParentReturn' => '$refresh',
         'deleteRequest',
         'editRequest',
-        'deleteConfirmRequest'
+        'deleteConfirmRequest',
+        'cancelRequest' => 'handleCancelRequest', 
     ];
+
+    public function handleCancelRequest($requestId)
+    {
+        // Retrieve tool items associated with the request
+        $toolItems = Request::find($requestId)->tool_keys->pluck('tool_id')->toArray();
+
+        if ($requestId) {
+            // Handle the cancellation logic here
+            Request::where('id', $requestId)->update(['status_id' => 8]);
+     
+    
+            // Assuming you want to update the status of associated tools
+            Tool::whereIn('id', $toolItems)->update(['status_id' => 1]);
+
+               // Update the status_id of each ToolRequest
+        ToolRequest::where('request_id', $requestId)->update(['status_id' => 8]);
+    
+            $action = 'cancel';
+            $message = 'Request Cancelled';
+    
+            $this->emit('flashAction', $action, $message);
+            $this->emit('refreshTable');
+        }
+    
+    }
 
     public function updatingSearch()
     {
@@ -53,6 +79,27 @@ class RequestList extends Component
 
         $action = 'error';
         $message = 'Successfully Deleted';
+
+        $this->emit('flashAction', $action, $message);
+        $this->emit('refreshTable');
+    }
+
+    public function cancelRequest($requestId)
+    {
+        if ($requestId) {
+            // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
+            Request::where('id', $requestId)->update(['status_id' => 8]);
+
+            // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
+            Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+
+            $action = 'cancel';
+            $message = 'Request Cancelled';
+        }
+
+
+        // $action = 'error';
+        // $message = 'Successfully Deleted';
 
         $this->emit('flashAction', $action, $message);
         $this->emit('refreshTable');

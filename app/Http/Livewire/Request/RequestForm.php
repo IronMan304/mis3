@@ -67,8 +67,8 @@ class RequestForm extends Component
             $request->update($data);
 
             $this->updateToolRequest($request);
-             // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
-             Tool::whereIn('id', $this->toolItems)->update(['status_id' => 2]);
+            // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
+            Tool::whereIn('id', $this->toolItems)->update(['status_id' => 2]);
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
@@ -94,6 +94,24 @@ class RequestForm extends Component
         $this->emit('refreshParentRequest');
         $this->emit('refreshTable');
     }
+
+    public function cancelRequest()
+    {
+        // if ($this->requestId) {
+        //     // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
+        //     //Request::where('id', $this->requestId)->update(['status_id' => 8]);
+
+        //     // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
+        //     //Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+
+        //     $action = 'cancel';
+        //     $message = 'Request Cancelled';
+
+            // Emit the event with necessary data
+            $this->emit('cancelRequest', $this->requestId, $this->toolItems);
+       // }
+    }
+
 
     public function render()
     {
@@ -127,21 +145,21 @@ class RequestForm extends Component
     {
         // Get the previous tool IDs
         $previousToolIds = $request->tool_keys->pluck('tool_id')->toArray();
-    
+
         // Remove existing tool request relationships
         $request->tool_keys()->delete();
-    
+
         // Create new tool request relationships
         $this->createToolRequest($request);
-    
+
         // Touch the Request model to update the updated_at timestamp
         $request->touch();
-    
+
         // Update the status_id of previously chosen tools back to 1
         $toolsToReset = array_diff($previousToolIds, $this->toolItems);
         Tool::whereIn('id', $toolsToReset)->update(['status_id' => 1]);
     }
-    
+
 
     public function addTool()
     {

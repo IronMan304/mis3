@@ -10,6 +10,10 @@
 					<a href="/requests"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
 						<span>Request</span></a>
 				</li>
+				<li>
+					<a href="/repairs"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
+						<span>Repair</span></a>
+				</li>
 
 				<li class="submenu">
 					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
@@ -19,7 +23,7 @@
 					<ul style="display: none;">
 
 						<li><a href="/users">Users</a></li>
-						<li><a href="/borrowers">Norsunian</a></li>
+						<li><a href="/borrowers">Borrowers</a></li>
 					</ul>
 				</li>
 
@@ -47,7 +51,7 @@
 
 					<ul style="display: none;">
 
-						<li><a href="/report">Employee Efficiency Report</a></li>
+						<li><a href="/report">Repair Report</a></li>
 					</ul>
 				</li>
 
@@ -66,6 +70,7 @@
 						<li><a href="/categories">Category</a></li>
 						<li><a href="/types">Type</a></li>
 						<li><a href="/sources">Source</a></li>
+						<li><a href="/statuses">Status</a></li>
 					</ul>
 				</li>
 

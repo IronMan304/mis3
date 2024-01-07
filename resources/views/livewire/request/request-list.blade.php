@@ -47,7 +47,7 @@
 									<td>Borrower</td>
 									<td>Category:Type</td>
 									<td>Tool</td>
-									<th>Status</th>
+									{{--<th>Status</th>--}}
 									<th>Date Borrowed</th>
 									<th>Date Returned</th>
 									<td>Action</td>
@@ -77,7 +77,8 @@
 									<td>
 										@if ($request->tool_keys)
 										@foreach ($request->tool_keys as $toolKey)
-										{{ $toolKey->tools->brand }}
+										{{ $toolKey->tools->brand ?? ''}}: {{ $toolKey->status->description ?? ''}} ({{ $toolKey->toolStatus->description ?? ''}})
+										
 										@if (!$loop->last)
 										{{-- Add a Space or separator between department names --}}
 										<br>
@@ -88,7 +89,7 @@
 										@endif
 									</td>
 
-									<td>
+									<!-- <td>
 										@if ($request->tool_keys)
 										@foreach ($request->tool_keys as $toolKey)
 										{{ $toolKey->status->description ?? ''}}
@@ -100,7 +101,7 @@
 										@else
 										No Tools Assigned
 										@endif
-									</td>
+									</td> -->
 
 									<td>{{ $request->updated_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}<br>
 										({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
@@ -127,7 +128,7 @@
 									<td class="text-center">
 										<div class="btn-group" role="group">
 											{{--<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editRequest({{ $request->id }})" title="Edit">
-												<i class='fa fa-pen-to-square'></i>
+											<i class='fa fa-pen-to-square'></i>
 											</button>--}}
 											@if ($request->tool_keys)
 											@php $returnButtonShown = false; @endphp
@@ -136,16 +137,39 @@
 											@if($toolKey->status_id == 6 && !$returnButtonShown)
 											@php $returnButtonShown = true; @endphp
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return">
-												Return
+												Return/Report
 											</button>
 											@endif
 											@endforeach
 											@endif
+											<!-- 
+											@if ($request->tool_keys)
+											@php $returnButtonShown = false; @endphp
+
+											@foreach ($request->tool_keys as $toolKey)
+											@if ($toolKey->status_id == 7)
+											{{-- If any tool key has a status of 7, do not show the button --}}
+											@php $returnButtonShown = true; @endphp
+											@break
+											@endif
+
+											@if ($toolKey->status_id == 6 && !$returnButtonShown)
+											{{-- Show the button only if the status is 6 and no previous tool key has a status of 7 --}}
+											@php $returnButtonShown = true; @endphp
+											<a class="btn btn-danger btn-sm mx-1" wire:click="handleCancelRequest({{ $request->id }})" title="Cancel">
+												<i class="fa fa-trash"></i>
+											</a>
+											@elseif ($toolKey->status_id == 8 && !$returnButtonShown)
+											{{-- If the status is 8 and no previous tool key has a status of 7, show the disabled button --}}
+											@php $returnButtonShown = true; @endphp
+											<button disabled>Cancelled</button>
+											@endif
+											@endforeach
+											@endif -->
 
 
-											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteRequest({{ $request->id }})" title="Delete">
-											<i class="fa fa-trash"></i>
-											</a>--}}
+
+
 										</div>
 									</td>
 

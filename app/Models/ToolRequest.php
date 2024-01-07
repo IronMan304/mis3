@@ -15,7 +15,7 @@ class ToolRequest extends Model
 
     protected $table = 'tool_requests';
     protected $primaryKey = 'id';
-    protected $fillable = ['tool_id', 'request_id', 'status_id', 'returned_at'];
+    protected $fillable = ['tool_id', 'request_id', 'status_id', 'user_id', 'returner_id', 'tool_status_id', 'description', 'returned_at'];
 
     public function tools()
     {
@@ -29,5 +29,9 @@ class ToolRequest extends Model
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id', 'id');
+    }
+
+    public function toolStatus(){
+        return $this->belongsTo(Status::class, 'tool_status_id', 'id');
     }
 }

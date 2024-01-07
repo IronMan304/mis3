@@ -41,9 +41,21 @@
                             <option value="{{ $tool->id }}">
                                 ({{ $tool->brand }})
                             </option>
-                            @else
+                            @elseif ($tool->status_id == 2)
                             <option value="{{ $tool->id }}" disabled>
                                 ({{ $tool->brand }}) In Use
+                            </option>
+                            @elseif ($tool->status_id == 3)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) Lost
+                            </option>
+                            @elseif ($tool->status_id == 4)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) Damaged
+                            </option>
+                            @elseif ($tool->status_id == 5)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Repair
                             </option>
                             @endif
                             @endforeach
