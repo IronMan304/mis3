@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div>
+                    <div class="form-group local-forms">
                         <label>Tool</label>
                         <select class="form-control select" id="toolItems" multiple wire:model="toolItems">
                             <option value="" selected>Select a Tool</option>
