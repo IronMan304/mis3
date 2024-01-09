@@ -69,7 +69,7 @@
 											{{ $borrower->contact_number}}
 										</td>
 										<td>
-											{{ $borrower->sex->description}}
+											{{ $borrower->sex->description ?? ''}}
 										</td>
 										<td>
 											{{ $borrower->college->description}}

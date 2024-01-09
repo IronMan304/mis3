@@ -111,12 +111,17 @@ class RequestList extends Component
 
         // dd($requests);
 
-        if (empty($this->search)) {
-            $requests  = Request::with('tool_keys.tools.type')->get();
-        } else {
-            $requests  = Request::where('description', 'LIKE', '%' . $this->search . '%')->get();
-        }
-
+        $requests = Request::with(['borrower' => function ($query) {
+            $query->where('first_name', 'LIKE', '%' . $this->search . '%');
+        }])
+        ->where(function ($query) {
+            $query->where('request_number', 'LIKE', '%' . $this->search . '%')
+                  ->orWhereHas('borrower', function ($query) {
+                      $query->where('first_name', 'LIKE', '%' . $this->search . '%');
+                  });
+        })
+        ->get();
+    
         $tools = Tool::all();
         $statuses = Status::all();
         $tool_requests = ToolRequest::all();
