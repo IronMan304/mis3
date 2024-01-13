@@ -4,13 +4,17 @@ namespace App\Http\Livewire\Borrower;
 
 use App\Models\Borrower;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class BorrowerList extends Component
 {
+    use withPagination;
+    protected $paginationTheme = 'bootstrap';
     public $borrowerId;
     public $search = '';
     public $action = '';  //flash
     public $message = '';  //flash
+    public $perPage = 10;
 
     protected $listeners = [
         'refreshParentBorrower' => '$refresh',
@@ -60,9 +64,9 @@ class BorrowerList extends Component
     public function render()
     {
         if (empty($this->search)) {
-            $borrowers  = Borrower::all();
+            $borrowers  = Borrower::paginate($this->perPage);
         } else {
-            $borrowers  = Borrower::where('firs_name', 'LIKE', '%' . $this->search . '%')->get();
+            $borrowers  = Borrower::where('first_name', 'LIKE', '%' . $this->search . '%')->get();
         }
 
         // $borrower = Borrower::with('sex')->get();

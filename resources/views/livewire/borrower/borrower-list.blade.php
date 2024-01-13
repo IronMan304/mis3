@@ -42,7 +42,7 @@
 						</div>
 
 						<div class="table-responsive">
-							<table id="borrower-table" class="table border-0 custom-table comman-table datatable mb-0">
+							<table id="borrower-table" class="table border-0 custom-table comman-table mb-0">
 								<thead>
 									<tr>
 										<td>Borrower</td>
@@ -108,5 +108,7 @@
 				@endsection
 
 			</div>
+			<!-- Pagination links -->
+			{{ $borrowers->links() }}
 		</div>
 	</div>

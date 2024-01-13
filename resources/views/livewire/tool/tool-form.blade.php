@@ -1,4 +1,4 @@
-<div class="modal-content">
+<div class="modal-content" id="toolModal">
     <div class="modal-header">
         <h1 class="modal-title fs-5">
             @if ($toolId)

@@ -51,13 +51,18 @@ class ToolList extends Component
     public function render()
     {
         if (empty($this->search)) {
-            $tools  = Tool::all();
+            $tools = Tool::all();
         } else {
-            $tools  = Tool::where('description', 'LIKE', '%' . $this->search . '%')->get();
+            $tools = Tool::where('brand', 'LIKE', '%' . $this->search . '%')
+                ->orWhereHas('type', function ($query) {
+                    $query->where('description', 'LIKE', '%' . $this->search . '%');
+                })
+                ->get();
         }
-
+    
         return view('livewire.Tool.Tool-list', [
             'tools' => $tools
         ]);
     }
+    
 }

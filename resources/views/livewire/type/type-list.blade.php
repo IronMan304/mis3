@@ -19,7 +19,7 @@
 					<div class="page-table-header mb-2">
 						<div class="row align-items-center">
 							<div class="col">
-                                <div class="doctor-table-blk">
+								<div class="doctor-table-blk">
 									<h3>Type List</h3>
 									<div class="doctor-search-blk">
 										<div class="add-group">
@@ -32,8 +32,7 @@
 							<div class="col-auto text-end float-end ms-auto download-grp">
 								<div class="top-nav-search table-search-blk">
 									<form>
-										<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search"
-											name="search">
+										<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search" name="search">
 										<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
 									</form>
 								</div>
@@ -45,38 +44,54 @@
 						<table class="table border-0 custom-table comman-table datatable mb-0">
 							<thead>
 								<tr>
-									<th>Category</th>
+									<!-- <th>Category</th> -->
 									<td>Type</td>
-									<th>Quantity</th>
-									<!-- <td style="width: 30%">Action</td> -->
+									<th>Total {{--({{ $totalToolCount }}) --}}</th>
+									<th>In Stock {{-- ({{ $totalInStockCount }}) --}}</th>
+									<th>In Use {{-- ({{ $totalInUseCount }}) --}}</th>
+									<th>Damaged {{-- ({{ $totalDamagedCount }}) --}}</th>
+									<th>Lost {{-- ({{ $totalLostCount }}) --}}</th>
+									<td>Action</td>
 								</tr>
 							</thead>
 							<tbody>
 								@foreach ($types as $type)
-									<tr>
-										<td>
-											{{ $type->category->description}}
-										</td>
-										<td>
-											{{ $type->description }}
-										</td>
-										<td>
-											{{ $type->tools->count()}}
-										</td>
+								<tr>
+									<!-- <td>
+										{{ $type->category->description}}
+									</td> -->
+									<td>
+										{{ $type->description }}
+									</td>
+									<td>
+										{{ $type->tools->count()}}
+									</td>
+									<td>
+										{{ $type->tools->where('status_id', 1)->count() }}
+									</td>
+									<td>
+										{{ $type->tools->where('status_id', 2)->count() }}
+									</td>
+									<td>
+										{{ $type->tools->where('status_id', 4)->count() }}
+									</td>
+									<td>
+										{{ $type->tools->where('status_id', 3)->count() }}
+									</td>
 
-										<!-- <td class="text-center">
+									<td class="text-center">
 											<div class="btn-group" role="group">
 												<button type="button" class="btn btn-primary btn-sm mx-1"
 													wire:click="editType({{ $type->id }})" title="Edit">
 													<i class='fa fa-pen-to-square'></i>
 												</button>
-												<a class="btn btn-danger btn-sm mx-1" wire:click="deleteType({{ $type->id }})" title="Delete">
+												<!-- <a class="btn btn-danger btn-sm mx-1" wire:click="deleteType({{ $type->id }})" title="Delete">
 													<i class="fa fa-trash"></i>
-												</a>
+												</a> -->
 											</div>
-										</td> -->
+										</td>
 
-									</tr>
+								</tr>
 								@endforeach
 							</tbody>
 						</table>
@@ -88,12 +103,11 @@
 </div>
 {{-- Modal --}}
 
-<div wire.ignore.self class="modal fade" id="typeModal" tabindex="-1" role="dialog"
-	aria-labelledby="typeModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div wire.ignore.self class="modal fade" id="typeModal" tabindex="-1" role="dialog" aria-labelledby="typeModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-dialog-centered">
 		<livewire:type.type-form />
 	</div>
 </div>
 @section('custom_script')
-	@include('layouts.scripts.type-scripts')
+@include('layouts.scripts.type-scripts')
 @endsection

@@ -44,9 +44,13 @@
 						<table class="table border-0 custom-table comman-table datatable mb-0">
 							<thead>
 								<tr>
-									<td style="width: 70%">Category</td>
-									<td>Quantity</td>
-									<td style="width: 30%">Action</td>
+									<td>Category</td>
+									<td>Total</td>
+									<th>In Stock</th>
+									<th>In Use</th>
+									<th>Damaged</th>
+									<th>Lost</th>
+									<td>Action</td>
 								</tr>
 							</thead>
 							<tbody>
@@ -63,6 +67,59 @@
 										@foreach($category->types as $type)
 										@php
 										$totalToolsCount += $type->tools->count();
+										@endphp
+										@endforeach
+
+										{{ $totalToolsCount }}
+									</td>
+
+									<td>
+										@php
+										$totalToolsCount = 0;
+										@endphp
+
+										@foreach($category->types as $type)
+										@php
+										$totalToolsCount += $type->tools->where('status_id', 1)->count();
+										@endphp
+										@endforeach
+
+										{{ $totalToolsCount }}
+									</td>
+									<td>
+										@php
+										$totalToolsCount = 0;
+										@endphp
+
+										@foreach($category->types as $type)
+										@php
+										$totalToolsCount += $type->tools->where('status_id', 2)->count();
+										@endphp
+										@endforeach
+
+										{{ $totalToolsCount }}
+									</td>
+									<td>
+										@php
+										$totalToolsCount = 0;
+										@endphp
+
+										@foreach($category->types as $type)
+										@php
+										$totalToolsCount += $type->tools->where('status_id', 4)->count();
+										@endphp
+										@endforeach
+
+										{{ $totalToolsCount }}
+									</td>
+									<td>
+										@php
+										$totalToolsCount = 0;
+										@endphp
+
+										@foreach($category->types as $type)
+										@php
+										$totalToolsCount += $type->tools->where('status_id', 3)->count();
 										@endphp
 										@endforeach
 

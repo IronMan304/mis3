@@ -45,8 +45,8 @@
 						<table class="table border-0 custom-table comman-table datatable mb-0">
 							<thead>
 								<tr>
-									<td style="width: 70%">Sex</td>
-									<td style="width: 30%">Action</td>
+									<td>Sex</td>
+									<td>Action</td>
 								</tr>
 							</thead>
 							<tbody>

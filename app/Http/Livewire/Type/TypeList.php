@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Type;
 
+use App\Models\Tool;
 use App\Models\Type;
 use Livewire\Component;
 
@@ -48,6 +49,46 @@ class TypeList extends Component
         $this->emit('refreshTable');
     }
 
+    public function getTotalToolCount()
+    {
+        // Retrieve all tools with status_id 1 (In Stock) across all types
+        $totalToolCount = Tool::count();
+
+        return $totalToolCount;
+    }
+
+    public function getTotalInStockCount()
+    {
+        // Retrieve all tools with status_id 1 (In Stock) across all types
+        $totalInStockCount = Tool::where('status_id', 1)->count();
+
+        return $totalInStockCount;
+    }
+    public function getTotalInUseCount()
+    {
+        // Retrieve the total count of tools with status_id 2 (In Use)
+        $totalInUseCount = Tool::where('status_id', 2)->count();
+
+        return $totalInUseCount;
+    }
+
+    public function getTotalDamagedCount()
+    {
+        // Retrieve the total count of tools with status_id 4 (Damaged)
+        $totalDamagedCount = Tool::where('status_id', 4)->count();
+
+        return $totalDamagedCount;
+    }
+
+    public function getTotalLostCount()
+    {
+        // Retrieve the total count of tools with status_id 3 (Lost)
+        $totalLostCount = Tool::where('status_id', 3)->count();
+
+        return $totalLostCount;
+    }
+
+
     public function render()
     {
         if (empty($this->search)) {
@@ -57,7 +98,12 @@ class TypeList extends Component
         }
 
         return view('livewire.Type.Type-list', [
-            'types' => $types
+            'types' => $types,
+            'totalToolCount' => $this->getTotalToolCount(),
+            'totalInStockCount' => $this->getTotalInStockCount(),
+            'totalInUseCount' => $this->getTotalInUseCount(),
+            'totalDamagedCount' => $this->getTotalDamagedCount(),
+            'totalLostCount' => $this->getTotalLostCount(),
         ]);
     }
 }

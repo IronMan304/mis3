@@ -72,6 +72,14 @@ class CategoryList extends Component
         $this->emit('refreshTable');
     }
 
+    public function getTotalToolCount()
+    {
+        // Retrieve all tools with status_id 1 (In Stock) across all types
+        $totalToolCount = Tool::count();
+
+        return $totalToolCount;
+    }
+
     public function render()
     {
         if (empty($this->search)) {

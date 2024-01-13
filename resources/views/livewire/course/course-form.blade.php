@@ -21,7 +21,7 @@
 							<span class="login-danger">*</span>
 						</label>
 						<select class="form-control select" wire:model="college_id">
-						<option value="" disabled selected>Select a College</option>
+						<option value="" selected>Select a College</option>
 							@foreach ($colleges as $college)
 							<option value="{{ $college->id }}">
 								({{$college->code}}) {{ $college->description }}

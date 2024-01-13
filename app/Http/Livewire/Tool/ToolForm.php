@@ -14,6 +14,7 @@ class ToolForm extends Component
     public $action = '';  //flash
     public $message = '';  //flash
     public $selectedCategory;
+    public $preserveDataTableState = false;
 
     protected $listeners = [
         'toolId',
@@ -40,6 +41,11 @@ class ToolForm extends Component
         $this->barcode = $tool->barcode;
         $this->brand = $tool->brand;
     }
+    public function preserveDataTableState()
+    {
+        $this->preserveDataTableState = true;
+    }
+
 
     //store
     public function store()
@@ -75,10 +81,12 @@ class ToolForm extends Component
         }
 
         $this->emit('flashAction', $action, $message);
+        $this->emit('preserveDataTableState');
         $this->resetInputFields();
+        $this->emit('refreshTable');
         $this->emit('closeToolModal');
         $this->emit('refreshParentTool');
-        $this->emit('refreshTable');
+      
     }
 
     public function render()

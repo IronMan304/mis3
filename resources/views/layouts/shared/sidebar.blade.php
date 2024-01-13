@@ -10,14 +10,14 @@
 					<a href="/requests"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
 						<span>Request</span></a>
 				</li>
-				<li>
+				<!-- <li>
 					<a href="/repairs"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
 						<span>Repair</span></a>
-				</li>
+				</li> -->
 
 				<li class="submenu">
 					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
-						<span>User Management</span> <span class="menu-arrow"></span>
+						<span>User <br> Management</span> <span class="menu-arrow"></span>
 					</a>
 
 					<ul style="display: none;">
@@ -29,14 +29,14 @@
 
 				<li class="submenu">
 					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
-						<span>Tool Management</span> <span class="menu-arrow"></span>
+						<span>Equipment <br> Management</span> <span class="menu-arrow"></span>
 					</a>
 
 					<ul style="display: none;">
 
 						<li><a href="/categories">Category</a></li>
 						<li><a href="/types">Type</a></li>
-						<li><a href="/tools">Tool</a></li>
+						<li><a href="/tools">Equipment</a></li>
 					</ul>
 				</li>
 
@@ -51,7 +51,7 @@
 
 					<ul style="display: none;">
 
-						<li><a href="/report">Repair Report</a></li>
+						<li><a href="/report">Report 1</a></li>
 					</ul>
 				</li>
 

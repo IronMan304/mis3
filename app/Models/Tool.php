@@ -37,6 +37,8 @@ class Tool extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function status(){
+    public function status()
+    {
         return $this->belongsTo(Status::class, 'status_id', 'id');
-    }}
+    }
+}

@@ -22,7 +22,7 @@
 							<span class="login-danger">*</span>
 						</label>
 						<select class="form-control select" wire:model="category_id">
-							<option value="" disabled selected>Select a Category</option>
+							<option value=""  selected>Select a Category</option>
 							@foreach ($categories as $category)
 							<option value="{{ $category->id }}">
 								{{ $category->description }}
