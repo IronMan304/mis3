@@ -182,21 +182,21 @@
 			</div>
 		</div>
 	</div>
-	{{-- Modal --}}
 
-	<div wire.ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered">
-			<livewire:request.request-form />
-		</div>
-	</div>
+</div>
+{{-- Modal --}}
 
-	<div wire.ignore.self class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered">
-			<livewire:request.return-form />
-		</div>
+<div wire.ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered">
+		<livewire:request.request-form />
 	</div>
 </div>
 
+<div wire.ignore.self class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered">
+		<livewire:request.return-form />
+	</div>
+</div>
 @section('custom_script')
 @include('layouts.scripts.request-scripts')
 @endsection

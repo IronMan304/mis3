@@ -44,6 +44,7 @@
 						<table class="table border-0 custom-table comman-table datatable mb-0">
 							<thead>
 								<tr>
+									<th>ID</th>
 									<td>Category</td>
 									<td>Total</td>
 									<th>In Stock</th>
@@ -56,6 +57,9 @@
 							<tbody>
 								@foreach ($categories as $category)
 								<tr>
+									<td>
+										{{ $category->id }}
+									</td>
 									<td>
 										{{ $category->description }}
 									</td>

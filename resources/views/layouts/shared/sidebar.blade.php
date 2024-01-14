@@ -3,7 +3,7 @@
 		<div class="sidebar-menu" id="sidebar-menu">
 			<ul>
 				<li>
-					<a href="/"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
+					<a href="/dashboard"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
 						<span>Dashboard</span></a>
 				</li>
 				<li>
@@ -67,8 +67,8 @@
 						<li><a href="/colleges">College</a></li>
 						<li><a href="/courses">Course</a></li>
 						<li><a href="/sexes">Sex</a></li>
-						<li><a href="/categories">Category</a></li>
-						<li><a href="/types">Type</a></li>
+						<!-- <li><a href="/categories">Category</a></li>
+						<li><a href="/types">Type</a></li> -->
 						<li><a href="/sources">Source</a></li>
 						<li><a href="/statuses">Status</a></li>
 					</ul>

@@ -54,15 +54,15 @@ class ToolList extends Component
             $tools = Tool::all();
         } else {
             $tools = Tool::where('brand', 'LIKE', '%' . $this->search . '%')
+                ->orWhere('property_number', 'LIKE', '%' . $this->search . '%') // Added this line for property_number search
                 ->orWhereHas('type', function ($query) {
                     $query->where('description', 'LIKE', '%' . $this->search . '%');
                 })
                 ->get();
         }
-    
+
         return view('livewire.Tool.Tool-list', [
             'tools' => $tools
         ]);
     }
-    
 }

@@ -69,6 +69,7 @@
 						<table class="table border-0 custom-table comman-table datatable mb-0">
 							<thead>
 								<tr>
+									<th>ID</th>
 									<th>Type</th>
 									<th>Property Number</th>
 									<td>Brand</td>
@@ -82,6 +83,9 @@
 
 								@foreach ($tools as $tool)
 								<tr id="{{ $tool->status_id == 1 ? 'status-one-row' : ($tool->status_id == 2 ? 'status-two-row' : ($tool->status_id == 3 ? 'status-three-row' : ($tool->status_id == 4 ? 'status-four-row' : ''))) }}">
+									<td>
+										{{ $tool->id }}
+									</td>
 									<td>
 										{{ $tool->type->description}}
 									</td>
