@@ -1,29 +1,29 @@
 <div class="content">
-<style>
-	#status-one-row {
-		background-color: #00ff00;
-		border-top: 5px solid #ddd;
-		border-bottom: 5px solid #ddd;
-	}
+	<style>
+		#status-one-row {
+			background-color: #00ff00;
+			border-top: 5px solid #ddd;
+			border-bottom: 5px solid #ddd;
+		}
 
-	#status-two-row {
-		background-color: #ffff00;
-		border-top: 5px solid #ddd;
-		border-bottom: 5px solid #ddd;
-	}
+		#status-two-row {
+			background-color: #ffff00;
+			border-top: 5px solid #ddd;
+			border-bottom: 5px solid #ddd;
+		}
 
-	#status-three-row {
-		background-color: #808080;
-		border-top: 5px solid #ddd;
-		border-bottom: 5px solid #ddd;
-	}
+		#status-three-row {
+			background-color: #808080;
+			border-top: 5px solid #ddd;
+			border-bottom: 5px solid #ddd;
+		}
 
-	#status-four-row {
-		background-color: #ff0000;
-		border-top: 5px solid #ddd;
-		border-bottom: 5px solid #ddd;
-	}
-</style>
+		#status-four-row {
+			background-color: #ff0000;
+			border-top: 5px solid #ddd;
+			border-bottom: 5px solid #ddd;
+		}
+	</style>
 	<div class="page-header">
 		<div class="row">
 			<div class="col-sm-12">
@@ -82,7 +82,7 @@
 							<tbody>
 
 								@foreach ($tools as $tool)
-								<tr id="{{ $tool->status_id == 1 ? 'status-one-row' : ($tool->status_id == 2 ? 'status-two-row' : ($tool->status_id == 3 ? 'status-three-row' : ($tool->status_id == 4 ? 'status-four-row' : ''))) }}">
+								<tr>
 									<td>
 										{{ $tool->id }}
 									</td>
@@ -101,7 +101,13 @@
 
 									<td> ({{ $tool->user->position ?? 'N/A' }}) {{ $tool->user->first_name ?? '' }} {{ $tool->user->last_name ?? '' }}</td>
 
-									<td>
+									<td style="background-color: 
+        @if($tool->status_id == 1) #00ff00 
+        @elseif($tool->status_id == 2) #ffff00 
+        @elseif($tool->status_id == 3) #808080 
+        @elseif($tool->status_id == 4) #ff0000 
+        @else #ffffff 
+        @endif;">
 										{{ $tool->status->description ?? ''}}
 									</td>
 

@@ -71,6 +71,7 @@
 						<li><a href="/types">Type</a></li> -->
 						<li><a href="/sources">Source</a></li>
 						<li><a href="/statuses">Status</a></li>
+						<li><a href="/borrower_types">Borrower Type</a></li>
 					</ul>
 				</li>
 
