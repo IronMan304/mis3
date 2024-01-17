@@ -49,6 +49,7 @@
 										<th>Id Number</th>
 										<th>Contact Number</th>
 										<th>Sex</th>
+										<th>Position</th>
 										<th>College</th>
 										<th>Course</th>
 										<td>Action</td>
@@ -70,6 +71,9 @@
 										</td>
 										<td>
 											{{ $borrower->sex->description ?? ''}}
+										</td>
+										<td>
+											{{ $borrower->position->description ?? ''}}
 										</td>
 										<td>
 											{{ $borrower->college->description}}

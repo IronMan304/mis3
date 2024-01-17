@@ -7,10 +7,11 @@ use App\Models\Course;
 use App\Models\College;
 use Livewire\Component;
 use App\Models\Borrower;
+use App\Models\Position;
 
 class BorrowerForm extends Component
 {
-    public $borrowerId, $id_number, $first_name, $middle_name, $last_name, $contact_number, $sex_id, $college_id, $course_id, $status_id;
+    public $borrowerId, $id_number, $first_name, $middle_name, $last_name, $contact_number, $sex_id, $position_id, $college_id, $course_id, $status_id;
     public $action = '';  //flash
     public $message = '';  //flash
 
@@ -37,6 +38,7 @@ class BorrowerForm extends Component
         $this->last_name = $borrower->last_name;
         $this->contact_number = $borrower->contact_number;
         $this->sex_id = $borrower->sex_id;
+        $this->position_id = $borrower->position_id;
         $this->college_id = $borrower->college_id;
         $this->course_id = $borrower->course_id;
         $this->status_id = $borrower->status_id;
@@ -52,6 +54,7 @@ class BorrowerForm extends Component
             'last_name' => 'required',
             'contact_number' => 'required',
             'sex_id' => 'nullable',
+            'position_id' => 'required',
             'college_id' => 'nullable',
             'course_id' => 'required',
             'status_id' => 'nullable',
@@ -77,12 +80,14 @@ class BorrowerForm extends Component
     public function render()
     {
         $sexes = Sex::all();
+        $positions = Position::all();
         $colleges = College::all();
         $courses = Course::where('college_id', $this->college_id)->get();
         return view('livewire.borrower.borrower-form', [
             'sexes' => $sexes,
             'colleges' => $colleges,
-            'courses' => $courses
+            'courses' => $courses,
+            'positions' => $positions
         ]);
     }
 }

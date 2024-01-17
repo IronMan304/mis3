@@ -22,8 +22,9 @@
 
 					<ul style="display: none;">
 
-						<li><a href="/users">Users</a></li>
-						<li><a href="/borrowers">Borrowers</a></li>
+						<li><a href="/users">User</a></li>
+						<li><a href="/borrowers">Borrower</a></li>
+						<li><a href="/operators">Operator</a></li>
 					</ul>
 				</li>
 
@@ -72,6 +73,8 @@
 						<li><a href="/sources">Source</a></li>
 						<li><a href="/statuses">Status</a></li>
 						<li><a href="/borrower_types">Borrower Type</a></li>
+						<li><a href="/services">Service</a></li>
+						<li><a href="/positions">Position</a></li>
 					</ul>
 				</li>
 

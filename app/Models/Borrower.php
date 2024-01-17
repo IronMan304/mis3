@@ -21,6 +21,7 @@ class Borrower extends Model
         'last_name',
         'contact_number',
         'sex_id',
+        'position_id',
         'college_id',
         'course_id',
         'status_id',
@@ -29,6 +30,11 @@ class Borrower extends Model
     public function sex()
     {
         return $this->belongsTo(Sex::class, 'sex_id', 'id');
+    }
+
+    public function position()
+    {
+        return $this->belongsTo(Position::class, 'position_id', 'id');
     }
 
     public function college()

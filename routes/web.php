@@ -24,7 +24,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
+use App\Http\Livewire\Operator\OperatorList;
+use App\Http\Livewire\Position\PositionList;
 use App\Http\Livewire\Request\RequestList1;
+use App\Http\Livewire\Service\ServiceList;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +68,9 @@ Route::middleware('auth')->group(function () {
     Route::get('requests1', RequestList1::class);
 
     Route::get('borrower_types', BorrowerTypeList::class);
+    Route::get('services', ServiceList::class);
+    Route::get('positions', PositionList::class);
+    Route::get('operators', OperatorList::class);
     
     Route::get('role', RoleList::class);
     Route::get('permission', PermissionList::class);

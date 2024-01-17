@@ -25,7 +25,7 @@
                             <option value="" selected>Select a Borrower</option>
                             @foreach ($borrowers as $borrower)
                             <option value="{{ $borrower->id }}">
-                                ({{$borrower->first_name}}) {{ $borrower->last_name }}
+                                {{$borrower->first_name}} {{ $borrower->last_name }} ({{ $borrower->position->description ?? ''}})
                             </option>
                             @endforeach
                         </select>

@@ -19,16 +19,30 @@
                     <div class="form-group local-forms">
                         <label>
                             Id Number
-                            <span class="login-danger">*</span>
+                         
                         </label>
                         <input class="form-control" type="text" wire:model="id_number" placeholder />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group local-forms">
+                        <label>Position
+                        </label>
+                        <select class="form-control select" wire:model="position_id">
+                        <option value="" selected>Select a Position</option>
+                            @foreach ($positions as $position)
+                            <option value="{{ $position->id }}">
+                                {{ $position->description }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
                         <label>
                             First name
-                            <span class="login-danger">*</span>
+                         
                         </label>
                         <input class="form-control" type="text" wire:model="first_name" placeholder />
                     </div>
@@ -37,7 +51,7 @@
                     <div class="form-group local-forms">
                         <label>
                             Middle name
-                            <span class="login-danger">*</span>
+                         
                         </label>
                         <input class="form-control" type="text" wire:model="middle_name" placeholder />
                     </div>
@@ -46,7 +60,7 @@
                     <div class="form-group local-forms">
                         <label>
                             Last name
-                            <span class="login-danger">*</span>
+                         
                         </label>
                         <input class="form-control" type="text" wire:model="last_name" placeholder />
                     </div>
@@ -55,7 +69,7 @@
                     <div class="form-group local-forms">
                         <label>
                             Contact Number
-                            <span class="login-danger">*</span>
+                         
                         </label>
                         <input class="form-control" type="text" wire:model="contact_number" placeholder />
                     </div>
@@ -63,9 +77,10 @@
                 <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Gender
-                            <span class="login-danger">*</span>
+                         
                         </label>
                         <select class="form-control select" wire:model="sex_id">
+                        <option value="" selected>Select a Gender</option>
                             @foreach ($sexes as $sex)
                             <option value="{{ $sex->id }}">
                                 {{ $sex->description }}
@@ -78,7 +93,7 @@
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>College
-                            <span class="login-danger">*</span>
+                         
                         </label>
                         <select class="form-control select" wire:model="college_id">
                         <option value=""  selected>Select a College</option>
@@ -94,7 +109,7 @@
                 <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Course
-                            <span class="login-danger">*</span>
+                         
                         </label>
                         <select class="form-control select" wire:model="course_id">
                         <option value=""  selected>Select a Course</option>
