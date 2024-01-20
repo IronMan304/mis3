@@ -31,9 +31,11 @@
                         <select class="form-control select" wire:model="position_id">
                         <option value="" selected>Select a Position</option>
                             @foreach ($positions as $position)
+                            @if ($position->description != 'Head of Office')
                             <option value="{{ $position->id }}">
                                 {{ $position->description }}
                             </option>
+                            @endif
                             @endforeach
                         </select>
                     </div>
@@ -74,21 +76,6 @@
                         <input class="form-control" type="text" wire:model="contact_number" placeholder />
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group local-forms">
-                        <label>Gender
-                         
-                        </label>
-                        <select class="form-control select" wire:model="sex_id">
-                        <option value="" selected>Select a Gender</option>
-                            @foreach ($sexes as $sex)
-                            <option value="{{ $sex->id }}">
-                                {{ $sex->description }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
 
                 <div class="col-md-12">
                     <div class="form-group local-forms">
@@ -106,13 +93,13 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                @if($position_id == 1)
+                <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Course
-                         
                         </label>
                         <select class="form-control select" wire:model="course_id">
-                        <option value=""  selected>Select a Course</option>
+                        <option  value=null selected>Select a Course</option>
                             @foreach ($courses as $course)
                             <option value="{{ $course->id }}">
                                 {{ $course->description }}
@@ -121,7 +108,23 @@
                         </select>
                     </div>
                 </div>
+                @endif
 
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Gender
+                         
+                        </label>
+                        <select class="form-control select" wire:model="sex_id">
+                        <option value="" selected>Select a Gender</option>
+                            @foreach ($sexes as $sex)
+                            <option value="{{ $sex->id }}">
+                                {{ $sex->description }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
             </div>
         </div>

@@ -55,12 +55,25 @@ class RequestForm extends Component
     {
         $data = $this->validate([
             'user_id' => 'nullable',
-            'borrower_id' => 'required',
+            'borrower_id' => auth()->user()->hasRole('requester') ? 'nullable' : 'required',
             'toolItems' => 'required|array',
         ]);
 
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
+
+        // Check if the user has the "requester" role
+        // if (auth()->user()->hasRole('requester')) {
+        //     // Set 'borrower_id' to the user's 'user_id'
+        //     $data['borrower_id'] = auth()->user()->id;
+        // }
+
+        // Check if the user has the "requester" role
+        if (auth()->user()->hasRole('requester')) {
+            // Fetch the user_id from the Borrower table using the authenticated user's id
+            $data['borrower_id'] = Borrower::where('user_id', auth()->user()->id)->value('id');
+        }
+
 
         if ($this->requestId) {
             $request = Request::findOrFail($this->requestId);
@@ -74,6 +87,12 @@ class RequestForm extends Component
         } else {
             // When creating a new tool request, set the 'user_id'
             $data['user_id'] = auth()->user()->id;
+            if (auth()->user()->hasRole('admin')) {
+                $data['status_id'] = 10; // Approved
+            } else {
+                $data['status_id'] = 11; // Pending
+            }
+
 
             // Create the request
             $request = Request::create($data);
@@ -107,9 +126,9 @@ class RequestForm extends Component
         //     $action = 'cancel';
         //     $message = 'Request Cancelled';
 
-            // Emit the event with necessary data
-            $this->emit('cancelRequest', $this->requestId, $this->toolItems);
-       // }
+        // Emit the event with necessary data
+        $this->emit('cancelRequest', $this->requestId, $this->toolItems);
+        // }
     }
 
 

@@ -18,6 +18,7 @@ class BorrowerList extends Component
 
     protected $listeners = [
         'refreshParentBorrower' => '$refresh',
+        'refreshParentBorrowerAccount' => '$refresh',
         'deleteBorrower',
         'editBorrower',
         'deleteConfirmBorrower'
@@ -26,6 +27,14 @@ class BorrowerList extends Component
     public function updatingSearch()
     {
         $this->emit('refreshTable');
+    }
+
+    public function createBorrowerAccount($borrowerId)
+    {
+        $this->borrowerId = $borrowerId;
+        $this->emit('resetInputFields');
+        $this->emit('borrowerId', $this->borrowerId);
+        $this->emit('openBorrowerAccountModal');
     }
 
     public function createBorrower()

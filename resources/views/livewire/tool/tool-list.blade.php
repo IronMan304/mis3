@@ -99,7 +99,7 @@
 									<td>{{ $tool->updated_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}</td>
 
 
-									<td> ({{ $tool->user->position ?? 'N/A' }}) {{ $tool->user->first_name ?? '' }} {{ $tool->user->last_name ?? '' }}</td>
+									<td> ({{ $tool->user->position->description ?? 'N/A' }}) <br>{{ $tool->user->first_name ?? '' }} {{ $tool->user->last_name ?? '' }}</td>
 
 									<td style="background-color: 
         @if($tool->status_id == 1) #00ff00 

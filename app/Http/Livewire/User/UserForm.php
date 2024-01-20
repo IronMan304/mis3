@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\User;
 
+use App\Models\Position;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -10,7 +11,7 @@ use Spatie\Permission\Models\Role;
 
 class UserForm extends Component
 {
-    public $userId, $first_name, $middle_name, $last_name, $position, $email, $password, $password_confirmation;
+    public $userId, $first_name, $middle_name, $last_name, $position_id, $email, $password, $password_confirmation;
     public $action = '';  //flash
     public $message = '';  //flash
     public $roleCheck = array();
@@ -35,7 +36,7 @@ class UserForm extends Component
         $this->first_name = $user->first_name;
         $this->middle_name = $user->middle_name;
         $this->last_name = $user->last_name;
-        $this->position = $user->position; // Changed from position to position
+        $this->position_id = $user->position_id; // Changed from position to position
         $this->email = $user->email;
 
         $this->selectedRoles = $user->getRoleNames()->toArray();
@@ -57,7 +58,7 @@ class UserForm extends Component
                 'first_name'    => 'required',
                 'middle_name'   => 'nullable',
                 'last_name'     => 'required',
-                'position'      => 'required',
+                'position_id'      => 'nullable',
                 'email'         => ['required', 'email'],
                 
             ]);
@@ -114,7 +115,7 @@ class UserForm extends Component
                 'first_name'    => 'required',
                 'middle_name'   => 'nullable',
                 'last_name'     => 'required',
-                'position'      => 'required',
+                'position_id'      => 'required',
                 'email'         => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
                 'password'      => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
@@ -123,7 +124,7 @@ class UserForm extends Component
                 'first_name'    => $this->first_name,
                 'middle_name'   => $this->middle_name,
                 'last_name'     => $this->last_name,
-                'position'      => $this->position,
+                'position_id'      => $this->position_id,
                 'email'         => $this->email,
                 'password'      => Hash::make($this->password)
             ]);
@@ -155,8 +156,10 @@ class UserForm extends Component
     public function render()
     {
         $roles = Role::all();
+        $positions = Position::all();
         return view('livewire.user.user-form', [
             'roles' => $roles,
+            'positions' => $positions,
         ]);
     }
 }

@@ -125,6 +125,8 @@ class RequestList extends Component
         $tools = Tool::all();
         $statuses = Status::all();
         $tool_requests = ToolRequest::all();
+        $requests = Request::with('borrower')->get();
+
         return view('livewire.request.request-list', [
             'requests' => $requests,
             'tools' => $tools,

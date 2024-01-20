@@ -11,7 +11,7 @@ use App\Models\Position;
 
 class BorrowerForm extends Component
 {
-    public $borrowerId, $id_number, $first_name, $middle_name, $last_name, $contact_number, $sex_id, $position_id, $college_id, $course_id, $status_id;
+    public $borrowerId, $id_number, $first_name, $middle_name, $last_name, $contact_number, $sex_id, $position_id, $college_id, $course_id, $status_id, $positionId;
     public $action = '';  //flash
     public $message = '';  //flash
 
@@ -47,8 +47,9 @@ class BorrowerForm extends Component
     //store
     public function store()
     {
-        $data = $this->validate([
-            'id_number' => 'required',
+        
+        $rules = [
+            'id_number' => 'required|unique:borrowers,id_number,' . $this->borrowerId,
             'first_name' => 'required',
             'middle_name' => 'nullable',
             'last_name' => 'required',
@@ -56,9 +57,16 @@ class BorrowerForm extends Component
             'sex_id' => 'nullable',
             'position_id' => 'required',
             'college_id' => 'nullable',
-            'course_id' => 'required',
+            'course_id' => 'nullable',
             'status_id' => 'nullable',
-        ]);
+        ];
+
+        if($this->position_id == 1){
+            $rules['course_id'] = 'required'; 
+
+        }
+
+        $data = $this->validate($rules);
 
         if ($this->borrowerId) {
             Borrower::whereId($this->borrowerId)->first()->update($data);

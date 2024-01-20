@@ -16,6 +16,7 @@
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
+                @if (auth()->user()->hasRole('admin'))
                 <div class="col-md-12" wire:ignore>
                     <div class="form-group local-forms">
                         <label>Borrower
@@ -31,6 +32,7 @@
                         </select>
                     </div>
                 </div>
+                @endif
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Tool</label>

@@ -14,4 +14,12 @@
   window.livewire.on('openBorrowerModal', () => {
     $('#borrowerModal').modal('show');
   });
+
+  window.livewire.on('closeBorrowerAccountModal', () => {
+    $('#borrowerAccountModal').modal('hide');
+  });
+
+  window.livewire.on('openBorrowerAccountModal', () => {
+    $('#borrowerAccountModal').modal('show');
+  });
 </script>

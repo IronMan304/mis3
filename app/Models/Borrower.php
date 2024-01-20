@@ -25,6 +25,7 @@ class Borrower extends Model
         'college_id',
         'course_id',
         'status_id',
+        'user_id', //for borrower user account
     ];
 
     public function sex()
@@ -56,5 +57,9 @@ class Borrower extends Model
     // {
     //     return $this->belongsTo(Status::class, 'status_id', 'id');
     // }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 
 }

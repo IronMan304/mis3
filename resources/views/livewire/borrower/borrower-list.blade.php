@@ -79,11 +79,17 @@
 											{{ $borrower->college->description}}
 										</td>
 										<td>
-											{{ $borrower->course->description}}
+											{{ $borrower->course->description ?? ''}}
 										</td>
 
 										<td class="text-center">
 											<div class="btn-group" role="group">
+												@if ($borrower->user_id == null)
+												<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createBorrowerAccount({{ $borrower->id }})" title="Add">
+
+													<i class="fa-solid fa-user-plus"></i>
+												</button>
+												@endif
 												<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editBorrower({{ $borrower->id }})" title="Edit">
 													<i class='fa fa-pen-to-square'></i>
 												</button>
@@ -105,6 +111,11 @@
 				<div wire.ignore.self class="modal fade" id="borrowerModal" tabindex="-1" role="dialog" aria-labelledby="borrowerModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 					<div class="modal-dialog modal-dialog-centered">
 						<livewire:borrower.borrower-form />
+					</div>
+				</div>
+				<div wire.ignore.self class="modal fade" id="borrowerAccountModal" tabindex="-1" role="dialog" aria-labelledby="borrowerAccountModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+					<div class="modal-dialog modal-dialog-centered">
+						<livewire:borrower.borrower-account-form />
 					</div>
 				</div>
 				@section('custom_script')

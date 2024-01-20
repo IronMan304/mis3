@@ -70,7 +70,7 @@
 									</td>
 
 									<td>
-										{{ $user->position }}
+										{{ $user->position->description ?? '' }}
 									</td>
 									<td>
 										{{ $user->email }}

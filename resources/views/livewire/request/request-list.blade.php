@@ -47,8 +47,8 @@
 									<td>Borrower</td>
 									<td>Category:Type</td>
 									<td>Tool</td>
-									{{--<th>Status</th>--}}
-									<th>Date Borrowed</th>
+									<th>Status</th>
+									<th>Date Requested</th>
 									<th>Date Returned</th>
 									<td>Action</td>
 								</tr>
@@ -89,6 +89,10 @@
 										@endif
 									</td>
 
+									<td>
+										{{ $request->status->description}}
+									</td>
+
 									<!-- <td>
 										@if ($request->tool_keys)
 										@foreach ($request->tool_keys as $toolKey)
@@ -104,7 +108,7 @@
 									</td> -->
 
 									<td>{{ $request->updated_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}<br>
-										({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
+										({{ $request->user->position->description ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
 									</td>
 
 									<td>
@@ -112,7 +116,7 @@
 										@foreach ($request->tool_keys as $toolKey)
 										@if($toolKey->created_at != $toolKey->updated_at)
 										{{ $toolKey->returned_at }}<br>
-										({{ $request->user->position ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
+										({{ $request->user->position->description ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
 										@if (!$loop->last)
 										<p>-------------------</p>
 										@endif
