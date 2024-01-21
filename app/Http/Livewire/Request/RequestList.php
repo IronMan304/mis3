@@ -14,16 +14,34 @@ class RequestList extends Component
     public $search = '';
     public $action = '';  //flash
     public $message = '';  //flash
+    public $isApproved = false;
 
     protected $listeners = [
         'refreshParentRequest' => '$refresh',
         'refreshParentReturn' => '$refresh',
+        'refreshParentApproval' => '$refresh',
         'deleteRequest',
         'editRequest',
         'deleteConfirmRequest',
         'cancelRequest' => 'handleCancelRequest', 
+        'approveBooking',
     ];
 
+    public function approveRequest($requestId)
+    {
+        $request = Request::find($requestId);
+
+        if ($request) {
+            if ($request->status_id != 2) {
+                $request->update(['status_id' => 10]); // Update the status to "Approved"
+                $action = 'edit';
+                $message = 'Request Approved';
+                $this->emit('flashAction', $action, $message);
+            }
+        }
+
+        // $this->resetPage();
+    }
     public function handleCancelRequest($requestId)
     {
         // Retrieve tool items associated with the request
@@ -66,12 +84,28 @@ class RequestList extends Component
         $this->emit('requestId', $this->requestId);
         $this->emit('openRequestModal');
     }
+
+    public function viewRequestTool($requestId)
+    {
+        //dd($requestId);
+        $this->requestId = $requestId;
+        $this->emit('requestId', $this->requestId);
+        $this->emit('openRequestToolViewModal');
+    }
     public function returnRequest($requestId)
     {
         //dd($requestId);
         $this->requestId = $requestId;
         $this->emit('returnId', $this->requestId);
         $this->emit('openReturnModal');
+    }
+
+    public function approvalRequest($requestId)
+    {
+        //dd($requestId);
+        $this->requestId = $requestId;
+        $this->emit('approvalId', $this->requestId);
+        $this->emit('openApprovalModal');
     }
     public function deleteRequest($requestId)
     {

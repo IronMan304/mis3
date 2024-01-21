@@ -22,13 +22,13 @@
                 });
             }
         });
-        
+
         Livewire.hook('message.processed', (message, component) => {
             // Reinitialize DataTable after Livewire update
             if ($.fn.DataTable.isDataTable('.datatable')) {
                 $('.datatable').DataTable().destroy();
             }
-            
+
             $('.datatable').DataTable({
                 searching: false
                 // Add other DataTable options here if needed

@@ -17,6 +17,7 @@ class RequestForm extends Component
     public $search = '';
     public $selectedTools = [];
 
+
     protected $listeners = [
         'requestId',
         'resetInputFields'
@@ -76,32 +77,48 @@ class RequestForm extends Component
 
 
         if ($this->requestId) {
-            $request = Request::findOrFail($this->requestId);
-            $request->update($data);
+            // $request = Request::findOrFail($this->requestId);
+            // $request->update($data);
 
-            $this->updateToolRequest($request);
-            // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
-            Tool::whereIn('id', $this->toolItems)->update(['status_id' => 2]);
-            $action = 'edit';
-            $message = 'Successfully Updated';
+            // $this->updateToolRequest($request);
+            // // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
+            // Tool::whereIn('id', $this->toolItems)->update(['status_id' => 2]);
+            // $action = 'edit';
+            // $message = 'Successfully Updated';
         } else {
+            
             // When creating a new tool request, set the 'user_id'
             $data['user_id'] = auth()->user()->id;
             if (auth()->user()->hasRole('admin')) {
-                $data['status_id'] = 10; // Approved
+                $data['status_id'] = 16; // "Reviewed" is the status of a requests table if admin makes the request
+                Tool::whereIn('id', $this->toolItems)->update(['status_id' => 17]); // "On hold" is the status of a tool if admin makes the request
+                $request = Request::create($data);
+                foreach ($this->toolItems as $toolId) {
+                    ToolRequest::create([
+                        'request_id' => $request->id,
+                        'tool_id' => $toolId,
+                        'status_id' => 10, // "Approved" is the status of a tool_requests if admin makes the request
+                    ]);
+                }
             } else {
-                $data['status_id'] = 11; // Pending
+                $data['status_id'] = 11; // Pending is the status of a requests if non admin makes the request
+                Tool::whereIn('id', $this->toolItems)->update(['status_id' => 14]); // "In request" is the status of a tool if non-admin makes the request
+
+                $request = Request::create($data);
+                foreach ($this->toolItems as $toolId) {
+                    ToolRequest::create([
+                        'request_id' => $request->id,
+                        'tool_id' => $toolId,
+                        'status_id' => 14, // "In request" is the status of a tool_requests if non-admin makes the request
+                    ]);
+                }
             }
 
-
             // Create the request
-            $request = Request::create($data);
-
-            // Update the tool status to 'Requested' (assuming 2 represents 'Requested')
-            Tool::whereIn('id', $this->toolItems)->update(['status_id' => 2]);
+            // $request = Request::create($data);
 
             // Create the tool request relationships
-            $this->createToolRequest($request);
+            // $this->createToolRequest($request);
 
             $action = 'store';
             $message = 'Successfully Created';
@@ -113,24 +130,6 @@ class RequestForm extends Component
         $this->emit('refreshParentRequest');
         $this->emit('refreshTable');
     }
-
-    public function cancelRequest()
-    {
-        // if ($this->requestId) {
-        //     // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
-        //     //Request::where('id', $this->requestId)->update(['status_id' => 8]);
-
-        //     // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
-        //     //Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
-
-        //     $action = 'cancel';
-        //     $message = 'Request Cancelled';
-
-        // Emit the event with necessary data
-        $this->emit('cancelRequest', $this->requestId, $this->toolItems);
-        // }
-    }
-
 
     public function render()
     {
@@ -149,35 +148,52 @@ class RequestForm extends Component
         ]);
     }
 
-    private function createToolRequest($request)
-    {
-        foreach ($this->toolItems as $toolId) {
-            ToolRequest::create([
-                'request_id' => $request->id,
-                'tool_id' => $toolId,
-                'status_id' => 6,
-            ]);
-        }
-    }
+    // public function cancelRequest()
+    // {
+    //     // if ($this->requestId) {
+    //     //     // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
+    //     //     //Request::where('id', $this->requestId)->update(['status_id' => 8]);
 
-    private function updateToolRequest($request)
-    {
-        // Get the previous tool IDs
-        $previousToolIds = $request->tool_keys->pluck('tool_id')->toArray();
+    //     //     // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
+    //     //     //Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
 
-        // Remove existing tool request relationships
-        $request->tool_keys()->delete();
+    //     //     $action = 'cancel';
+    //     //     $message = 'Request Cancelled';
 
-        // Create new tool request relationships
-        $this->createToolRequest($request);
+    //     // Emit the event with necessary data
+    //     $this->emit('cancelRequest', $this->requestId, $this->toolItems);
+    //     // }
+    // }
 
-        // Touch the Request model to update the updated_at timestamp
-        $request->touch();
+    // private function createToolRequest($request)
+    // {
+    //     foreach ($this->toolItems as $toolId) {
+    //         ToolRequest::create([
+    //             'request_id' => $request->id,
+    //             'tool_id' => $toolId,
+    //             'status_id' => 14, // In Request means that tool is currently in request
+    //         ]);
+    //     }
+    // }
 
-        // Update the status_id of previously chosen tools back to 1
-        $toolsToReset = array_diff($previousToolIds, $this->toolItems);
-        Tool::whereIn('id', $toolsToReset)->update(['status_id' => 1]);
-    }
+    // private function updateToolRequest($request)
+    // {
+    //     // Get the previous tool IDs
+    //     $previousToolIds = $request->tool_keys->pluck('tool_id')->toArray();
+
+    //     // Remove existing tool request relationships
+    //     $request->tool_keys()->delete();
+
+    //     // Create new tool request relationships
+    //     $this->createToolRequest($request);
+
+    //     // Touch the Request model to update the updated_at timestamp
+    //     $request->touch();
+
+    //     // Update the status_id of previously chosen tools back to 1
+    //     $toolsToReset = array_diff($previousToolIds, $this->toolItems);
+    //     Tool::whereIn('id', $toolsToReset)->update(['status_id' => 1]);
+    // }
 
 
     public function addTool()

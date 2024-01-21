@@ -59,6 +59,14 @@
                             <option value="{{ $tool->id }}" disabled>
                                 ({{ $tool->brand }}) In Repair
                             </option>
+                            @elseif ($tool->status_id == 14)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Request
+                            </option>
+                            @elseif ($tool->status_id == 17)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) On Hold
+                            </option>
                             @endif
                             @endforeach
                         </select>
