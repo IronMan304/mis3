@@ -2,10 +2,12 @@
 	<div class="sidebar-inner slimscroll">
 		<div class="sidebar-menu" id="sidebar-menu">
 			<ul>
+				@if(auth()->user()->hasRole('admin'))
 				<li>
 					<a href="/dashboard"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
 						<span>Dashboard</span></a>
 				</li>
+				@endif
 				<li>
 					<a href="/requests"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
 						<span>Request</span></a>
@@ -15,6 +17,7 @@
 						<span>Repair</span></a>
 				</li> -->
 
+				@if(auth()->user()->hasRole('admin'))
 				<li class="submenu">
 					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
 						<span>User <br> Management</span> <span class="menu-arrow"></span>
@@ -41,9 +44,9 @@
 					</ul>
 				</li>
 
-		
 
-				
+
+
 
 				<li class="submenu">
 					<a href="#"><span class="menu-side"><i class="fa-solid fa-list"></i></span>
@@ -85,6 +88,7 @@
 						<li class="mb-5"><a href="/permission">Permission</a></li>
 					</ul>
 				</li>
+				@endif
 
 			</ul>
 		</div>

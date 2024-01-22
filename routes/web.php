@@ -48,7 +48,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -71,11 +71,14 @@ Route::middleware('auth')->group(function () {
     Route::get('services', ServiceList::class);
     Route::get('positions', PositionList::class);
     Route::get('operators', OperatorList::class);
-    
+
     Route::get('role', RoleList::class);
     Route::get('permission', PermissionList::class);
 
     Route::get('trials', TrialList::class);
 });
 
-require __DIR__.'/auth.php';
+Route::group(['middleware' => ['role:admin|requester']], function () {
+    Route::get('requests', RequestList::class);
+});
+require __DIR__ . '/auth.php';

@@ -69,12 +69,26 @@
 	</ul>
 
 
-	<div class="dropdown mobile-user-menu float-end">
+	<!-- <div class="dropdown mobile-user-menu float-end">
 		<span>
 			<a class="btn btn-sm btn-primary" href="{{ route('logout') }}"
 				onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 				<i class="fa-solid fa-right-from-bracket"></i>
 			</a>
 		</span>
+	</div> -->
+	<div class="dropdown mobile-user-menu float-end">
+		<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i
+				class="fa-solid fa-ellipsis-vertical"></i></a>
+		<div class="dropdown-menu dropdown-menu-end">
+			<!-- <a class="dropdown-item" href="/profile">My Profile</a> -->
+			<a class="dropdown-item" href="{{ route('logout') }}"
+				onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+				Logout
+				<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+					@csrf
+				</form>
+			</a>
+		</div>
 	</div>
 </div>
