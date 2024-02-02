@@ -16,7 +16,7 @@
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
-                @if (auth()->user()->hasRole('admin'))
+                @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff'))
                 <div class="col-md-12" wire:ignore>
                     <div class="form-group local-forms">
                         <label>Borrower
@@ -31,7 +31,6 @@
                         </select>
                     </div>
                 </div>
-                @endif
 
                 <div class="col-md-12">
                     <div class="form-group local-forms">
@@ -173,6 +172,170 @@
                         </select>
                     </div>
                 </div>
+                @endif
+
+
+                @if (auth()->user()->hasRole('requester'))
+                {{--<div class="col-md-12" wire:ignore>
+                    <div class="form-group local-forms">
+                        <label>Borrower
+                        </label>
+                        <select class="form-control select" disabled>
+
+
+                            <option value="{{ $borrower_id }}">
+                                {{$first_name}}
+                            </option>
+
+                        </select>
+                    </div>
+                </div>--}}
+
+                <div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>Tool</label>
+                        <select class="form-control select" id="toolItems" multiple wire:model="toolItems">
+                            <option value="" selected>Select a Tool</option>s
+
+                            @if(auth()->user()->position_id == 1)
+                            @foreach ($tools as $tool)
+                            @php
+                            $matchingPosition = false;
+                            foreach ($tool->position_keys as $positionKey) {
+                            if ($positionKey->position_id == auth()->user()->position_id) {
+                            $matchingPosition = true;
+                            break;
+                            }
+                            }
+                            @endphp
+                            @if ($tool->status_id == 1 && $matchingPosition)
+                            <option value="{{ $tool->id }}">
+                                ({{ $tool->brand }})
+                            </option>
+                            @elseif ($tool->status_id == 2 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Use
+                            </option>
+                            @elseif ($tool->status_id == 3 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) Lost
+                            </option>
+                            @elseif ($tool->status_id == 4 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) Damaged
+                            </option>
+                            @elseif ($tool->status_id == 5 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Repair
+                            </option>
+                            @elseif ($tool->status_id == 14 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Request
+                            </option>
+                            @elseif ($tool->status_id == 17 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) On Hold
+                            </option>
+
+                            @endif
+                            @endforeach
+                            @endif
+
+                            @if($borrower_id && $borrowers->find($borrower_id)->position->description == 'Faculty')
+                            @foreach ($tools as $tool)
+                            @php
+                            $matchingPosition = false;
+                            foreach ($tool->position_keys as $positionKey) {
+                            if ($positionKey->position_id == 2) {
+                            $matchingPosition = true;
+                            break;
+                            }
+                            }
+                            @endphp
+                            @if ($tool->status_id == 1 && $matchingPosition)
+                            <option value="{{ $tool->id }}">
+                                ({{ $tool->brand }})
+                            </option>
+                            @elseif ($tool->status_id == 2 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Use
+                            </option>
+                            @elseif ($tool->status_id == 3 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) Lost
+                            </option>
+                            @elseif ($tool->status_id == 4 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) Damaged
+                            </option>
+                            @elseif ($tool->status_id == 5 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Repair
+                            </option>
+                            @elseif ($tool->status_id == 14 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Request
+                            </option>
+                            @elseif ($tool->status_id == 17 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) On Hold
+                            </option>
+
+                            @endif
+                            @endforeach
+                            @endif
+
+                            @if($borrower_id && $borrowers->find($borrower_id)->position->description == 'Guest')
+                            @foreach ($tools as $tool)
+                            @php
+                            $matchingPosition = false;
+                            foreach ($tool->position_keys as $positionKey) {
+                            if ($positionKey->position_id == 8) {
+                            $matchingPosition = true;
+                            break;
+                            }
+                            }
+                            @endphp
+                            @if ($tool->status_id == 1 && $matchingPosition)
+                            <option value="{{ $tool->id }}">
+                                ({{ $tool->brand }})
+                            </option>
+                            @elseif ($tool->status_id == 2 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Use
+                            </option>
+                            @elseif ($tool->status_id == 3 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) Lost
+                            </option>
+                            @elseif ($tool->status_id == 4 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) Damaged
+                            </option>
+                            @elseif ($tool->status_id == 5 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Repair
+                            </option>
+                            @elseif ($tool->status_id == 14 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) In Request
+                            </option>
+                            @elseif ($tool->status_id == 17 && $matchingPosition)
+                            <option value="{{ $tool->id }}" disabled>
+                                ({{ $tool->brand }}) On Hold
+                            </option>
+
+                            @endif
+                            @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                @endif
+
+
+
+
 
             </div>
         </div>

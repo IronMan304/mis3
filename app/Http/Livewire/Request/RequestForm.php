@@ -12,14 +12,20 @@ use App\Models\ToolPosition;
 
 class RequestForm extends Component
 {
-    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id;
+    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id, $first_name;
     public $toolItems = [];
     public $action = '';  //flash
     public $message = '';  //flash
     public $search = '';
     public $selectedTools = [];
 
-
+    public function mount()
+    {
+        if (auth()->user()->hasRole('requester')) {
+            $this->borrower_id = Borrower::where('user_id', auth()->user()->id)->value('id');
+            $this->first_name = Borrower::where('user_id', auth()->user()->id)->value('first_name');
+        }
+    }
     protected $listeners = [
         'requestId',
         'resetInputFields'
@@ -48,6 +54,8 @@ class RequestForm extends Component
 
         // Populate selectedTools with the associated tools
         $this->selectedTools = $request->tool_keys->pluck('tools')->flatten();
+
+        //$this->borrower_id1 = Borrower::where('user_id', auth()->user()->id)->value('id');
        
     }
 
@@ -146,7 +154,7 @@ class RequestForm extends Component
         if (auth()->user()->hasRole('admin')) {
             $borrowers = Borrower::all();
         } else {
-           
+            $borrowers = Borrower::all();
         }
 
        //dd($selectedBorrower);

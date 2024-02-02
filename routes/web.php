@@ -78,7 +78,7 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::get('trials', TrialList::class);
 });
 
-Route::group(['middleware' => ['role:admin|requester']], function () {
+Route::group(['middleware' => ['role:admin|requester|staff']], function () {
     Route::get('requests', RequestList::class);
 });
 require __DIR__ . '/auth.php';

@@ -122,7 +122,7 @@
 										@foreach ($request->tool_keys as $toolKey)
 										@if($toolKey->created_at != $toolKey->updated_at)
 										{{ $toolKey->returned_at }}<br>
-										({{ $request->user->position->description ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
+										({{ $toolKey->user->position->description ?? '' }}) {{ $toolKey->user->first_name ?? '' }} {{ $toolKey->user->last_name ?? '' }}
 										@if (!$loop->last)
 										<p>-------------------</p>
 										@endif
