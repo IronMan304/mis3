@@ -6,6 +6,7 @@ use App\Models\Tool;
 use App\Models\Type;
 use App\Models\Source;
 use Livewire\Component;
+use App\Models\Borrower;
 use App\Models\Category;
 use App\Models\Position;
 use App\Models\ToolPosition;
@@ -124,6 +125,8 @@ class ToolForm extends Component
         $types = Type::where('category_id', $this->category_id)->get();
         $positions = Position::all();
         $tools = Tool::all();
+         // Fetch the user_id from the Borrower table using the authenticated user's id
+        $borrower = Borrower::where('user_id', auth()->user()->id)->value('id');
 
         return view('livewire.tool.tool-form', [
             'categories' => $categories,
@@ -131,6 +134,7 @@ class ToolForm extends Component
             'types' => $types,
             'positions' => $positions,
             'tools' => $tools,
+            'borrower' => $borrower,
         ]);
     }
 }

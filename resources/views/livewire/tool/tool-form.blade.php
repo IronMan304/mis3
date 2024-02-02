@@ -84,7 +84,7 @@
                         <input class="form-control" type="text" wire:model="property_number" placeholder="ABC123456789XYZ" />
                     </div>
                 </div>
-
+       
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Applicability

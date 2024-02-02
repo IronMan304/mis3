@@ -3,14 +3,16 @@
 namespace App\Http\Livewire\Request;
 
 use App\Models\Tool;
+use App\Models\User;
 use App\Models\Request;
-use App\Models\ToolRequest;
 use Livewire\Component;
 use App\Models\Borrower;
+use App\Models\ToolRequest;
+use App\Models\ToolPosition;
 
 class RequestForm extends Component
 {
-    public $requestId, $tool_id, $user_id, $borrower_id, $status_id;
+    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id;
     public $toolItems = [];
     public $action = '';  //flash
     public $message = '';  //flash
@@ -46,8 +48,7 @@ class RequestForm extends Component
 
         // Populate selectedTools with the associated tools
         $this->selectedTools = $request->tool_keys->pluck('tools')->flatten();
-
-        // You might need to adjust other fields as per your application's requirements
+       
     }
 
 
@@ -141,10 +142,18 @@ class RequestForm extends Component
         }
         //$tools = Tool::where('status_id', 1)->get();
         $tools = Tool::all();
-        $borrowers = Borrower::all();
+       
+        if (auth()->user()->hasRole('admin')) {
+            $borrowers = Borrower::all();
+        } else {
+           
+        }
+
+       //dd($selectedBorrower);
+
         return view('livewire.request.request-form', [
             'tools' => $tools,
-            'borrowers' => $borrowers
+            'borrowers' => $borrowers,
         ]);
     }
 

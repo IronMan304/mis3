@@ -11,7 +11,7 @@ use Livewire\Component;
 
 class BorrowerAccountForm extends Component
 {
-    public $user_id, $borrowerId, $last_name, $first_name, $middle_name, $email, $password, $position;
+    public $user_id, $borrowerId, $last_name, $first_name, $middle_name, $email, $password, $position_id, $position;
     public $action = '';  //flash
     public $message = '';  //flash
     public $showButton = true;
@@ -52,6 +52,8 @@ class BorrowerAccountForm extends Component
                 'email' => ['required', 'email', Rule::unique('users', 'email')],
                 'password' => ['required', 'min:6']
             ]);
+
+            $borrower = Borrower::find($this->borrowerId);
     
            // Concatenate and convert to lowercase
             $user = User::create([
@@ -63,16 +65,19 @@ class BorrowerAccountForm extends Component
                 //'position' => $this->position,
                 'email' => $this->email,
                 'password' => Hash::make($this->password),
+                'position_id' => $borrower->position_id,
             ]);
     
             // Assign the "requester" role to the user
             $user->assignRole('requester');
     
-            $borrower = Borrower::find($this->borrowerId);
+    
     
             // Update the user_id field in the borrower model
             $borrower->user_id = $user->id; // Set the user_id to the ID of the newly created user
             $borrower->save(); // Save the changes to the borrower record
+
+          
     
             $action = 'store';
             $message = 'Account Successfully Created';

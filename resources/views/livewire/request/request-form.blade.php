@@ -33,11 +33,18 @@
                     </div>
                 </div>
                 @endif
+
+            
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Tool</label>
                         <select class="form-control select" id="toolItems" multiple wire:model="toolItems">
-                            <option value="" selected>Select a Tool</option>
+                            <option value="" selected>Select a Tool</option>s
+  
+
+                            @if($borrower_id && $borrowers->find($borrower_id)->position_id == 1)
+
+
                             @foreach ($tools as $tool)
                             @if ($tool->status_id == 1)
                             <option value="{{ $tool->id }}">
@@ -69,9 +76,13 @@
                             </option>
                             @endif
                             @endforeach
+                            @endif
+           
+                       
                         </select>
                     </div>
                 </div>
+              
 
 
 
