@@ -85,10 +85,67 @@
                     </div>
                 </div>
 
+                <div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>Applicability
+                        </label>
+                        <select class="form-control select" wire:model="positionItems" multiple id="positionItems">
+                            <option value=""  selected>Assign who can borrow</option>
+                            @foreach ($positions as $position)
+                            <option value="{{ $position->id }}">
+                                {{ $position->description }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                {{--<div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>Applicability
+                        </label>
+                        <select class="form-control select" wire:model="position_id">
+                            <option value=""  selected>Select who can borrow</option>
+                       
+                            @foreach ($positions as $position)
+                            @if ($position->id != 3)
+                            <option value="{{ $position->id }}">
+                                {{$position->description}}
+                            </option>
+                            @endif
+                            @endforeach
+                      
+                        </select>
+                    </div>
+                </div>--}}
+
             </div>
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('livewire:load', function() {
+
+            // positionItems Select2
+            $('#positionItems').select2({
+                dropdownParent: $('#toolModal')
+            });
+
+            $('#positionItems').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('positionItems', data);
+            });
+        });
+
+        document.addEventListener('livewire:update', function() {
+            // Refresh Select2 on Livewire update
+            $('#positionItems').select2({
+                dropdownParent: $('#toolModal')
+            });
+        });
+    </script>
 </div>

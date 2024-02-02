@@ -94,7 +94,7 @@ class RequestForm extends Component
                 Tool::whereIn('id', $this->toolItems)->update(['status_id' => 17]); // "On hold" is the status of a tool if admin makes the request
                 $request = Request::create($data);
                 foreach ($this->toolItems as $toolId) {
-                    ToolRequest::create([
+                    ToolRequest::create([ //request_tools
                         'request_id' => $request->id,
                         'tool_id' => $toolId,
                         'status_id' => 10, // "Approved" is the status of a tool_requests if admin makes the request

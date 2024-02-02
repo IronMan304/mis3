@@ -16,7 +16,7 @@ class Tool extends Model
 
     protected $table = 'tools';
     protected $primaryKey = 'id';
-    protected $fillable = ['user_id', 'category_id', 'source_id', 'type_id', 'property_number', 'status_id', 'barcode', 'brand'];
+    protected $fillable = ['user_id', 'category_id', 'source_id', 'type_id', 'property_number', 'status_id', 'barcode', 'brand', 'position_id'];
 
     public function category()
     {
@@ -40,5 +40,14 @@ class Tool extends Model
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id', 'id');
+    }
+
+    // public function position()
+    // {
+    //     return $this->belongsTo(Position::class, 'position_id', 'id');
+    // }
+    public function position_keys()
+    {
+        return $this->hasMany(ToolPosition::class);
     }
 }

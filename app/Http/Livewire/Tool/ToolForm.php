@@ -7,14 +7,17 @@ use App\Models\Type;
 use App\Models\Source;
 use Livewire\Component;
 use App\Models\Category;
+use App\Models\Position;
+use App\Models\ToolPosition;
 
 class ToolForm extends Component
 {
-    public $toolId, $user_id, $category_id, $source_id, $type_id, $status_id, $property_number, $barcode, $brand;
+    public $toolId, $user_id, $category_id, $source_id, $type_id, $status_id, $property_number, $barcode, $brand, $position_id;
     public $action = '';  //flash
     public $message = '';  //flash
     public $selectedCategory;
     public $preserveDataTableState = false;
+    public $positionItems = [];
 
     protected $listeners = [
         'toolId',
@@ -40,6 +43,9 @@ class ToolForm extends Component
         $this->property_number = $tool->property_number;
         $this->barcode = $tool->barcode;
         $this->brand = $tool->brand;
+        //$this->position_id = $tool->position;
+        // Populate toolItems with the IDs of associated tools
+        $this->positionItems = $tool->position_keys->pluck('position_id')->toArray();
     }
     public function preserveDataTableState()
     {
@@ -60,13 +66,29 @@ class ToolForm extends Component
             'brand' => 'required',
             'property_number' => 'required',
             'barcode' => 'nullable',
+            'positionItems' => 'nullable|array',
+            //'position_id' => 'nullable',
         ]);
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
         $data['status_id'] = 1;
 
         if ($this->toolId) {
-            Tool::whereId($this->toolId)->first()->update($data);
+            $tool = Tool::find($this->toolId);
+            if ($tool) {
+                // Update the tool with the provided data
+                $tool->update($data);
+
+                // Delete previous ToolPosition entries for the tool
+                $tool->position_keys()->delete();
+
+                //Iterate through each position item and update or create ToolPosition
+                foreach ($this->positionItems as $positionId) {
+                    ToolPosition::updateOrCreate(
+                        ['tool_id' => $tool->id, 'position_id' => $positionId],
+                    );
+                }
+            }
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
@@ -75,7 +97,14 @@ class ToolForm extends Component
             $data['user_id'] = auth()->user()->id;
             $data['status_id'];
 
-            Tool::create($data);
+            $tool = Tool::create($data);
+            foreach ($this->positionItems as $positionId) {
+                ToolPosition::create([
+                    'tool_id' => $tool->id,
+                    'position_id' => $positionId,
+                ]);
+            }
+
             $action = 'store';
             $message = 'Successfully Created';
         }
@@ -86,7 +115,6 @@ class ToolForm extends Component
         $this->emit('refreshTable');
         $this->emit('closeToolModal');
         $this->emit('refreshParentTool');
-      
     }
 
     public function render()
@@ -94,11 +122,15 @@ class ToolForm extends Component
         $categories = Category::with('types')->get();
         $sources = Source::all();
         $types = Type::where('category_id', $this->category_id)->get();
+        $positions = Position::all();
+        $tools = Tool::all();
 
         return view('livewire.tool.tool-form', [
             'categories' => $categories,
             'sources' => $sources,
             'types' => $types,
+            'positions' => $positions,
+            'tools' => $tools,
         ]);
     }
 }
