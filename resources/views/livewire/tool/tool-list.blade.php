@@ -135,7 +135,7 @@
 	{{-- Modal --}}
 
 	<div wire.ignore.self class="modal fade" id="toolModal" tabindex="-1" role="dialog" aria-labelledby="toolModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<livewire:tool.tool-form />
 		</div>
 	</div>

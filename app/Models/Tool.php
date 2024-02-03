@@ -50,4 +50,8 @@ class Tool extends Model
     {
         return $this->hasMany(ToolPosition::class);
     }
+    public function security_keys()
+    {
+        return $this->hasMany(ToolSecurity::class);
+    }
 }

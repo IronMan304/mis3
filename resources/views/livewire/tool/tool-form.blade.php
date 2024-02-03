@@ -16,7 +16,7 @@
         <div class="modal-body">
             <div class="row">
 
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Category
                             <span class="login-danger">*</span>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Type
                             <span class="login-danger">*</span>
@@ -49,7 +49,7 @@
                 </div>
 
 
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Source
                             <span class="login-danger">*</span>
@@ -65,7 +65,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>
                             Brand
@@ -75,7 +75,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>
                             Property Number
@@ -94,6 +94,21 @@
                             @foreach ($positions as $position)
                             <option value="{{ $position->id }}">
                                 {{ $position->description }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>Security
+                        </label>
+                        <select class="form-control select" wire:model="securityItems" multiple id="securityItems">
+                            <option value=""  selected>Assign who will need to sign</option>
+                            @foreach ($securities as $security)
+                            <option value="{{ $security->id }}">
+                                {{ $security->description }}
                             </option>
                             @endforeach
                         </select>
@@ -139,11 +154,22 @@
                 console.log(data);
                 @this.set('positionItems', data);
             });
+
+              // securityItems Select2
+              $('#securityItems').select2({
+                dropdownParent: $('#toolModal')
+            });
+
+            $('#securityItems').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('securityItems', data);
+            });
         });
 
         document.addEventListener('livewire:update', function() {
             // Refresh Select2 on Livewire update
-            $('#positionItems').select2({
+            $('#positionItems, #securityItems').select2({
                 dropdownParent: $('#toolModal')
             });
         });

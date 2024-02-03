@@ -10,6 +10,7 @@ use App\Models\Borrower;
 use App\Models\Category;
 use App\Models\Position;
 use App\Models\ToolPosition;
+use App\Models\ToolSecurity;
 
 class ToolForm extends Component
 {
@@ -19,6 +20,7 @@ class ToolForm extends Component
     public $selectedCategory;
     public $preserveDataTableState = false;
     public $positionItems = [];
+    public $securityItems = [];
 
     protected $listeners = [
         'toolId',
@@ -47,6 +49,7 @@ class ToolForm extends Component
         //$this->position_id = $tool->position;
         // Populate toolItems with the IDs of associated tools
         $this->positionItems = $tool->position_keys->pluck('position_id')->toArray();
+        $this->securityItems = $tool->security_keys->pluck('security_id')->toArray();
     }
     public function preserveDataTableState()
     {
@@ -68,6 +71,7 @@ class ToolForm extends Component
             'property_number' => 'required',
             'barcode' => 'nullable',
             'positionItems' => 'nullable|array',
+            'securityItems' => 'nullable|array',
             //'position_id' => 'nullable',
         ]);
         // Include the 'user_id' in the data array
@@ -82,11 +86,19 @@ class ToolForm extends Component
 
                 // Delete previous ToolPosition entries for the tool
                 $tool->position_keys()->delete();
+                $tool->security_keys()->delete();
 
                 //Iterate through each position item and update or create ToolPosition
                 foreach ($this->positionItems as $positionId) {
                     ToolPosition::updateOrCreate(
                         ['tool_id' => $tool->id, 'position_id' => $positionId],
+                    );
+                }
+
+                //Iterate through each position item and update or create ToolPosition
+                foreach ($this->securityItems as $securityId) {
+                    ToolSecurity::updateOrCreate(
+                        ['tool_id' => $tool->id, 'security_id' => $securityId],
                     );
                 }
             }
@@ -103,6 +115,12 @@ class ToolForm extends Component
                 ToolPosition::create([
                     'tool_id' => $tool->id,
                     'position_id' => $positionId,
+                ]);
+            }
+            foreach ($this->securityItems as $securityId) {
+                ToolSecurity::create([
+                    'tool_id' => $tool->id,
+                    'security_id' => $securityId,
                 ]);
             }
 
@@ -124,6 +142,7 @@ class ToolForm extends Component
         $sources = Source::all();
         $types = Type::where('category_id', $this->category_id)->get();
         $positions = Position::all();
+        $securities = Position::all();
         $tools = Tool::all();
          // Fetch the user_id from the Borrower table using the authenticated user's id
         $borrower = Borrower::where('user_id', auth()->user()->id)->value('id');
@@ -135,6 +154,7 @@ class ToolForm extends Component
             'positions' => $positions,
             'tools' => $tools,
             'borrower' => $borrower,
+            'securities' => $securities,
         ]);
     }
 }
