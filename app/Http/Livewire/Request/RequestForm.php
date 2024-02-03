@@ -24,6 +24,7 @@ class RequestForm extends Component
         if (auth()->user()->hasRole('requester')) {
             $this->borrower_id = Borrower::where('user_id', auth()->user()->id)->value('id');
             $this->first_name = Borrower::where('user_id', auth()->user()->id)->value('first_name');
+            $this->position_id = Borrower::where('user_id', auth()->user()->id)->value('position_id');
         }
     }
     protected $listeners = [

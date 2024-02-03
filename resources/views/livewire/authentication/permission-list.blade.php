@@ -34,7 +34,7 @@
                                 <div class="top-nav-search table-search-blk">
                                     <form>
                                         <input type="text" class="form-control" placeholder="Search here"
-                                            wire:model.debounce.500ms="search" name="search">
+                                            wire:model.debounce.500ms="search">
                                         <a class="btn"><img src="assets/img/icons/search-normal.svg" alt></a>
                                     </form>
                                 </div>

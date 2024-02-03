@@ -176,6 +176,7 @@
 
 
                 @if (auth()->user()->hasRole('requester'))
+        
                 {{--<div class="col-md-12" wire:ignore>
                     <div class="form-group local-forms">
                         <label>Borrower
@@ -331,11 +332,8 @@
                         </select>
                     </div>
                 </div>
+        
                 @endif
-
-
-
-
 
             </div>
         </div>
@@ -367,11 +365,23 @@
                 console.log(data);
                 @this.set('toolItems', data);
             });
+
+               // ToolItemsFaculty Select2
+               $('#toolItemsFaculty').select2({
+                dropdownParent: $('#modal-content')
+            });
+
+            $('#toolItemsFaculty').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('toolItemsFaculty', data);
+            });
         });
 
+         
         document.addEventListener('livewire:update', function() {
             // Refresh Select2 on Livewire update
-            $('#borrower_id, #toolItems').select2({
+            $('#borrower_id, #toolItems, #toolItemsFaculty').select2({
                 dropdownParent: $('#modal-content')
             });
         });

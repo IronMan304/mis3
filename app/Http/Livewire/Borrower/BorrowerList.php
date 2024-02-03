@@ -75,7 +75,7 @@ class BorrowerList extends Component
         if (empty($this->search)) {
             $borrowers  = Borrower::paginate($this->perPage);
         } else {
-            $borrowers  = Borrower::where('first_name', 'LIKE', '%' . $this->search . '%')->get();
+            $borrowers  = Borrower::where('first_name', 'LIKE', '%' . $this->search . '%')->paginate($this->perPage);
         }
 
         // $borrower = Borrower::with('sex')->get();

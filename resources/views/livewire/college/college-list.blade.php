@@ -19,7 +19,7 @@
 					<div class="page-table-header mb-2">
 						<div class="row align-items-center">
 							<div class="col">
-                                <div class="doctor-table-blk">
+								<div class="doctor-table-blk">
 									<h3>College List</h3>
 									<div class="doctor-search-blk">
 										<div class="add-group">
@@ -32,8 +32,7 @@
 							<div class="col-auto text-end float-end ms-auto download-grp">
 								<div class="top-nav-search table-search-blk">
 									<form>
-										<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search"
-											name="search">
+										<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
 										<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
 									</form>
 								</div>
@@ -52,27 +51,26 @@
 							</thead>
 							<tbody>
 								@foreach ($colleges as $college)
-									<tr>
-										<td>
-											{{ $college->code}}
-										</td>
-										<td>
-											{{ $college->description }}
-										</td>
+								<tr>
+									<td>
+										{{ $college->code}}
+									</td>
+									<td>
+										{{ $college->description }}
+									</td>
 
-										<td class="text-center">
-											<div class="btn-group" role="group">
-												<button type="button" class="btn btn-primary btn-sm mx-1"
-													wire:click="editCollege({{ $college->id }})" title="Edit">
-													<i class='fa fa-pen-to-square'></i>
-												</button>
-												<a class="btn btn-danger btn-sm mx-1" wire:click="deleteCollege({{ $college->id }})" title="Delete">
-													<i class="fa fa-trash"></i>
-												</a>
-											</div>
-										</td>
+									<td class="text-center">
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editCollege({{ $college->id }})" title="Edit">
+												<i class='fa fa-pen-to-square'></i>
+											</button>
+											<a class="btn btn-danger btn-sm mx-1" wire:click="deleteCollege({{ $college->id }})" title="Delete">
+												<i class="fa fa-trash"></i>
+											</a>
+										</div>
+									</td>
 
-									</tr>
+								</tr>
 								@endforeach
 							</tbody>
 						</table>
@@ -84,12 +82,11 @@
 </div>
 {{-- Modal --}}
 
-<div wire.ignore.self class="modal fade" id="collegeModal" tabindex="-1" role="dialog"
-	aria-labelledby="collegeModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div wire.ignore.self class="modal fade" id="collegeModal" tabindex="-1" role="dialog" aria-labelledby="collegeModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-dialog-centered">
 		<livewire:college.college-form />
 	</div>
 </div>
 @section('custom_script')
-	@include('layouts.scripts.college-scripts')
+@include('layouts.scripts.college-scripts')
 @endsection

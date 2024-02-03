@@ -47,9 +47,9 @@
 					<h5>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h5>
 					<span class="text-capitalize">{{ auth()->user()->roles[0]->name }}</span>
 				</div>
-				<span class="user-img">
+				<!-- <span class="user-img">
 					<img src="{{ asset('assets/img/user-06.jpg') }}" alt="Admin">
-				</span>
+				</span> -->
 			</a>
 			<div class="dropdown-menu">
 				<a class="dropdown-item" href="{{ route('logout') }}"
