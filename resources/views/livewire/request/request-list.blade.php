@@ -148,10 +148,17 @@
 											</button>
 											@endif--}}
 
-											@if($request->status_id != 16)
+											@if(auth()->user()->hasRole('staff') || auth()->user()->hasRole('admin'))
+											@if($request->status_id == 11)
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
 												<i class="fa-solid fa-arrow-right-arrow-left"></i>
 											</button>
+											
+											@else
+											<button disabled type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
+												<i class="fa-solid fa-arrow-right-arrow-left"></i>
+											</button>
+											@endif
 											@endif
 
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="View Tool">

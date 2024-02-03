@@ -99,7 +99,7 @@ class RequestForm extends Component
             
             // When creating a new tool request, set the 'user_id'
             $data['user_id'] = auth()->user()->id;
-            if (auth()->user()->hasRole('admin')) {
+            if (auth()->user()->hasRole('head of office')) {
                 $data['status_id'] = 16; // "Reviewed" is the status of a requests table if admin makes the request
                 Tool::whereIn('id', $this->toolItems)->update(['status_id' => 17]); // "On hold" is the status of a tool if admin makes the request
                 $request = Request::create($data);

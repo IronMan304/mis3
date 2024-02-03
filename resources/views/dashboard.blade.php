@@ -1,5 +1,5 @@
 
-@if(auth()->user()->hasRole('admin'))
+@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))
 <x-app-layout>
 
     <div class="content">

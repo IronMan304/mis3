@@ -98,7 +98,7 @@ class ApprovalForm extends Component
 
             foreach ($unapprovedTools as $tool) {
                 $tool_requests = ToolRequest::where('request_id', $this->approvalId)->where('tool_id', $tool->id)->where('status_id', 14)->get();
-            
+
                 foreach ($tool_requests as $tool_request) {
                     if ($this->selectedConditionStatus == 10) {
                         // If status is approved and tool is not in approval_toolItems, set tool in the inventory to "In stock"
@@ -111,35 +111,30 @@ class ApprovalForm extends Component
                     }
                 }
             }
-            
 
+            // Check if all $statusId values were 15, then set the status of the request to rejected (16)
+            $allRejected = true;
 
-            // if ($this->selectedConditionStatus == 10) {
+            foreach ($this->approval_toolItems as $toolId) {
+                $toolRequest = ToolRequest::where('request_id', $this->approvalId)
+                    ->where('tool_id', $toolId)
+                    ->first();
 
-            //     $selectedTools = $this->approval_toolItems;
+                if ($toolRequest->approval_at == null && $toolRequest->status_id != 15) {
+                    $allRejected = false;
+                    break;
+                }
+            }
 
-            //     $unselectedTools = Tool::whereNotIn('id', $selectedTools)->get();
+            if ($allRejected) {
+                $return = Request::find($this->approvalId);
+                $return->update(['status_id' => 15]); // rejected
+            } else {
+                // Set the status_id for the Request model to 16
+                $return = Request::find($this->approvalId);
+                $return->update(['status_id' => 16]); // reviewed
+            }
 
-            //     foreach ($unselectedTools as $tool) {
-            //         $tool->status_id = 1; //In stock after rejected
-            //         $tool->save();
-            //     }
-            // }
-
-            // foreach ($this->approval_toolItems as $toolId) {
-            //     $tool = Tool::find($toolId);
-
-            //     if ($tool->status_id == 10) { //if approved
-            //         $tool->update(['status_id' => 2]);
-            //     } 
-            //     else {
-            //         $tool->update(['status_id' => 1]);
-            //     }
-            // }
-
-            // Set the status_id for the Request model to 16
-            $return = Request::find($this->approvalId);
-            $return->update(['status_id' => 16]); // reviewed
 
             $action = 'edit';
             $message = 'Successfully Returned';

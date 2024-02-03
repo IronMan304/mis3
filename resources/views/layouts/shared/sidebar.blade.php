@@ -2,7 +2,9 @@
 	<div class="sidebar-inner slimscroll">
 		<div class="sidebar-menu" id="sidebar-menu">
 			<ul>
-				@if(auth()->user()->hasRole('admin'))
+
+			
+				@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))
 				<li>
 					<a href="/dashboard"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
 						<span>Dashboard</span></a>
@@ -25,15 +27,16 @@
 					</ul>
 				</li>
 
-				@if(auth()->user()->hasRole('admin'))
+
 				<li class="submenu">
 					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
 						<span>User <br> Management</span> <span class="menu-arrow"></span>
 					</a>
 
 					<ul style="display: none;">
-
+						@if(auth()->user()->hasRole('admin'))
 						<li><a href="/users">User</a></li>
+						@endif
 						<li><a href="/borrowers">Borrower</a></li>
 						<li><a href="/operators">Operator</a></li>
 					</ul>
@@ -67,6 +70,7 @@
 					</ul>
 				</li>
 
+				@if(auth()->user()->hasRole('admin'))
 				<li class="menu-title">Setup</li>
 
 				<li class="submenu">

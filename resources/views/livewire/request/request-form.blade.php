@@ -51,38 +51,38 @@
                             @endphp
                             @if ($tool->status_id == 1 && $matchingPosition)
                             <option value="{{ $tool->id }}">
-                                ({{ $tool->brand }})
+                                {{ $tool->brand }} ( {{ $tool->property_number }})
                             </option>
                             @elseif ($tool->status_id == 2 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Use
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Use
                             </option>
                             @elseif ($tool->status_id == 3 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Lost
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Lost
                             </option>
                             @elseif ($tool->status_id == 4 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Damaged
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Damaged
                             </option>
                             @elseif ($tool->status_id == 5 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Repair
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Repair
                             </option>
                             @elseif ($tool->status_id == 14 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Request
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Request
                             </option>
                             @elseif ($tool->status_id == 17 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) On Hold
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) On Hold
                             </option>
 
                             @endif
                             @endforeach
-                            @endif
+                            {{--@endif--}}
 
-                            @if($borrower_id && $borrowers->find($borrower_id)->position->description == 'Faculty')
+                            @elseif($borrower_id && $borrowers->find($borrower_id)->position->description == 'Faculty')
                             @foreach ($tools as $tool)
                             @php
                             $matchingPosition = false;
@@ -95,38 +95,39 @@
                             @endphp
                             @if ($tool->status_id == 1 && $matchingPosition)
                             <option value="{{ $tool->id }}">
-                                ({{ $tool->brand }})
+                                {{ $tool->brand }} ( {{ $tool->property_number }})
                             </option>
                             @elseif ($tool->status_id == 2 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Use
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Use
                             </option>
                             @elseif ($tool->status_id == 3 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Lost
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Lost
                             </option>
                             @elseif ($tool->status_id == 4 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Damaged
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Damaged
                             </option>
                             @elseif ($tool->status_id == 5 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Repair
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Repair
                             </option>
                             @elseif ($tool->status_id == 14 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Request
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Request
                             </option>
                             @elseif ($tool->status_id == 17 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) On Hold
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) On Hold
                             </option>
 
                             @endif
                             @endforeach
-                            @endif
+                            {{--@endif--}}
 
-                            @if($borrower_id && $borrowers->find($borrower_id)->position->description == 'Guest')
+
+                            @elseif($borrower_id && $borrowers->find($borrower_id)->position_id == 8)
                             @foreach ($tools as $tool)
                             @php
                             $matchingPosition = false;
@@ -139,31 +140,31 @@
                             @endphp
                             @if ($tool->status_id == 1 && $matchingPosition)
                             <option value="{{ $tool->id }}">
-                                ({{ $tool->brand }})
+                                {{ $tool->brand }} ( {{ $tool->property_number }})
                             </option>
                             @elseif ($tool->status_id == 2 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Use
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Use
                             </option>
                             @elseif ($tool->status_id == 3 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Lost
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Lost
                             </option>
                             @elseif ($tool->status_id == 4 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Damaged
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Damaged
                             </option>
                             @elseif ($tool->status_id == 5 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Repair
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Repair
                             </option>
                             @elseif ($tool->status_id == 14 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Request
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Request
                             </option>
                             @elseif ($tool->status_id == 17 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) On Hold
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) On Hold
                             </option>
 
                             @endif
@@ -176,8 +177,8 @@
 
 
                 @if (auth()->user()->hasRole('requester'))
-        
-                {{--<div class="col-md-12" wire:ignore>
+
+                <div class="col-md-12" wire:ignore>
                     <div class="form-group local-forms">
                         <label>Borrower
                         </label>
@@ -190,7 +191,7 @@
 
                         </select>
                     </div>
-                </div>--}}
+                </div>
 
                 <div class="col-md-12">
                     <div class="form-group local-forms">
@@ -211,43 +212,43 @@
                             @endphp
                             @if ($tool->status_id == 1 && $matchingPosition)
                             <option value="{{ $tool->id }}">
-                                ({{ $tool->brand }})
+                                {{ $tool->brand }} ( {{ $tool->property_number }})
                             </option>
                             @elseif ($tool->status_id == 2 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Use
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Use
                             </option>
                             @elseif ($tool->status_id == 3 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Lost
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Lost
                             </option>
                             @elseif ($tool->status_id == 4 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Damaged
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Damaged
                             </option>
                             @elseif ($tool->status_id == 5 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Repair
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Repair
                             </option>
                             @elseif ($tool->status_id == 14 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Request
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Request
                             </option>
                             @elseif ($tool->status_id == 17 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) On Hold
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) On Hold
                             </option>
 
                             @endif
                             @endforeach
                             @endif
 
-                            @if($borrower_id && $borrowers->find($borrower_id)->position->description == 'Faculty')
+                            @if(auth()->user()->position_id == 2)
                             @foreach ($tools as $tool)
                             @php
                             $matchingPosition = false;
                             foreach ($tool->position_keys as $positionKey) {
-                            if ($positionKey->position_id == 2) {
+                            if ($positionKey->position_id == auth()->user()->position_id) {
                             $matchingPosition = true;
                             break;
                             }
@@ -255,43 +256,43 @@
                             @endphp
                             @if ($tool->status_id == 1 && $matchingPosition)
                             <option value="{{ $tool->id }}">
-                                ({{ $tool->brand }})
+                                {{ $tool->brand }} ( {{ $tool->property_number }})
                             </option>
                             @elseif ($tool->status_id == 2 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Use
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Use
                             </option>
                             @elseif ($tool->status_id == 3 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Lost
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Lost
                             </option>
                             @elseif ($tool->status_id == 4 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Damaged
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Damaged
                             </option>
                             @elseif ($tool->status_id == 5 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Repair
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Repair
                             </option>
                             @elseif ($tool->status_id == 14 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Request
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Request
                             </option>
                             @elseif ($tool->status_id == 17 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) On Hold
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) On Hold
                             </option>
 
                             @endif
                             @endforeach
                             @endif
 
-                            @if($borrower_id && $borrowers->find($borrower_id)->position->description == 'Guest')
+                            @if(auth()->user()->position_id == 8)
                             @foreach ($tools as $tool)
                             @php
                             $matchingPosition = false;
                             foreach ($tool->position_keys as $positionKey) {
-                            if ($positionKey->position_id == 8) {
+                            if ($positionKey->position_id == auth()->user()->position_id) {
                             $matchingPosition = true;
                             break;
                             }
@@ -299,31 +300,31 @@
                             @endphp
                             @if ($tool->status_id == 1 && $matchingPosition)
                             <option value="{{ $tool->id }}">
-                                ({{ $tool->brand }})
+                                {{ $tool->brand }} ( {{ $tool->property_number }})
                             </option>
                             @elseif ($tool->status_id == 2 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Use
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Use
                             </option>
                             @elseif ($tool->status_id == 3 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Lost
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Lost
                             </option>
                             @elseif ($tool->status_id == 4 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) Damaged
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) Damaged
                             </option>
                             @elseif ($tool->status_id == 5 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Repair
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Repair
                             </option>
                             @elseif ($tool->status_id == 14 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) In Request
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) In Request
                             </option>
                             @elseif ($tool->status_id == 17 && $matchingPosition)
                             <option value="{{ $tool->id }}" disabled>
-                                ({{ $tool->brand }}) On Hold
+                                {{ $tool->brand }} ( {{ $tool->property_number }}) On Hold
                             </option>
 
                             @endif
@@ -332,7 +333,7 @@
                         </select>
                     </div>
                 </div>
-        
+
                 @endif
 
             </div>
@@ -366,8 +367,8 @@
                 @this.set('toolItems', data);
             });
 
-               // ToolItemsFaculty Select2
-               $('#toolItemsFaculty').select2({
+            // ToolItemsFaculty Select2
+            $('#toolItemsFaculty').select2({
                 dropdownParent: $('#modal-content')
             });
 
@@ -378,7 +379,7 @@
             });
         });
 
-         
+
         document.addEventListener('livewire:update', function() {
             // Refresh Select2 on Livewire update
             $('#borrower_id, #toolItems, #toolItemsFaculty').select2({

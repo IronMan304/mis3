@@ -49,36 +49,43 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::group(['middleware' => ['role:admin']], function () {
+    Route::get('users', UserList::class);
+    Route::get('role', RoleList::class);
+    Route::get('permission', PermissionList::class);
+
+    Route::get('sexes', SexList::class);
+    Route::get('colleges', CollegeList::class);
+    Route::get('courses', CourseList::class);
+    Route::get('sources', SourceList::class);
+    Route::get('statuses', StatusList::class);
+    Route::get('borrower_types', BorrowerTypeList::class);
+    Route::get('services', ServiceList::class);
+    Route::get('positions', PositionList::class);
+
+    Route::get('trials', TrialList::class);
+});
+
+Route::group(['middleware' => ['role:admin|staff|head of office']], function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('users', UserList::class);
     Route::get('borrowers', BorrowerList::class);
-    Route::get('sexes', SexList::class);
-    Route::get('colleges', CollegeList::class);
-    Route::get('courses', CourseList::class);
+    Route::get('operators', OperatorList::class);
+   
     Route::get('categories', CategoryList::class);
     Route::get('types', TypeList::class);
     Route::get('tools', ToolList::class);
-    Route::get('sources', SourceList::class);
-    Route::get('statuses', StatusList::class);
+  
     Route::get('requests', RequestList::class);
-    Route::get('requests1', RequestList1::class);
+    //Route::get('requests1', RequestList1::class);
 
-    Route::get('borrower_types', BorrowerTypeList::class);
-    Route::get('services', ServiceList::class);
-    Route::get('positions', PositionList::class);
-    Route::get('operators', OperatorList::class);
-
-    Route::get('role', RoleList::class);
-    Route::get('permission', PermissionList::class);
-
-    Route::get('trials', TrialList::class);
+   
 });
 
-Route::group(['middleware' => ['role:admin|requester|staff']], function () {
+Route::group(['middleware' => ['role:admin|requester|staff|head of office']], function () {
     Route::get('requests', RequestList::class);
 });
+
 require __DIR__ . '/auth.php';

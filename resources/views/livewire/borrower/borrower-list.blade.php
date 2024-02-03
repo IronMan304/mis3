@@ -44,14 +44,14 @@
 						<table id="borrower-table" class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
-									<td>Borrower</td>
+									<th>Borrower</th>
 									<th>Id Number</th>
 									<th>Contact Number</th>
 									<th>Sex</th>
 									<th>Position</th>
 									<th>College</th>
 									<th>Course</th>
-									<td>Action</td>
+									<th>Action</th>
 
 								</tr>
 							</thead>
@@ -83,11 +83,14 @@
 
 									<td class="text-center">
 										<div class="btn-group" role="group">
+
+											@if(auth()->user()->hasRole('admin'))
 											@if ($borrower->user_id == null)
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createBorrowerAccount({{ $borrower->id }})" title="Add">
-
+										
 												<i class="fa-solid fa-user-plus"></i>
 											</button>
+											@endif
 											@endif
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editBorrower({{ $borrower->id }})" title="Edit">
 												<i class='fa fa-pen-to-square'></i>
