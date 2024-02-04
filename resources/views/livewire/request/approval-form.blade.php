@@ -32,6 +32,37 @@
                     </div>
                 </div>
 
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Operator
+                        </label>
+                        <select class="form-control select" wire:model="option_id" disabled>
+                            <option value="" selected>Do you need an operator?</option>
+                            @foreach ($options as $option)
+                            <option value="{{ $option->id }}">
+                                {{ $option->description }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Estimated Return Date</label>
+                        <input class="form-control" type="date" wire:model="estimated_return_date" placeholder="mm/dd/yyyy" disabled/>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+					<div class="form-group local-forms">
+						<label>
+							Purpose
+						</label>
+						<input class="form-control" type="text" wire:model="purpose" placeholder disabled/>
+					</div>
+				</div>
+
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Response</label>
@@ -65,6 +96,24 @@
                                 {{ $tool_request->tools->brand }}
                             </option>
                             @endif
+                            @endforeach
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>Operators</label>
+                        <select class="form-control select" id="operatorItems" wire:model="operatorItems" multiple>
+                            <option value="" selected>Assign Operators</option>
+                            @foreach($operators as $operator)
+                    
+
+                            <option value="{{ $operator->id ?? ''}}">
+                                {{ $operator->first_name ?? '' }}  {{ $operator->last_name ?? ''}}
+                            </option>
+                     
                             @endforeach
                         </select>
 
@@ -119,11 +168,22 @@
                 console.log(data);
                 @this.set('approval_toolItems', data);
             });
+
+             // ToolItems Select2
+             $('#operatorItems').select2({
+                dropdownParent: $('#approval-modal-content')
+            });
+
+            $('#operatorItems').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('operatorItems', data);
+            });
         });
 
         document.addEventListener('livewire:update', function() {
             // Refresh Select2 on Livewire update
-            $('#requester_id, #approval_toolItems').select2({
+            $('#requester_id, #approval_toolItems, #operatorItems').select2({
                 dropdownParent: $('#approval-modal-content')
             });
         });

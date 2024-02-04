@@ -336,6 +336,37 @@
 
                 @endif
 
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Operator
+                        </label>
+                        <select class="form-control select" wire:model="option_id">
+                            <option value="" selected>Do you need an operator?</option>
+                            @foreach ($options as $option)
+                            <option value="{{ $option->id }}">
+                                {{ $option->description }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Estimated Return Date</label>
+                        <input class="form-control" type="date" wire:model="estimated_return_date" placeholder="mm/dd/yyyy" />
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+					<div class="form-group local-forms">
+						<label>
+							Purpose
+						</label>
+						<input class="form-control" type="text" wire:model="purpose" placeholder />
+					</div>
+				</div>
+
             </div>
         </div>
         <div class="modal-footer">

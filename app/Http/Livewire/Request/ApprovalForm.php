@@ -2,20 +2,24 @@
 
 namespace App\Http\Livewire\Request;
 
-use Illuminate\Support\Facades\Request as IlluminateRequest;
-use App\Models\Borrower;
-use App\Models\Request;
-use App\Models\Status;
-use App\Models\Tool;
-use App\Models\ToolRequest;
-use Livewire\Component;
 use Carbon\Carbon;
+use App\Models\Tool;
+use App\Models\Option;
+use App\Models\Status;
+use App\Models\Request;
+use Livewire\Component;
+use App\Models\Borrower;
+use App\Models\Operator;
+use App\Models\RequestOperatorKey;
+use App\Models\ToolRequest;
+use Illuminate\Support\Facades\Request as IlluminateRequest;
 
 
 class ApprovalForm extends Component
 {
-    public $approvalId, $borrower_id, $status_id, $selectedCondition, $selectedToolId, $description;
+    public $approvalId, $borrower_id, $status_id, $selectedCondition, $selectedToolId, $description, $option_id, $estimated_return_date, $purpose;
     public $approval_toolItems = [];
+    public $operatorItems = [];
     public $action = '';  //flash
     public $message = '';  //flash
 
@@ -41,6 +45,9 @@ class ApprovalForm extends Component
         $this->approvalId = $approvalId;
         $return = Request::find($approvalId);
         $this->borrower_id = $return->borrower_id;
+        $this->option_id = $return->option_id;
+        $this->estimated_return_date = $return->estimated_return_date;
+        $this->purpose = $return->purpose;
 
         // Assuming there is a tools relationship in your Request model
         $this->approval_toolItems = $return->tool_keys->map(function ($tool) {
@@ -50,6 +57,10 @@ class ApprovalForm extends Component
         $this->selectedTools = $return->tool_keys->map(function ($tool) {
             return $tool->tools;
         })->flatten();
+
+        $this->operatorItems = $return->request_operator_keys->map(function ($operator) {
+            return $operator->operator_id;
+        })->toArray();
     }
 
     //store
@@ -58,6 +69,7 @@ class ApprovalForm extends Component
         $data = $this->validate([
             'borrower_id' => 'nullable',
             'approval_toolItems' => 'required|array',
+            'operatorItems' => 'nullable|array'
         ]);
         //$data['user_id'] = auth()->user()->id;
         //$data['status_id'] = 16; //for returning
@@ -91,6 +103,13 @@ class ApprovalForm extends Component
                         $tool->update(['status_id' => 1]); // if rejected, the tool in the inventory will be "In stock"
                     }
                 }
+            }
+         
+            foreach ($this->operatorItems as $operatorId) {
+                RequestOperatorKey::create([
+                    'request_id' => $this->approvalId,
+                    'operator_id' => $operatorId,
+                ]);
             }
 
             // Handle tools that are not in $this->approval_toolItems
@@ -156,6 +175,7 @@ class ApprovalForm extends Component
         $borrowers = Borrower::all();
         $tools = Tool::all();
         $tool_requests = ToolRequest::all();
+        $operators = Operator::all();
 
         $requests  = Request::with('tool_keys.tools.type')->get();
 
@@ -164,6 +184,7 @@ class ApprovalForm extends Component
         //dd($requests);
         //dump($this->approvalId);
         $statuses = Status::all();
+        $options = Option::all();
 
         return view('livewire.request.approval-form', [
             'borrowers' => $borrowers,
@@ -172,6 +193,8 @@ class ApprovalForm extends Component
             'tool_requests' => $tool_requests,
             'statuses' => $statuses,
             'selectedConditionStatus' => $this->selectedConditionStatus,
+            'options' => $options,
+            'operators' => $operators,
         ]);
     }
 }

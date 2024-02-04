@@ -2,17 +2,21 @@
 
 namespace App\Http\Livewire\Request;
 
+use Carbon\Carbon;
 use App\Models\Tool;
 use App\Models\User;
 use App\Models\Request;
 use Livewire\Component;
 use App\Models\Borrower;
+use App\Models\Operator;
+use App\Models\Option;
 use App\Models\ToolRequest;
 use App\Models\ToolPosition;
 
 class RequestForm extends Component
 {
-    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id, $first_name;
+    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id, $first_name, $option_id, $estimated_return_date, $purpose;
+
     public $toolItems = [];
     public $action = '';  //flash
     public $message = '';  //flash
@@ -49,6 +53,9 @@ class RequestForm extends Component
 
         $this->tool_id = $request->tool_id;
         $this->borrower_id = $request->borrower_id;
+        $this->option_id = $request->option_id;
+        $this->estimated_return_date = $request->estimated_return_date;
+        $this->purpose = $request->purpose;
 
         // Populate toolItems with the IDs of associated tools
         $this->toolItems = $request->tool_keys->pluck('tool_id')->toArray();
@@ -67,6 +74,9 @@ class RequestForm extends Component
         $data = $this->validate([
             'user_id' => 'nullable',
             'borrower_id' => auth()->user()->hasRole('requester') ? 'nullable' : 'required',
+            'option_id' => 'required',
+            'estimated_return_date' => 'nullable|date',
+            'purpose' => 'nullable',
             'toolItems' => 'required|array',
         ]);
 
@@ -74,17 +84,10 @@ class RequestForm extends Component
         $data['user_id'] = auth()->user()->id;
 
         // Check if the user has the "requester" role
-        // if (auth()->user()->hasRole('requester')) {
-        //     // Set 'borrower_id' to the user's 'user_id'
-        //     $data['borrower_id'] = auth()->user()->id;
-        // }
-
-        // Check if the user has the "requester" role
         if (auth()->user()->hasRole('requester')) {
             // Fetch the user_id from the Borrower table using the authenticated user's id
             $data['borrower_id'] = Borrower::where('user_id', auth()->user()->id)->value('id');
         }
-
 
         if ($this->requestId) {
             // $request = Request::findOrFail($this->requestId);
@@ -96,10 +99,9 @@ class RequestForm extends Component
             // $action = 'edit';
             // $message = 'Successfully Updated';
         } else {
-            
             // When creating a new tool request, set the 'user_id'
             $data['user_id'] = auth()->user()->id;
-            if (auth()->user()->hasRole('head of office')) {
+            if (auth()->user()->hasRole('staff')) {
                 $data['status_id'] = 16; // "Reviewed" is the status of a requests table if admin makes the request
                 Tool::whereIn('id', $this->toolItems)->update(['status_id' => 17]); // "On hold" is the status of a tool if admin makes the request
                 $request = Request::create($data);
@@ -158,11 +160,14 @@ class RequestForm extends Component
             $borrowers = Borrower::all();
         }
 
+        $options = Option::all();
+
        //dd($selectedBorrower);
 
         return view('livewire.request.request-form', [
             'tools' => $tools,
             'borrowers' => $borrowers,
+            'options' => $options,
         ]);
     }
 
