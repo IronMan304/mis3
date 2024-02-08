@@ -338,8 +338,7 @@
 
                 <div class="col-md-6">
                     <div class="form-group local-forms">
-                        <label>Operator
-                        </label>
+                        <label>Operator</label>
                         <select class="form-control select" wire:model="option_id">
                             <option value="" selected>Do you need an operator?</option>
                             @foreach ($options as $option)
@@ -349,6 +348,7 @@
                             @endforeach
                         </select>
                     </div>
+
                 </div>
 
                 <div class="col-md-6">
@@ -359,13 +359,13 @@
                 </div>
 
                 <div class="col-md-12">
-					<div class="form-group local-forms">
-						<label>
-							Purpose
-						</label>
-						<input class="form-control" type="text" wire:model="purpose" placeholder />
-					</div>
-				</div>
+                    <div class="form-group local-forms">
+                        <label>
+                            Purpose
+                        </label>
+                        <input class="form-control" type="text" wire:model="purpose" placeholder />
+                    </div>
+                </div>
 
             </div>
         </div>

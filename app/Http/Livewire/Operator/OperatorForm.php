@@ -54,6 +54,7 @@ class OperatorForm extends Component
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
+            $data['status_id'] = 18; // means available
             Operator::create($data);
             $action = 'store';
             $message = 'Successfully Created';

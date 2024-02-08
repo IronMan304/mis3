@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Request as IlluminateRequest;
 
 class ApprovalForm extends Component
 {
-    public $approvalId, $borrower_id, $status_id, $selectedCondition, $selectedToolId, $description, $option_id, $estimated_return_date, $purpose;
+    public $approvalId, $borrower_id, $status_id, $selectedCondition, $selectedToolId, $description, $option_id, $estimated_return_date, $purpose, $request_status_id;
     public $approval_toolItems = [];
     public $operatorItems = [];
     public $action = '';  //flash
@@ -48,6 +48,7 @@ class ApprovalForm extends Component
         $this->option_id = $return->option_id;
         $this->estimated_return_date = $return->estimated_return_date;
         $this->purpose = $return->purpose;
+        $this->request_status_id = $return->status_id;
 
         // Assuming there is a tools relationship in your Request model
         $this->approval_toolItems = $return->tool_keys->map(function ($tool) {
@@ -69,7 +70,7 @@ class ApprovalForm extends Component
         $data = $this->validate([
             'borrower_id' => 'nullable',
             'approval_toolItems' => 'required|array',
-            'operatorItems' => 'nullable|array'
+            'operatorItems' => $this->option_id == 1  && $this->request_status_id == 6 ? 'required|array' : 'nullable|array',
         ]);
         //$data['user_id'] = auth()->user()->id;
         //$data['status_id'] = 16; //for returning
@@ -195,6 +196,7 @@ class ApprovalForm extends Component
             'selectedConditionStatus' => $this->selectedConditionStatus,
             'options' => $options,
             'operators' => $operators,
+            //'option_id' => $this->option_id,
         ]);
     }
 }

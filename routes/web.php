@@ -80,7 +80,7 @@ Route::group(['middleware' => ['role:admin|staff|head of office']], function () 
     Route::get('types', TypeList::class);
     Route::get('tools', ToolList::class);
   
-    Route::get('requests', RequestList::class);
+   //Route::get('requests', RequestList::class);
     //Route::get('requests1', RequestList1::class);
 
    

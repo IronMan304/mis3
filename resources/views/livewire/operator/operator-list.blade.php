@@ -19,7 +19,7 @@
 					<div class="page-table-header mb-2">
 						<div class="row align-items-center">
 							<div class="col">
-                                <div class="doctor-table-blk">
+								<div class="doctor-table-blk">
 									<h3>Operator List</h3>
 									<div class="doctor-search-blk">
 										<div class="add-group">
@@ -45,45 +45,48 @@
 							<thead>
 								<tr>
 									<th>First name</th>
-                                    <th>Middle name</th>
-                                    <th>Last name</th>
-                                    <th>Contact number</th>
-                                    <th>Gender</th>
+									<th>Middle name</th>
+									<th>Last name</th>
+									<th>Contact number</th>
+									<th>Gender</th>
+									<th>Status</th>
 									<th>Action</th>
 								</tr>
 							</thead>
 							<tbody>
 								@foreach ($operators as $operator)
-									<tr>
-										<td>
-											{{ $operator->first_name }}
-										</td>
-                                        <td>
-											{{ $operator->middle_name }}
-										</td>
-                                        <td>
-											{{ $operator->last_name }}
-										</td>
-                                        <td>
-											{{ $operator->contact_number }}
-										</td>
-                                        <td>
-											{{ $operator->sex->description }}
-										</td>
+								<tr>
+									<td>
+										{{ $operator->first_name ?? '' }}
+									</td>
+									<td>
+										{{ $operator->middle_name ?? '' }}
+									</td>
+									<td>
+										{{ $operator->last_name ?? '' }}
+									</td>
+									<td>
+										{{ $operator->contact_number ?? '' }}
+									</td>
+									<td>
+										{{ $operator->sex->description ?? '' }}
+									</td>
+									<td>
+										{{ $operator->status->description ?? ''}}
+									</td>
 
-										<td class="text-center">
-											<div class="btn-group" role="group">
-												<button type="button" class="btn btn-primary btn-sm mx-1"
-													wire:click="editOperator({{ $operator->id }})" title="Edit">
-													<i class='fa fa-pen-to-square'></i>
-												</button>
-												<a class="btn btn-danger btn-sm mx-1" wire:click="deleteOperator({{ $operator->id }})" title="Delete">
-													<i class="fa fa-trash"></i>
-												</a>
-											</div>
-										</td>
+									<td class="text-center">
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editOperator({{ $operator->id }})" title="Edit">
+												<i class='fa fa-pen-to-square'></i>
+											</button>
+											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteOperator({{ $operator->id }})" title="Delete">
+												<i class="fa fa-trash"></i>
+											</a>--}}
+										</div>
+									</td>
 
-									</tr>
+								</tr>
 								@endforeach
 							</tbody>
 						</table>
@@ -95,12 +98,11 @@
 </div>
 {{-- Modal --}}
 
-<div wire.ignore.self class="modal fade" id="operatorModal" tabindex="-1" role="dialog"
-	aria-labelledby="operatorModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div wire.ignore.self class="modal fade" id="operatorModal" tabindex="-1" role="dialog" aria-labelledby="operatorModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-dialog-centered">
 		<livewire:operator.operator-form />
 	</div>
 </div>
 @section('custom_script')
-	@include('layouts.scripts.operator-scripts')
+@include('layouts.scripts.operator-scripts')
 @endsection

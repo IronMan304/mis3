@@ -5,13 +5,15 @@ namespace App\Http\Livewire\Request;
 use Carbon\Carbon;
 use App\Models\Tool;
 use App\Models\User;
+use App\Models\Option;
 use App\Models\Request;
 use Livewire\Component;
 use App\Models\Borrower;
 use App\Models\Operator;
-use App\Models\Option;
 use App\Models\ToolRequest;
 use App\Models\ToolPosition;
+use App\Models\ToolSecurity;
+use App\Models\RequestToolToolSecurityKey;
 
 class RequestForm extends Component
 {
@@ -22,6 +24,8 @@ class RequestForm extends Component
     public $message = '';  //flash
     public $search = '';
     public $selectedTools = [];
+    // public $securityButton = false;
+    // public $userPositionId = auth()->user()->position_id;
 
     public function mount()
     {
@@ -64,7 +68,7 @@ class RequestForm extends Component
         $this->selectedTools = $request->tool_keys->pluck('tools')->flatten();
 
         //$this->borrower_id1 = Borrower::where('user_id', auth()->user()->id)->value('id');
-       
+
     }
 
 
@@ -106,11 +110,36 @@ class RequestForm extends Component
                 Tool::whereIn('id', $this->toolItems)->update(['status_id' => 17]); // "On hold" is the status of a tool if admin makes the request
                 $request = Request::create($data);
                 foreach ($this->toolItems as $toolId) {
-                    ToolRequest::create([ //request_tools
+                    $toolRequest = ToolRequest::create([ //request_tools
                         'request_id' => $request->id,
                         'tool_id' => $toolId,
                         'status_id' => 10, // "Approved" is the status of a tool_requests if admin makes the request
                     ]);
+
+                    // // Fetch security_id for the current tool
+                    // $securityId = ToolSecurity::where('tool_id', $toolId)->value('security_id');
+                    // Create a record in request_tool_tool_security table
+                    // RequestToolToolSecurityKey::create([
+                    //     'request_tools_id' => $toolRequest->id,
+                    //     'security_id' => $securityId,
+                    // ]);
+
+                    // Fetch all security_ids for the current tool
+                    $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
+
+
+                    // Create a record in request_tool_tool_security table for each security_id
+                    foreach ($securityIds as $securityId) {
+                        RequestToolToolSecurityKey::create([
+                            'request_tools_id' => $toolRequest->id,
+                            'security_id' => $securityId,
+                        ]);
+                        // if ($this->userPositionId == $securityId) {
+                        //     // If position_id matches any of the security_id, set showButton to true
+                        //     $securityButton = true;
+                        //     break;
+                        // }
+                    }
                 }
             } else {
                 $data['status_id'] = 11; // Pending is the status of a requests if non admin makes the request
@@ -118,11 +147,23 @@ class RequestForm extends Component
 
                 $request = Request::create($data);
                 foreach ($this->toolItems as $toolId) {
-                    ToolRequest::create([
+                    $toolRequest = ToolRequest::create([
                         'request_id' => $request->id,
                         'tool_id' => $toolId,
                         'status_id' => 14, // "In request" is the status of a tool_requests if non-admin makes the request
                     ]);
+
+                    // Fetch all security_ids for the current tool
+                    $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
+
+
+                    // Create a record in request_tool_tool_security table for each security_id
+                    foreach ($securityIds as $securityId) {
+                        RequestToolToolSecurityKey::create([
+                            'request_tools_id' => $toolRequest->id,
+                            'security_id' => $securityId,
+                        ]);
+                    }
                 }
             }
 
@@ -153,7 +194,7 @@ class RequestForm extends Component
         }
         //$tools = Tool::where('status_id', 1)->get();
         $tools = Tool::all();
-       
+
         if (auth()->user()->hasRole('admin')) {
             $borrowers = Borrower::all();
         } else {
@@ -162,7 +203,7 @@ class RequestForm extends Component
 
         $options = Option::all();
 
-       //dd($selectedBorrower);
+        //dd($selectedBorrower);
 
         return view('livewire.request.request-form', [
             'tools' => $tools,

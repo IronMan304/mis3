@@ -50,23 +50,23 @@
                 <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Estimated Return Date</label>
-                        <input class="form-control" type="date" wire:model="estimated_return_date" placeholder="mm/dd/yyyy" disabled/>
+                        <input class="form-control" type="date" wire:model="estimated_return_date" placeholder="mm/dd/yyyy" disabled />
                     </div>
                 </div>
 
                 <div class="col-md-12">
-					<div class="form-group local-forms">
-						<label>
-							Purpose
-						</label>
-						<input class="form-control" type="text" wire:model="purpose" placeholder disabled/>
-					</div>
-				</div>
+                    <div class="form-group local-forms">
+                        <label>
+                            Purpose
+                        </label>
+                        <input class="form-control" type="text" wire:model="purpose" placeholder disabled />
+                    </div>
+                </div>
 
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Response</label>
-                        <select class="form-control select" wire:model="selectedConditionStatus">
+                        <select class="form-control select" wire:model="selectedConditionStatus" @if ($approval_toolItems == null) disabled @endif>
                             <option value="" selected>Condition of the tool</option>
                             @foreach ($statuses as $status)
                             @if($status->id == 10 || $status->id == 15 )
@@ -87,7 +87,7 @@
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Tools</label>
-                        <select class="form-control select" id="approval_toolItems" wire:model="approval_toolItems" multiple>
+                        <select class="form-control select" id="approval_toolItems" wire:model="approval_toolItems" multiple @if ($approval_toolItems == null) disabled @endif>
                             <option value="" selected>Select Tools</option>
                             @foreach($tool_requests as $tool_request)
                             @if($tool_request->request_id == $approvalId && $tool_request->status_id == 14) {{-- In Request --}}
@@ -105,29 +105,25 @@
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Operators</label>
-                        <select class="form-control select" id="operatorItems" wire:model="operatorItems" multiple>
+                        <select class="form-control select" id="operatorItems" wire:model="operatorItems" multiple @if ($option_id==2 || $request_status_id=! 6) disabled @endif> {{-- 6 means In Progress--}}
                             <option value="" selected>Assign Operators</option>
                             @foreach($operators as $operator)
-                    
-
                             <option value="{{ $operator->id ?? ''}}">
-                                {{ $operator->first_name ?? '' }}  {{ $operator->last_name ?? ''}}
+                                {{ $operator->first_name ?? '' }} {{ $operator->last_name ?? ''}}
                             </option>
-                     
                             @endforeach
                         </select>
-
                     </div>
                 </div>
 
                 <div class="col-md-12">
-					<div class="form-group local-forms">
-						<label>
-							Description
-						</label>
-						<input class="form-control" type="text" wire:model="description" placeholder />
-					</div>
-				</div>
+                    <div class="form-group local-forms">
+                        <label>
+                            Description
+                        </label>
+                        <input class="form-control" type="text" wire:model="description" placeholder @if ($approval_toolItems != null) disabled @endif/>
+                    </div>
+                </div>
 
                 {{--@foreach($tool_requests as $tool_request)
                 @if($tool_request->request_id == $approvalId)
@@ -169,8 +165,8 @@
                 @this.set('approval_toolItems', data);
             });
 
-             // ToolItems Select2
-             $('#operatorItems').select2({
+            // ToolItems Select2
+            $('#operatorItems').select2({
                 dropdownParent: $('#approval-modal-content')
             });
 

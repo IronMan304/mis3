@@ -49,10 +49,11 @@
 									{{--<th>Category:Type</th>
 									<th>Tool</th>--}}
 									<th>Operator</th>
-									<th>Event</th>
+
 									<th>Status</th>
 									<th>Date Requested</th>
 									<th>Date Returned</th>
+									<th>Estimated Return Date</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -63,8 +64,21 @@
 									<td>
 										{{ $request->borrower->first_name ?? '' }}
 									</td>
-									<td></td>
-									<td></td>
+									<td>
+										@if ($request->request_operator_keys)
+										@foreach ($request->request_operator_keys as $request_operator_key)
+										{{ $request_operator_key->operators->first_name ?? ''}} {{ $request_operator_key->operators->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
+
+										@if (!$loop->last)
+										{{-- Add a Space or separator between department names --}}
+										<br>
+										@endif
+										@endforeach
+										@else
+										No Tools Assigned
+										@endif
+									</td>
+
 
 
 									{{--<td>
@@ -133,6 +147,49 @@
 										@endif
 									</td>
 
+									<td>
+										{{ $request->estimated_return_date ?? ''}}
+									</td>
+
+
+									@php
+
+
+
+
+									$request = \App\Models\Request::with('tool_keys.tools')->findOrFail($request->id);
+									$this->toolItems = $request->tool_keys->pluck('tool_id')->toArray();
+									foreach ($this->toolItems as $toolId) {
+
+									// Assuming you have fetched the current user and the tool
+									$userPositionId = auth()->user()->position_id;
+									$toolSecurityIds = \App\Models\ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
+									// Check if the tool is approved
+									$toolKey = $request->tool_keys->where('tool_id', $toolId)->first();
+
+
+									$securityButton = false;
+									$approvedTool = false;
+
+									foreach ($toolSecurityIds as $securityId) {
+									if ($userPositionId == $securityId && $toolKey && $toolKey->status_id == 10) {
+									// If position_id matches any of the security_id, set securityButton to true
+									$securityButton = true;
+									break;
+									}
+									}
+									}
+
+									/*if ($request->tool_keys){
+									foreach ($request->tool_keys as $toolKey){
+									if ($toolKey->status_id == 10 && $userPositionId == $securityId) { //10 means approved tools
+									$approvedTool = true;
+									break;
+									}
+									}
+									}*/
+									@endphp
+
 
 
 									<td class="text-center">
@@ -144,15 +201,15 @@
 											@php $returnButtonShown = false; @endphp
 											{{--@if($request->status_id == 11)
 											<button class="btn btn-success btn-sm mx-1" type="button" wire:click="approveRequest({{ $request->id }})">
-												<i class="fa-solid fa-thumbs-up"></i>
+											<i class="fa-solid fa-thumbs-up"></i>
 											</button>
 											@endif--}}
 
 											@if(auth()->user()->hasRole('staff') || auth()->user()->hasRole('admin'))
-											@if($request->status_id == 11)
+											@if($request->status_id == 11 || $request->status_id == 6)
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
 												<i class="fa-solid fa-arrow-right-arrow-left"></i>
-											</button>	
+											</button>
 											@else
 											<button disabled type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
 												<i class="fa-solid fa-arrow-right-arrow-left"></i>
@@ -197,6 +254,15 @@
 											@endif
 											@endforeach
 											@endif -->
+
+											@if($securityButton)
+											<button>Show Button</button>
+
+											@endif
+
+
+
+
 
 
 
@@ -243,3 +309,15 @@
 @section('custom_script')
 @include('layouts.scripts.request-scripts')
 @endsection
+
+{{--
+@if ($request->tool_keys)
+@foreach ($request->tool_keys as $toolKey)
+@if($tool_securities->find($toolKey->tools->id)->security_id == auth()->user()->position_id)
+<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
+<i class="fa-solid fa-arrow-right-arrow-left"></i>
+</button>
+@endif
+@endforeach
+@endif
+--}}
