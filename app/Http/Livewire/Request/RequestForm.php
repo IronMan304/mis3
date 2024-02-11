@@ -17,7 +17,7 @@ use App\Models\RequestToolToolSecurityKey;
 
 class RequestForm extends Component
 {
-    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id, $first_name, $option_id, $estimated_return_date, $purpose;
+    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id, $first_name, $option_id, $estimated_return_date, $purpose, $date_needed, $errorMessage;
 
     public $toolItems = [];
     public $action = '';  //flash
@@ -60,6 +60,7 @@ class RequestForm extends Component
         $this->option_id = $request->option_id;
         $this->estimated_return_date = $request->estimated_return_date;
         $this->purpose = $request->purpose;
+        $this->date_needed = $request->date_needed;
 
         // Populate toolItems with the IDs of associated tools
         $this->toolItems = $request->tool_keys->pluck('tool_id')->toArray();
@@ -79,9 +80,10 @@ class RequestForm extends Component
             'user_id' => 'nullable',
             'borrower_id' => auth()->user()->hasRole('requester') ? 'nullable' : 'required',
             'option_id' => 'required',
-            'estimated_return_date' => 'nullable|date',
+            'estimated_return_date' => 'required|date',
             'purpose' => 'nullable',
             'toolItems' => 'required|array',
+            'date_needed' => 'required|date',
         ]);
 
         // Include the 'user_id' in the data array
@@ -93,6 +95,7 @@ class RequestForm extends Component
             $data['borrower_id'] = Borrower::where('user_id', auth()->user()->id)->value('id');
         }
 
+        $toolsWithStatusOne = Tool::whereIn('id', $this->toolItems)->where('status_id', 1)->get();
         if ($this->requestId) {
             // $request = Request::findOrFail($this->requestId);
             // $request->update($data);
@@ -103,85 +106,90 @@ class RequestForm extends Component
             // $action = 'edit';
             // $message = 'Successfully Updated';
         } else {
-            // When creating a new tool request, set the 'user_id'
-            $data['user_id'] = auth()->user()->id;
-            if (auth()->user()->hasRole('staff')) {
-                $data['status_id'] = 16; // "Reviewed" is the status of a requests table if admin makes the request
-                Tool::whereIn('id', $this->toolItems)->update(['status_id' => 17]); // "On hold" is the status of a tool if admin makes the request
-                $request = Request::create($data);
-                foreach ($this->toolItems as $toolId) {
-                    $toolRequest = ToolRequest::create([ //request_tools
-                        'request_id' => $request->id,
-                        'tool_id' => $toolId,
-                        'status_id' => 10, // "Approved" is the status of a tool_requests if admin makes the request
-                    ]);
+            if ($toolsWithStatusOne->count() === count($this->toolItems)) {
+                // When creating a new tool request, set the 'user_id'
+                $data['user_id'] = auth()->user()->id;
 
-                    // // Fetch security_id for the current tool
-                    // $securityId = ToolSecurity::where('tool_id', $toolId)->value('security_id');
-                    // Create a record in request_tool_tool_security table
-                    // RequestToolToolSecurityKey::create([
-                    //     'request_tools_id' => $toolRequest->id,
-                    //     'security_id' => $securityId,
-                    // ]);
-
-                    // Fetch all security_ids for the current tool
-                    $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
-
-
-                    // Create a record in request_tool_tool_security table for each security_id
-                    foreach ($securityIds as $securityId) {
-                        RequestToolToolSecurityKey::create([
-                            'request_tools_id' => $toolRequest->id,
-                            'security_id' => $securityId,
+                if (auth()->user()->hasRole('staff')) {
+                    $data['status_id'] = 16; // "Reviewed" is the status of a requests table if admin makes the request
+                    Tool::whereIn('id', $this->toolItems)->update(['status_id' => 17]); // "On hold" is the status of a tool if staff makes the request
+                    $request = Request::create($data);
+                    foreach ($this->toolItems as $toolId) {
+                        $toolRequest = ToolRequest::create([ //request_tools
+                            'request_id' => $request->id,
+                            'tool_id' => $toolId,
+                            'status_id' => 10, // "Approved" is the status of a tool_requests if admin makes the request
                         ]);
-                        // if ($this->userPositionId == $securityId) {
-                        //     // If position_id matches any of the security_id, set showButton to true
-                        //     $securityButton = true;
-                        //     break;
-                        // }
+
+                        // // Fetch security_id for the current tool
+                        // $securityId = ToolSecurity::where('tool_id', $toolId)->value('security_id');
+                        // Create a record in request_tool_tool_security table
+                        // RequestToolToolSecurityKey::create([
+                        //     'request_tools_id' => $toolRequest->id,
+                        //     'security_id' => $securityId,
+                        // ]);
+
+                        // Fetch all security_ids for the current tool
+                        $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
+
+
+                        // Create a record in request_tool_tool_security table for each security_id
+                        foreach ($securityIds as $securityId) {
+                            RequestToolToolSecurityKey::create([
+                                'request_tools_id' => $toolRequest->id,
+                                'security_id' => $securityId,
+                            ]);
+                            // if ($this->userPositionId == $securityId) {
+                            //     // If position_id matches any of the security_id, set showButton to true
+                            //     $securityButton = true;
+                            //     break;
+                            // }
+                        }
+                    }
+                } else {
+                    $data['status_id'] = 11; // Pending is the status of a requests if non admin makes the request
+                    Tool::whereIn('id', $this->toolItems)->update(['status_id' => 14]); // "In request" is the status of a tool if non-admin makes the request
+
+                    $request = Request::create($data);
+                    foreach ($this->toolItems as $toolId) {
+                        $toolRequest = ToolRequest::create([
+                            'request_id' => $request->id,
+                            'tool_id' => $toolId,
+                            'status_id' => 14, // "In request" is the status of a tool_requests if non-admin makes the request
+                        ]);
+
+                        // Fetch all security_ids for the current tool
+                        $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
+
+
+                        // Create a record in request_tool_tool_security table for each security_id
+                        foreach ($securityIds as $securityId) {
+                            RequestToolToolSecurityKey::create([
+                                'request_tools_id' => $toolRequest->id,
+                                'security_id' => $securityId,
+                            ]);
+                        }
                     }
                 }
+
+                // Create the request
+                // $request = Request::create($data);
+
+                // Create the tool request relationships
+                // $this->createToolRequest($request);
+
+                $action = 'store';
+                $message = 'Successfully Created';
+                $this->emit('flashAction', $action, $message);
+                $this->resetInputFields();
+                $this->emit('closeRequestModal');
+                $this->emit('refreshParentRequest');
+                $this->emit('refreshTable');
             } else {
-                $data['status_id'] = 11; // Pending is the status of a requests if non admin makes the request
-                Tool::whereIn('id', $this->toolItems)->update(['status_id' => 14]); // "In request" is the status of a tool if non-admin makes the request
-
-                $request = Request::create($data);
-                foreach ($this->toolItems as $toolId) {
-                    $toolRequest = ToolRequest::create([
-                        'request_id' => $request->id,
-                        'tool_id' => $toolId,
-                        'status_id' => 14, // "In request" is the status of a tool_requests if non-admin makes the request
-                    ]);
-
-                    // Fetch all security_ids for the current tool
-                    $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
-
-
-                    // Create a record in request_tool_tool_security table for each security_id
-                    foreach ($securityIds as $securityId) {
-                        RequestToolToolSecurityKey::create([
-                            'request_tools_id' => $toolRequest->id,
-                            'security_id' => $securityId,
-                        ]);
-                    }
-                }
+                $this->errorMessage = 'You can only request tools that are In stock';
             }
-
-            // Create the request
-            // $request = Request::create($data);
-
-            // Create the tool request relationships
-            // $this->createToolRequest($request);
-
-            $action = 'store';
-            $message = 'Successfully Created';
+        
         }
-
-        $this->emit('flashAction', $action, $message);
-        $this->resetInputFields();
-        $this->emit('closeRequestModal');
-        $this->emit('refreshParentRequest');
-        $this->emit('refreshTable');
     }
 
     public function render()
@@ -209,6 +217,7 @@ class RequestForm extends Component
             'tools' => $tools,
             'borrowers' => $borrowers,
             'options' => $options,
+            'errorMessage' => $this->errorMessage,
         ]);
     }
 

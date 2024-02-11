@@ -70,7 +70,7 @@ class ApprovalForm extends Component
         $data = $this->validate([
             'borrower_id' => 'nullable',
             'approval_toolItems' => 'required|array',
-            'operatorItems' => $this->option_id == 1  && $this->request_status_id == 6 ? 'required|array' : 'nullable|array',
+            //'operatorItems' => $this->option_id == 1  && $this->request_status_id == 6 ? 'required|array' : 'nullable|array',
         ]);
         //$data['user_id'] = auth()->user()->id;
         //$data['status_id'] = 16; //for returning
@@ -123,11 +123,11 @@ class ApprovalForm extends Component
                     if ($this->selectedConditionStatus == 10) {
                         // If status is approved and tool is not in approval_toolItems, set tool in the inventory to "In stock"
                         $tool->update(['status_id' => 1]);
-                        $tool_request->update(['status_id' => 15]);
+                        $tool_request->update(['status_id' => 15]);//rejected
                     } elseif ($this->selectedConditionStatus == 15) {
                         // If status is rejected and tool is not in approval_toolItems, set tool in the inventory to "On hold"
                         $tool->update(['status_id' => 17]);
-                        $tool_request->update(['status_id' => 10]); //rejected
+                        $tool_request->update(['status_id' => 10]); //approved
                     }
                 }
             }
@@ -157,7 +157,7 @@ class ApprovalForm extends Component
 
 
             $action = 'edit';
-            $message = 'Successfully Returned';
+            $message = 'Successfully Responsed';
         } else {
             Request::create($data);
             $action = 'store';

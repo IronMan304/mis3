@@ -13,12 +13,14 @@
         <div class="modal-body">
             <div class="row">
             <div class="table-responsive">
-						<table class="table border-0 custom-table comman-table datatable mb-0">
+						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
 								
-									<th>Category:Type</th>
-									<th>Tool</th>
+									<th>Equipment Category:Type</th>
+									<th>Equipment</th>
+									<th>Date Requested</th>
+									<th>Date Returned</th>
 									{{--<th>Action</th>--}}
 								</tr>
 							</thead>
@@ -48,6 +50,26 @@
 										@if (!$loop->last)
 										{{-- Add a Space or separator between department names --}}
 										<br>
+										@endif
+										@endforeach
+										@else
+										No Tools Assigned
+										@endif
+									</td>
+
+									<td>{{ $request->created_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}<br>
+										({{ $request->user->position->description ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
+									</td>
+
+									<td>
+										@if ($request->tool_keys)
+										@foreach ($request->tool_keys as $toolKey)
+										@if($toolKey->created_at != $toolKey->updated_at)
+										{{ $toolKey->returned_at }}<br>
+										({{ $toolKey->user->position->description ?? '' }}) {{ $toolKey->user->first_name ?? '' }} {{ $toolKey->user->last_name ?? '' }}
+										@if (!$loop->last)
+										<p>-------------------</p>
+										@endif
 										@endif
 										@endforeach
 										@else

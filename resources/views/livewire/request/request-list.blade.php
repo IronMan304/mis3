@@ -41,19 +41,20 @@
 					</div>
 
 					<div class="table-responsive">
-						<table class="table border-0 custom-table comman-table datatable mb-0">
+						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
 									<th>ID</th>
 									<th>Requester</th>
 									{{--<th>Category:Type</th>
 									<th>Tool</th>--}}
-									<th>Operator</th>
+						
 
+			
+									<th>Date Needed</th>
+									<th>Return Date</th>
+									<th>Operator</th>
 									<th>Status</th>
-									<th>Date Requested</th>
-									<th>Date Returned</th>
-									<th>Estimated Return Date</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -64,20 +65,7 @@
 									<td>
 										{{ $request->borrower->first_name ?? '' }}
 									</td>
-									<td>
-										@if ($request->request_operator_keys)
-										@foreach ($request->request_operator_keys as $request_operator_key)
-										{{ $request_operator_key->operators->first_name ?? ''}} {{ $request_operator_key->operators->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
-
-										@if (!$loop->last)
-										{{-- Add a Space or separator between department names --}}
-										<br>
-										@endif
-										@endforeach
-										@else
-										No Tools Assigned
-										@endif
-									</td>
+							
 
 
 
@@ -109,9 +97,7 @@
 										@endif
 									</td>--}}
 
-									<td>
-										{{ $request->status->description}}
-									</td>
+							
 
 									<!-- <td>
 										@if ($request->tool_keys)
@@ -127,28 +113,35 @@
 										@endif
 									</td> -->
 
-									<td>{{ $request->updated_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}<br>
-										({{ $request->user->position->description ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
-									</td>
 
 									<td>
-										@if ($request->tool_keys)
-										@foreach ($request->tool_keys as $toolKey)
-										@if($toolKey->created_at != $toolKey->updated_at)
-										{{ $toolKey->returned_at }}<br>
-										({{ $toolKey->user->position->description ?? '' }}) {{ $toolKey->user->first_name ?? '' }} {{ $toolKey->user->last_name ?? '' }}
-										@if (!$loop->last)
-										<p>-------------------</p>
-										@endif
-										@endif
-										@endforeach
-										@else
-										No Tools Assigned
-										@endif
+										{{ $request->date_needed ?? ''}}
 									</td>
-
 									<td>
 										{{ $request->estimated_return_date ?? ''}}
+									</td>
+
+									<td>
+										@if ($request->request_operator_keys->isNotEmpty())
+											@foreach ($request->request_operator_keys as $request_operator_key)
+											{{ $request_operator_key->operators->first_name ?? 'n'}} {{ $request_operator_key->operators->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
+
+												@if (!$loop->last)
+												{{-- Add a Space or separator between department names --}}
+												<br>
+												@endif
+											@endforeach
+										@elseif ($request->option_id == 1)
+										{{ 'TBA' }}
+										@endif
+										
+										@if ($request->option_id == 2)
+										{{ 'N/A' }}
+										@endif
+									</td>
+
+									<td>
+										{{ $request->status->description}}
 									</td>
 
 
@@ -172,7 +165,7 @@
 									$approvedTool = false;
 
 									foreach ($toolSecurityIds as $securityId) {
-									if ($userPositionId == $securityId && $toolKey && $toolKey->status_id == 10) {
+									if ($userPositionId == $securityId && $toolKey && $toolKey->status_id == 10 ) {
 									// If position_id matches any of the security_id, set securityButton to true
 									$securityButton = true;
 									break;
@@ -255,8 +248,10 @@
 											@endforeach
 											@endif -->
 
-											@if($securityButton)
-											<button>Show Button</button>
+											@if($securityButton || auth()->user()->hasRole('admin'))
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="Letter">
+												<i class="fa-solid fa-envelope"></i>
+											</button>
 
 											@endif
 
@@ -278,6 +273,8 @@
 				</div>
 			</div>
 		</div>
+		<!-- Pagination links -->
+		{{ $requests->links() }}
 	</div>
 	{{-- Modal --}}
 

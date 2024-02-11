@@ -9,9 +9,11 @@ use Livewire\Component;
 use App\Models\ToolRequest;
 use App\Models\ToolSecurity;
 use App\Models\RequestToolToolSecurityKey;
+use Livewire\WithPagination;
 
 class RequestList extends Component
 {
+    use withPagination;
     public $requestId;
     public $search = '';
     public $action = '';  //flash
@@ -19,6 +21,8 @@ class RequestList extends Component
     public $isApproved = false;
     public $toolItems = [];
     public $securityButton = false;
+    public $perPage = 10;
+    protected $paginationTheme = 'bootstrap';
 
     protected $listeners = [
         'refreshParentRequest' => '$refresh',
@@ -196,7 +200,7 @@ class RequestList extends Component
         $tools = Tool::all();
         $statuses = Status::all();
         $tool_requests = ToolRequest::all();
-        $requests = Request::with('borrower')->get();
+        $requests = Request::with('borrower')->paginate($this->perPage);
         $toolSecurities = ToolSecurity::all();
 
         //dd($securityButton);

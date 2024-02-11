@@ -76,7 +76,7 @@ class ToolForm extends Component
         ]);
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
-        $data['status_id'] = 1;
+     
 
         if ($this->toolId) {
             $tool = Tool::find($this->toolId);
@@ -105,10 +105,11 @@ class ToolForm extends Component
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
+            $data['status_id'] = 1;
 
             // When creating a new tool, set the 'user_id'
-            $data['user_id'] = auth()->user()->id;
-            $data['status_id'];
+            //$data['user_id'] = auth()->user()->id;
+            // $data['status_id'];
 
             $tool = Tool::create($data);
             foreach ($this->positionItems as $positionId) {

@@ -15,7 +15,7 @@ class Request extends Model
     
     protected $table = 'requests';
     protected $primaryKey = 'id';
-    protected $fillable = [ 'request_number','tool_id', 'user_id', 'borrower_id', 'status_id', 'option_id', 'estimated_return_date', 'purpose' ];
+    protected $fillable = [ 'request_number','tool_id', 'user_id', 'borrower_id', 'status_id', 'option_id', 'estimated_return_date', 'purpose', 'date_needed' ];
     
     public function borrower(){
         return $this->belongsTo(Borrower::class, 'borrower_id', 'id');

@@ -11,8 +11,20 @@
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     @if ($errors->any())
-    {{ implode('', $errors->all('<div>:message</div>')) }}
+    <span class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </span>
     @endif
+    @if(isset($errorMessage))
+    <div class="alert alert-danger">
+        {{ $errorMessage }}
+    </div>
+    @endif
+
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
@@ -340,7 +352,7 @@
                     <div class="form-group local-forms">
                         <label>Operator</label>
                         <select class="form-control select" wire:model="option_id">
-                            <option value="" selected>Do you need an operator?</option>
+                            <option value="" selected>Please choose according to your requirement</option>
                             @foreach ($options as $option)
                             <option value="{{ $option->id }}">
                                 {{ $option->description }}
@@ -353,7 +365,14 @@
 
                 <div class="col-md-6">
                     <div class="form-group local-forms">
-                        <label>Estimated Return Date</label>
+                        <label>Date Needed</label>
+                        <input class="form-control" type="date" wire:model="date_needed" placeholder="mm/dd/yyyy" />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Return Date</label>
                         <input class="form-control" type="date" wire:model="estimated_return_date" placeholder="mm/dd/yyyy" />
                     </div>
                 </div>
@@ -361,7 +380,7 @@
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>
-                            Purpose
+                            Purpose/Description
                         </label>
                         <input class="form-control" type="text" wire:model="purpose" placeholder />
                     </div>
