@@ -69,20 +69,27 @@ class RequestList extends Component
     
     // }
 
-    public function approveRequest($requestId)
+    // public function approveRequest($requestId)
+    // {
+    //     $request = Request::find($requestId);
+
+    //     if ($request) {
+    //         if ($request->status_id != 2) {
+    //             $request->update(['status_id' => 10]); // Update the status to "Approved"
+    //             $action = 'edit';
+    //             $message = 'Request Approved';
+    //             $this->emit('flashAction', $action, $message);
+    //         }
+    //     }
+
+    //     // $this->resetPage();
+    // }
+
+    public function securityApprovalForm($requestId)
     {
-        $request = Request::find($requestId);
-
-        if ($request) {
-            if ($request->status_id != 2) {
-                $request->update(['status_id' => 10]); // Update the status to "Approved"
-                $action = 'edit';
-                $message = 'Request Approved';
-                $this->emit('flashAction', $action, $message);
-            }
-        }
-
-        // $this->resetPage();
+        $this->requestId = $requestId;
+        $this->emit('requestId', $this->requestId);
+        $this->emit('openSecurityApprovalModal');
     }
     public function handleCancelRequest($requestId)
     {
@@ -202,6 +209,7 @@ class RequestList extends Component
         $tool_requests = ToolRequest::all();
         $requests = Request::with('borrower')->paginate($this->perPage);
         $toolSecurities = ToolSecurity::all();
+        $rTTSK = RequestToolToolSecurityKey::all();
 
         //dd($securityButton);
 
@@ -211,6 +219,7 @@ class RequestList extends Component
             'statuses' => $statuses,
             'tool_requests' => $tool_requests,
             'toolSecurities' => $toolSecurities,
+            'rTTSK' => $rTTSK,
             //'securityButton' => $securityButton,
         ]);
     }

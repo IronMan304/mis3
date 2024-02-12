@@ -34,4 +34,10 @@ class ToolRequest extends Model
     public function toolStatus(){
         return $this->belongsTo(Status::class, 'tool_status_id', 'id');
     }
+
+    public function rtts_keys()
+    {
+        return $this->hasMany(RequestToolToolSecurityKey::class, 'request_tools_id');
+    }
+
 }

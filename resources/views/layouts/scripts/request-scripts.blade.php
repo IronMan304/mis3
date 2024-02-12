@@ -38,6 +38,14 @@
       $('#approvalModal').modal('show');
     });
 
+    window.livewire.on('closeSecurityApprovalModal', () => {
+      $('#securityApprovalModal').modal('hide');
+    });
+
+    window.livewire.on('openSecurityApprovalModal', () => {
+      $('#securityApprovalModal').modal('show');
+    });
+
 
         $('#requestModal').on('shown.bs.modal', function() {
             if (!$.fn.DataTable.isDataTable('.datatable')) {

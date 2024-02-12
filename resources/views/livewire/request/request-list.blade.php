@@ -48,9 +48,9 @@
 									<th>Requester</th>
 									{{--<th>Category:Type</th>
 									<th>Tool</th>--}}
-						
 
-			
+
+
 									<th>Date Needed</th>
 									<th>Return Date</th>
 									<th>Operator</th>
@@ -65,7 +65,7 @@
 									<td>
 										{{ $request->borrower->first_name ?? '' }}
 									</td>
-							
+
 
 
 
@@ -97,7 +97,7 @@
 										@endif
 									</td>--}}
 
-							
+
 
 									<!-- <td>
 										@if ($request->tool_keys)
@@ -123,26 +123,57 @@
 
 									<td>
 										@if ($request->request_operator_keys->isNotEmpty())
-											@foreach ($request->request_operator_keys as $request_operator_key)
-											{{ $request_operator_key->operators->first_name ?? 'n'}} {{ $request_operator_key->operators->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
+										@foreach ($request->request_operator_keys as $request_operator_key)
+										{{ $request_operator_key->operators->first_name ?? 'n'}} {{ $request_operator_key->operators->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
 
-												@if (!$loop->last)
-												{{-- Add a Space or separator between department names --}}
-												<br>
-												@endif
-											@endforeach
+										@if (!$loop->last)
+										{{-- Add a Space or separator between department names --}}
+										<br>
+										@endif
+										@endforeach
 										@elseif ($request->option_id == 1)
 										{{ 'TBA' }}
 										@endif
-										
+
 										@if ($request->option_id == 2)
 										{{ 'N/A' }}
 										@endif
 									</td>
 
 									<td>
-										{{ $request->status->description}}
+										{{'Request'}}: {{ $request->status->description }} 
+										<br>
+
+										@if ($request->tool_keys)
+										@php
+										$shownSecurityIds = []; // Initialize an array to keep track of shown security IDs
+										@endphp
+
+										@foreach ($request->tool_keys as $toolKey)
+										@foreach ($toolKey->rtts_keys as $rtts_key)
+										{{-- Check if the security ID has already been shown --}}
+										@if (!in_array($rtts_key->security->description, $shownSecurityIds))
+										{{ $rtts_key->security->description }}: {{ $rtts_key->status->description ?? ''}}
+										{{-- Add the security ID to the list of shown IDs --}}
+										@if (!$loop->last)
+										{{-- Add a Space or separator between department names --}}
+										<br>
+										@endif
+										@php
+										$shownSecurityIds[] = $rtts_key->security->description;
+										@endphp
+										@endif
+
+									
+										@endforeach
+										@if (!$loop->last)
+										{{-- Add a Space or separator between department names --}}
+										<br>
+										@endif
+										@endforeach
+										@endif
 									</td>
+
 
 
 									@php
@@ -249,7 +280,7 @@
 											@endif -->
 
 											@if($securityButton || auth()->user()->hasRole('admin'))
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="Letter">
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="securityApprovalForm({{ $request->id }})" title="Letter">
 												<i class="fa-solid fa-envelope"></i>
 											</button>
 
@@ -299,6 +330,12 @@
 	<div wire.ignore.self class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="approvalModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 		<div class="modal-dialog modal-dialog-centered">
 			<livewire:request.approval-form />
+		</div>
+	</div>
+
+	<div wire.ignore.self class="modal fade" id="securityApprovalModal" tabindex="-1" role="dialog" aria-labelledby="securityApprovalModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:request.security-approval-form />
 		</div>
 	</div>
 </div>

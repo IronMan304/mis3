@@ -57,6 +57,22 @@
 										@endif
 									</td>
 
+									<td>
+									@if ($request->tool_keys)
+										@foreach($request->tool_keys as $toolKey)
+										@foreach($toolKey->rtts_keys as $rtts_key)
+										{{ $rtts_key->security_id }}
+							
+									
+										@endforeach
+										@if (!$loop->last)
+												{{-- Add a Space or separator between department names --}}
+												<br>
+												@endif
+										@endforeach
+										@endif
+									</td>
+
 									<td>{{ $request->created_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}<br>
 										({{ $request->user->position->description ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
 									</td>
