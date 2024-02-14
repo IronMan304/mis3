@@ -2,10 +2,11 @@
     <div class="modal-header">
         <h1 class="modal-title fs-5">
             @if ($requestId)
-            Edit Sex
+            Request letter
             @else
             Add Sex
             @endif
+            <button type="button" aria-label="Print"><i class="fa-solid fa-print"></i></button>
         </h1>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
@@ -15,17 +16,121 @@
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group local-forms">
-                        <label>
-                            Borrower
-                        </label>
-                        <input class="form-control" type="text" wire:model="borrower_id" placeholder disabled />
-                    </div>
-                </div>
+                {{$request->borrower->first_name ?? ''}}
+            </div>
+            <div class="modal-footer">
+
+
+
                 <div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
+                    @if ($request && $request->tool_keys)
+                    @php
+                    $shownSecurityIds = []; // Initialize an array to keep track of shown security IDs
+
+                    @endphp
+
+                    @if($request->status_id == 16)
+                    @foreach ($request->tool_keys as $toolKey)
+                    @foreach ($toolKey->rtts_keys as $rtts_key)
+
+                    {{-- Check if the security ID has already been shown --}}
+                    @if (!in_array($rtts_key->security->description, $shownSecurityIds))
+                    {{-- Check if the status is null and security ID meets the condition --}}
+                    @if($rtts_key->status_id == 11 && ($rtts_key->security_id == 3 || $rtts_key->security_id == 5 || $rtts_key->security_id == 6))
+
+                    @if($rtts_key->status_id == 11 && $rtts_key->security_id == 3)
+                    <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="hOOAprroval({{ $request->id }})" title="Approval">
+                        <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
+                    </button>
+                    @endif
+
+                    @php
+                    $shownSecurityIds[] = $rtts_key->security->description;
+                    @endphp
+
+                    @endif
+                    @endif
+
+                    @endforeach
+                    @endforeach
+                    @endif
+                    @endif
+                </div>
+
+
+                <div>
+                    @if ($request && $request->tool_keys)
+                    @php
+                    $shownSecurityIds = []; // Initialize an array to keep track of shown security IDs
+
+                    @endphp
+
+                    @if($request->status_id == 16)
+                    @foreach ($request->tool_keys as $toolKey)
+                    @foreach ($toolKey->rtts_keys as $rtts_key)
+
+                    {{-- Check if the security ID has already been shown --}}
+                    @if (!in_array($rtts_key->security->description, $shownSecurityIds))
+                    {{-- Check if the status is null and security ID meets the condition --}}
+                    @if($rtts_key->status_id == 11 && ($rtts_key->security_id == 3 || $rtts_key->security_id == 5 || $rtts_key->security_id == 6))
+
+                    @if($rtts_key->status_id == 11 && $rtts_key->security_id == 5)
+                    <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="vPAprroval({{ $request->id }})" title="Approval">
+                        <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
+                    </button>
+                    @endif
+
+                    @php
+                    $shownSecurityIds[] = $rtts_key->security->description;
+                    @endphp
+
+                    @endif
+                    @endif
+
+                    @endforeach
+                    @endforeach
+                    @endif
+                    @endif
+                </div>
+
+                <div>
+                    @if ($request && $request->tool_keys)
+                    @php
+                    $shownSecurityIds = []; // Initialize an array to keep track of shown security IDs
+
+                    @endphp
+
+                    @if($request->status_id == 16)
+                    @foreach ($request->tool_keys as $toolKey)
+                    @foreach ($toolKey->rtts_keys as $rtts_key)
+
+                    {{-- Check if the security ID has already been shown --}}
+                    @if (!in_array($rtts_key->security->description, $shownSecurityIds))
+                    {{-- Check if the status is null and security ID meets the condition --}}
+                    @if($rtts_key->status_id == 11 && ($rtts_key->security_id == 3 || $rtts_key->security_id == 5 || $rtts_key->security_id == 6))
+
+                    @if($rtts_key->status_id == 11 && $rtts_key->security_id == 6 )
+                    <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="pAprroval({{ $request->id }})" title="Approval">
+                        <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
+                    </button>
+                    @endif
+
+                    @php
+                    $shownSecurityIds[] = $rtts_key->security->description;
+                    @endphp
+
+                    @endif
+                    @endif
+
+                    @endforeach
+                    @endforeach
+                    @endif
+                    @endif
+                </div>
+
+
+
+                <button class="btn btn-primary">Reject</button>
+            </div>
     </form>
 </div>

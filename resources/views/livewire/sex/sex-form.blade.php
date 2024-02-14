@@ -24,9 +24,9 @@
 						<input class="form-control" type="text" wire:model="description" placeholder />
 					</div>
 				</div>
-				<div>
-					<div class="modal-footer">
-						<button type="submit" class="btn btn-primary">Save</button>
-					</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary">Save</button>
+			</div>
 	</form>
 </div>

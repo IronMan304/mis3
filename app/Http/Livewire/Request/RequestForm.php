@@ -167,6 +167,8 @@ class RequestForm extends Component
                             RequestToolToolSecurityKey::create([
                                 'request_tools_id' => $toolRequest->id,
                                 'security_id' => $securityId,
+                                'status_id' => 11,
+                                'request_id' => $request->id,
                             ]);
                         }
                     }

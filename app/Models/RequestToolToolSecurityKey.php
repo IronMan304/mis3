@@ -13,7 +13,7 @@ class RequestToolToolSecurityKey extends Model
 
     protected $table = 'request_tools_tool_securities_key';
     protected $primaryKey = 'id';
-    protected $fillable = ['request_tools_id', 'security_id', 'status_id'];
+    protected $fillable = ['request_tools_id', 'security_id', 'status_id', 'user_id', 'request_id'];
 
     public function requestTool()
     {
@@ -26,6 +26,14 @@ class RequestToolToolSecurityKey extends Model
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function request()
+    {
+        return $this->belongsTo(Request::class, 'reqeust_id', 'id');
     }
 
 }
