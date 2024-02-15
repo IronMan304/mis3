@@ -29,6 +29,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
+use App\Http\Controllers\WelcomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +41,7 @@ use App\Http\Livewire\BorrowerType\BorrowerTypeList;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('/', [WelcomeController::class, 'index']);
 Route::get('/', function () {
     return view('welcome');
 });

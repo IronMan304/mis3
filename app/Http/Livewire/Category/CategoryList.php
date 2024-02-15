@@ -2,11 +2,16 @@
 
 namespace App\Http\Livewire\Category;
 
-use App\Models\Category;
+use App\Models\Tool;
 use Livewire\Component;
+use App\Models\Category;
+use Livewire\WithPagination;
 
 class CategoryList extends Component
 {
+    use withPagination;
+    protected $paginationTheme = 'bootstrap';
+    public $perPage = 10;
     public $categoryId;
     public $search = '';
     public $action = '';  //flash
@@ -83,9 +88,9 @@ class CategoryList extends Component
     public function render()
     {
         if (empty($this->search)) {
-            $categories  = Category::with('types.tools')->get();
+            $categories  = Category::with('types.tools')->paginate($this->perPage);
         } else {
-            $categories  = Category::where('description', 'LIKE', '%' . $this->search . '%')->get();
+            $categories  = Category::where('description', 'LIKE', '%' . $this->search . '%')->paginate($this->perPage);
         }
 
         return view('livewire.category.category-list', [

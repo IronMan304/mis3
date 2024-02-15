@@ -66,17 +66,19 @@
 					</div>
 
 					<div class="table-responsive">
-						<table class="table border-0 custom-table comman-table datatable mb-0">
+						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
 									<th>ID</th>
 									<th>Type</th>
 									<th>Property Number</th>
-									<td>Brand</td>
+									<th>Brand</th>
+									<th>Applicability</th>
+									<th>Security</th>
 									<th>Date Updated</th>
 									<th>Added By</th>
 									<th>Status</th>
-									<td>Action</td>
+									<th>Action</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -96,20 +98,55 @@
 										{{ $tool->brand }}
 									</td>
 
-									<td>{{ $tool->updated_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}</td>
+									<td>
+										@if ($tool->position_keys)
+										@foreach ($tool->position_keys as $positionKey)
+										{{ $positionKey->positions->description ?? ''}}
+
+										@if (!$loop->last)
+										{{-- Add a Space or separator between department names --}}
+										<br>
+										@endif
+										@endforeach
+										@else
+										No Tools Assigned
+										@endif
+									</td>
+
+									<td>
+										@if ($tool->security_keys)
+										@foreach ($tool->security_keys as $securityKey)
+										{{ $securityKey->securities->description ?? ''}}
+
+										@if (!$loop->last)
+										{{-- Add a Space or separator between department names --}}
+										<br>
+										@endif
+										@endforeach
+										@else
+										No Tools Assigned
+										@endif
+									</td>
+
+									<td class="appoint-time">
+										<span>{{ $tool->updated_at->setTimezone('Asia/Manila')->format('m-d-Y') }} at </span>
+										{{ $tool->updated_at->setTimezone('Asia/Manila')->format('h:i A') }}
+									</td>
+			
+
 
 
 									<td> ({{ $tool->user->position->description ?? 'N/A' }}) <br>{{ $tool->user->first_name ?? '' }} {{ $tool->user->last_name ?? '' }}</td>
 
-									<td style="background-color: 
-        @if($tool->status_id == 1) #00ff00 
-        @elseif($tool->status_id == 2) #ffff00 
-        @elseif($tool->status_id == 3) #808080 
-        @elseif($tool->status_id == 4) #ff0000 
-        @else #ffffff 
-        @endif;">
-										{{ $tool->status->description ?? ''}}
+									{{-- green, pink, gray, orange, blue--}}
+
+									<td>
+										<button @if($tool->status_id == 1) class="custom-badge status-green" @elseif ($tool->status_id == 2) class="custom-badge status-blue" @elseif($tool->status_id == 3) class="custom-badge status-gray" @elseif($tool->status_id == 4) class="custom-badge status-red" @elseif($tool->status_id == 17) class="custom-badge status-pink" @elseif($tool->status_id == 14) class="custom-badge status-orange" @endif>
+											{{ $tool->status->description ?? ''}}
+										</button>
 									</td>
+
+
 
 
 									<td class="text-center">
@@ -131,6 +168,7 @@
 				</div>
 			</div>
 		</div>
+		{{ $tools->links() }}
 	</div>
 	{{-- Modal --}}
 

@@ -41,13 +41,15 @@
 					</div>
 
 					<div class="table-responsive">
-						<table class="table border-0 custom-table comman-table datatable mb-0">
+						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
 									<th>ID</th>
 									<td>Category</td>
 									<td>Total</td>
 									<th>In Stock</th>
+									<th>In Request</th>
+									<th>On Hold</th>
 									<th>In Use</th>
 									<th>Damaged</th>
 									<th>Lost</th>
@@ -90,6 +92,35 @@
 
 										{{ $totalToolsCount }}
 									</td>
+
+									<td>
+									@php
+										$totalToolsCount = 0;
+										@endphp
+
+										@foreach($category->types as $type)
+										@php
+										$totalToolsCount += $type->tools->where('status_id', 14)->count();
+										@endphp
+										@endforeach
+
+										{{ $totalToolsCount }}
+									</td>
+
+									<td>
+									@php
+										$totalToolsCount = 0;
+										@endphp
+
+										@foreach($category->types as $type)
+										@php
+										$totalToolsCount += $type->tools->where('status_id', 17)->count();
+										@endphp
+										@endforeach
+
+										{{ $totalToolsCount }}
+									</td>
+
 									<td>
 										@php
 										$totalToolsCount = 0;
@@ -156,6 +187,7 @@
 				</div>
 			</div>
 		</div>
+		{{ $categories->links() }}
 	</div>
 </div>
 {{-- Modal --}}
