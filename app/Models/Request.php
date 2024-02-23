@@ -15,7 +15,7 @@ class Request extends Model
     
     protected $table = 'requests';
     protected $primaryKey = 'id';
-    protected $fillable = [ 'request_number','tool_id', 'user_id', 'borrower_id', 'status_id', 'option_id', 'estimated_return_date', 'purpose', 'date_needed' ];
+    protected $fillable = [ 'request_number','tool_id', 'user_id', 'borrower_id', 'status_id', 'option_id', 'estimated_return_date', 'purpose', 'date_needed', 'current_security_id' ];
     
     public function borrower(){
         return $this->belongsTo(Borrower::class, 'borrower_id', 'id');
@@ -47,6 +47,11 @@ class Request extends Model
     public function request_operator_keys()
     {
         return $this->hasMany(RequestOperatorKey::class, 'request_id');
+    }
+
+    public function current_security()
+    {
+        return $this->belongsTo(Position::class, 'current_security_id', 'id');
     }
 
 

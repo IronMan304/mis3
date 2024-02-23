@@ -84,6 +84,7 @@ class RequestForm extends Component
             'purpose' => 'nullable',
             'toolItems' => 'required|array',
             'date_needed' => 'required|date',
+            //'current_security_id' => 'nullable',
         ]);
 
         // Include the 'user_id' in the data array
@@ -109,6 +110,7 @@ class RequestForm extends Component
             if ($toolsWithStatusOne->count() === count($this->toolItems)) {
                 // When creating a new tool request, set the 'user_id'
                 $data['user_id'] = auth()->user()->id;
+             
 
                 if (auth()->user()->hasRole('staff')) {
                     $data['status_id'] = 16; // "Reviewed" is the status of a requests table if admin makes the request
@@ -161,7 +163,7 @@ class RequestForm extends Component
                         // Fetch all security_ids for the current tool
                         $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
 
-
+                        $minSecurityId = min($securityIds);  
                         // Create a record in request_tool_tool_security table for each security_id
                         foreach ($securityIds as $securityId) {
                             RequestToolToolSecurityKey::create([
@@ -170,7 +172,10 @@ class RequestForm extends Component
                                 'status_id' => 11,
                                 'request_id' => $request->id,
                             ]);
+                           
                         }
+                    
+                        $request->update(['current_security_id' =>  $minSecurityId]);
                     }
                 }
 

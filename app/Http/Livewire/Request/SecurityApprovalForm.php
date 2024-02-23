@@ -7,14 +7,16 @@ use Livewire\Component;
 
 class SecurityApprovalForm extends Component
 {
-    public $requestId, $borrower_id, $request, $rttskStatusId;
+    public $requestId, $borrower_id, $request, $rttskStatusId = 0;
     public $action = '';  //flash
     public $message = '';  //flash
     public $approvalStatus = [
-        'head_of_office' => false,
-        'vp' => false,
-        'president' => false
+        'head_of_office' => 11,
+        'vp' => 11,
+        'president' => 11
     ];
+
+    protected $approvedRttsKeys = [];
 
     protected $listeners = [
         'requestId',
@@ -46,6 +48,7 @@ class SecurityApprovalForm extends Component
 
             $request = Request::find($this->requestId);
             $allApproved = true; // Flag to track if all rtts_keys are approved
+            $request->update(['current_security_id' => 5]); //5 means vp
 
             foreach ($request->tool_keys as $toolKey) {
                 foreach ($toolKey->rtts_keys as $rtts_key) {
@@ -57,7 +60,10 @@ class SecurityApprovalForm extends Component
                         {
                             $rtts_key->update(['status_id' => 10]); // Update the status to "Approved"
                             $rtts_key->update(['user_id' => auth()->user()->id]);
-                            $this->approvalStatus['head_of_office'] =  $rtts_key->status_id;
+                            $this->approvalStatus['head_of_office'] =  10;
+                               // Save the ID of the approved rtts_key
+                        $this->approvedRttsKeys[] = $rtts_key->id;
+                           //dd($this->approvedRttsKeys);
                         }
                         // Check if any rtts_key is not approved
                         if ($rtts_key->status_id != 10) {
@@ -88,6 +94,7 @@ class SecurityApprovalForm extends Component
         if ($this->requestId) {
             $request = Request::find($this->requestId);
             $allApproved = true; // Flag to track if all rtts_keys are approved
+            $request->update(['current_security_id' => 6]); //5 means p
 
             foreach ($request->tool_keys as $toolKey) {
                 foreach ($toolKey->rtts_keys as $rtts_key) {
@@ -99,6 +106,7 @@ class SecurityApprovalForm extends Component
                         {
                             $rtts_key->update(['status_id' => 10]); // Update the status to "Approved"
                             $rtts_key->update(['user_id' => auth()->user()->id]);
+                            $this->approvalStatus['vp'] =  $rtts_key->status_id;
                         }
                         // Check if any rtts_key is not approved
                         if ($rtts_key->status_id != 10) {
@@ -138,6 +146,7 @@ class SecurityApprovalForm extends Component
                         {
                             $rtts_key->update(['status_id' => 10]); // Update the status to "Approved"
                             $rtts_key->update(['user_id' => auth()->user()->id]);
+                            $this->approvalStatus['president'] =  $rtts_key->status_id;
                         }
                         // Check if any rtts_key is not approved
                         if ($rtts_key->status_id != 10) {

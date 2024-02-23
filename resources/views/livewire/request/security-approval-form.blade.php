@@ -38,7 +38,7 @@
                     {{-- Check if the status is null and security ID meets the condition --}}
                     @if($rtts_key->status_id == 11 && ($rtts_key->security_id == 3 || $rtts_key->security_id == 5 || $rtts_key->security_id == 6))
 
-                    @if($rtts_key->status_id == 11 && $rtts_key->security_id == 3)
+                    @if($rtts_key->status_id == 11 && $rtts_key->security_id == 3 && $request->current_security_id == 3)
                     <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="hOOAprroval({{ $request->id }})" title="Approval">
                         <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
                     </button>
@@ -74,7 +74,7 @@
                     {{-- Check if the status is null and security ID meets the condition --}}
                     @if($rtts_key->status_id == 11 && ($rtts_key->security_id == 3 || $rtts_key->security_id == 5 || $rtts_key->security_id == 6))
 
-                    @if($rtts_key->status_id == 11 && $rtts_key->security_id == 5)
+                    @if($rtts_key->status_id == 11 && $rtts_key->security_id == 5 && $request->current_security_id == 5)
                     <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="vPAprroval({{ $request->id }})" title="Approval">
                         <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
                     </button>
@@ -108,8 +108,9 @@
                     @if (!in_array($rtts_key->security->description, $shownSecurityIds))
                     {{-- Check if the status is null and security ID meets the condition --}}
                     @if($rtts_key->status_id == 11 && ($rtts_key->security_id == 3 || $rtts_key->security_id == 5 || $rtts_key->security_id == 6))
+                    
 
-                    @if($rtts_key->status_id == 11 && $rtts_key->security_id == 6 )
+                    @if($rtts_key->status_id == 11 && $rtts_key->security_id == 6 && $request->current_security_id == 6)
                     <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="pAprroval({{ $request->id }})" title="Approval">
                         <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
                     </button>
