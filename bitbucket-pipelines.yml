@@ -7,11 +7,4 @@ pipelines:
         script:
           - echo 'Deploying to production'
           - apt-get update && apt-get install -y lftp
-          - composer install 
-          - php artisan optimize
-          - php artisan route:cache
-          - php artisan view:cache
-          - php artisan config:cache
-          - php artisan migrate --force
-          - npm install && npm run production
           - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; set ftp:ssl-allow yes; mirror -R ./ /htdocs"
