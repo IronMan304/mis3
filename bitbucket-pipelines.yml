@@ -16,5 +16,5 @@ pipelines:
                 php artisan config:cache
                 php artisan migrate --force
                 npm install && npm run production
-                lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; set ftp:ssl-allow no; mirror -R ./ /htdocs"
+                lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; set ftp:ssl-allow yes; mirror -R ./ /htdocs"
             fi
