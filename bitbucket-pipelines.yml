@@ -1,0 +1,16 @@
+image: atlassian/default-image:3
+
+pipelines:
+  default:
+    - step:
+        name: 'Deployment'
+        script:
+          - echo 'Deploying to production'
+          - apt-get update && apt-get install -y lftp
+          - composer install --no-dev --prefer-dist
+          - php artisan optimize
+          - php artisan route:cache
+          - php artisan view:cache
+          - php artisan config:cache
+          - npm install && npm run production # Assuming you're using npm for asset compilation
+          - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; set ftp:ssl-allow no; mirror -R ./ /htdocs"
