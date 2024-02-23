@@ -1,7 +1,7 @@
 image: atlassian/default-image:3
+
 pipelines:
-  branches:
-    master:
+  default:
     - step:
         name: 'Deployment'
         script:
@@ -14,5 +14,4 @@ pipelines:
           - php artisan config:cache
           - php artisan migrate --force
           - npm install && npm run production
-          - git ftp push -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST
-            
+          - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; set ftp:ssl-allow yes; mirror -R ./ /htdocs"
