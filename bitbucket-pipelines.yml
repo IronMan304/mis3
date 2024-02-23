@@ -1,19 +1,18 @@
 image: atlassian/default-image:3
 pipelines:
-  default:
+  branches:
+    master:
     - step:
         name: 'Deployment'
         script:
           - echo 'Deploying to production'
-          - |
-            if [[ "$BITBUCKET_TAG" =~ ^release-.*$ ]]; then
-                apt-get update && apt-get install -y lftp
-                composer install --no-dev --prefer-dist
-                php artisan optimize
-                php artisan route:cache
-                php artisan view:cache
-                php artisan config:cache
-                php artisan migrate --force
-                npm install && npm run production
-                git ftp push -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST
-            fi
+          - apt-get update && apt-get install -y lftp
+          - composer install --no-dev --prefer-dist
+          - php artisan optimize
+          - php artisan route:cache
+          - php artisan view:cache
+          - php artisan config:cache
+          - php artisan migrate --force
+          - npm install && npm run production
+          - git ftp push -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST
+            
