@@ -6,7 +6,11 @@ pipelines:
         name: 'Deployment'
         script:
           - echo 'Deploying to production'
-          - apt-get update && apt-get install -y lftp
+          # Install Composer
+          - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          - php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          - php -r "unlink('composer-setup.php');"
+          # Run Composer install
           - composer install --no-dev --prefer-dist
           - php artisan optimize
           - php artisan route:cache
