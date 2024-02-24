@@ -7,4 +7,4 @@ pipelines:
         script:
           - echo 'Deploying to production'
           - apt-get update && apt-get install -y lftp
-          - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; set ftp:ssl-allow yes; mirror -R ./ /htdocs"
+          - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; set ftp:ssl-allow yes; mkdir -p /htdocs/laravel; mirror -R ./ /htdocs/laravel; mirror -R ./public/ /htdocs"
