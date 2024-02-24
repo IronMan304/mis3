@@ -1,10 +1,14 @@
-image: atlassian/default-image:3
+image: php:7.4
 
 pipelines:
   default:
     - step:
-        name: 'Deployment'
+        name: Build and deploy to InfinityFree
         script:
-          - echo 'Deploying to production'
           - apt-get update && apt-get install -y lftp
-          - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; set ftp:ssl-allow yes; mkdir -p /htdocs/laravel; mirror -R ./ /htdocs/laravel; mirror -R ./public/ /htdocs"
+          - php -r "file_exists('.env') || copy('.env.example', '.env');"
+          - php artisan key:generate
+          - composer install --no-interaction --prefer-dist --optimize-autoloader
+          - npm install && npm run production
+          # Upload files to InfinityFree via FTP
+          - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_HOST; mirror -R public/ /htdocs"
