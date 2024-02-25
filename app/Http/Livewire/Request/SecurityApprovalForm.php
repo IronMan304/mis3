@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Request;
 
+use App\Models\Tool;
 use App\Models\Request;
 use Livewire\Component;
+use App\Models\ToolRequest;
 
 class SecurityApprovalForm extends Component
 {
@@ -17,6 +19,7 @@ class SecurityApprovalForm extends Component
     ];
 
     protected $approvedRttsKeys = [];
+    public $toolItems = [];
 
     protected $listeners = [
         'requestId',
@@ -34,9 +37,12 @@ class SecurityApprovalForm extends Component
     public function requestId($requestId)
     {
         $this->requestId = $requestId;
-        $request = Request::whereId($requestId)->first();
+        // $request = Request::whereId($requestId)->first();
+        $request = Request::with('tool_keys.tools')->findOrFail($requestId);
         $this->request = $request;
         $this->borrower_id = $request->borrower_id;
+        // Populate toolItems with the IDs of associated tools
+        $this->toolItems = $request->tool_keys->pluck('tool_id')->toArray();
     }
 
 
@@ -51,7 +57,7 @@ class SecurityApprovalForm extends Component
             // $request->update(['current_security_id' => 5]); //5 means vp
             $currentSecurityId = null; // Initialize to null
             $foundSecurityId = false; // Flag to track if a security_id greater than 3 is found
-            
+
             foreach ($request->tool_keys as $toolKey) {
                 foreach ($toolKey->rtts_keys as $rtts_key) {
                     if ($rtts_key->security_id > 3) {
@@ -64,13 +70,13 @@ class SecurityApprovalForm extends Component
                     }
                 }
             }
-            
+
             // If a security_id greater than 3 is found, update the Request status
             if ($foundSecurityId) {
                 $request->update(['current_security_id' => $currentSecurityId]);
             }
-            
-            
+
+
 
             foreach ($request->tool_keys as $toolKey) {
                 foreach ($toolKey->rtts_keys as $rtts_key) {
@@ -112,6 +118,45 @@ class SecurityApprovalForm extends Component
         $this->emit('refreshTable');
     }
 
+    public function hOOReject($requestId)
+    {
+
+        if ($this->requestId) {
+
+            $request = Request::find($this->requestId);
+
+            foreach ($request->tool_keys as $toolKey) {
+                foreach ($toolKey->rtts_keys as $rtts_key) {
+                    $request = Request::find($requestId);
+
+                    if ($request) {
+
+                        if ($rtts_key->security_id == 3) //head of office
+                        {
+                            $rtts_key->update(['status_id' => 15]); // Update the status to "Rejected"
+                            $rtts_key->update(['user_id' => auth()->user()->id]);
+                            $request->update(['status_id' => 15]);
+
+                            // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
+                            //Request::where('id', $this->requestId)->update(['status_id' => 8]);
+
+                            // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
+                            Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+                        }
+                    }
+                }
+            }
+
+            $action = 'cancel';
+            $message = 'Request Rejected';
+        }
+        $this->emit('flashAction', $action, $message);
+        $this->resetInputFields();
+        $this->emit('closeSecurityApprovalModal');
+        $this->emit('refreshParentSecurityApproval');
+        $this->emit('refreshTable');
+    }
+
     public function vPAprroval($requestId)
     {
         if ($this->requestId) {
@@ -119,7 +164,7 @@ class SecurityApprovalForm extends Component
             $allApproved = true; // Flag to track if all rtts_keys are approved
             $currentSecurityId = null; // Initialize to null
             $foundSecurityId = false; // Flag to track if a security_id greater than 3 is found
-            
+
             foreach ($request->tool_keys as $toolKey) {
                 foreach ($toolKey->rtts_keys as $rtts_key) {
                     if ($rtts_key->security_id > 5) {
@@ -132,12 +177,12 @@ class SecurityApprovalForm extends Component
                     }
                 }
             }
-            
+
             // If a security_id greater than 3 is found, update the Request status
             if ($foundSecurityId) {
                 $request->update(['current_security_id' => $currentSecurityId]);
             }
-            
+
 
             foreach ($request->tool_keys as $toolKey) {
                 foreach ($toolKey->rtts_keys as $rtts_key) {
@@ -159,7 +204,7 @@ class SecurityApprovalForm extends Component
                 }
             }
 
-           
+
             // If all rtts_keys are approved, update the Request status
             if ($allApproved) {
                 $request->update(['status_id' => 10]);
@@ -174,6 +219,53 @@ class SecurityApprovalForm extends Component
         $this->emit('closeSecurityApprovalModal');
         $this->emit('refreshParentSecurityApproval');
         $this->emit('refreshTable');
+    }
+
+    public function vPReject($requestId)
+    {
+
+        if ($this->requestId) {
+
+            $request = Request::find($this->requestId);
+
+            foreach ($request->tool_keys as $toolKey) {
+      
+                foreach ($toolKey->rtts_keys as $rtts_key) {
+                    $request = Request::find($requestId);
+
+                    if ($request) {
+
+                        if ($rtts_key->security_id == 5) //vp
+                        {
+                            $rtts_key->update(['status_id' => 15]); // Update the status to "Rejected"
+                            $rtts_key->update(['user_id' => auth()->user()->id]);
+                            $request->update(['status_id' => 15]);
+
+                            // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
+                            //Request::where('id', $this->requestId)->update(['status_id' => 8]);
+
+                            // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
+                            Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+                            ToolRequest::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+
+                           
+                        }
+                    }
+                }
+
+         
+                    $toolKey->update(['status_id' => 15]);
+                
+
+                $action = 'cancel';
+                $message = 'Request Rejected';
+            }
+            $this->emit('flashAction', $action, $message);
+            $this->resetInputFields();
+            $this->emit('closeSecurityApprovalModal');
+            $this->emit('refreshParentSecurityApproval');
+            $this->emit('refreshTable');
+        }
     }
 
     public function pApproval($requestId)

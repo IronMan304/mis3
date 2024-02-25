@@ -42,6 +42,9 @@
                     <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="hOOAprroval({{ $request->id }})" title="Approval">
                         <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
                     </button>
+                    <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="hOOReject({{ $request->id }})" title="Reject">
+                    <i class="fa-solid fa-thumbs-down"></i>{{ $rtts_key->security->description ?? ''}}
+                    </button>
                     @endif
 
                     @php
@@ -77,6 +80,9 @@
                     @if($rtts_key->status_id == 11 && $rtts_key->security_id == 5 && $request->current_security_id == 5)
                     <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="vPAprroval({{ $request->id }})" title="Approval">
                         <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="vPReject({{ $request->id }})" title="Reject">
+                    <i class="fa-solid fa-thumbs-down"></i>{{ $rtts_key->security->description ?? ''}}
                     </button>
                     @endif
 
@@ -132,7 +138,7 @@
 
 
 
-                <button class="btn btn-primary">Reject</button>
+       
             </div>
     </form>
 </div>
