@@ -164,6 +164,7 @@ class RequestForm extends Component
                         $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
 
                         $minSecurityId = min($securityIds);  
+                        $maxSecurityId = max($securityIds); 
                         // Create a record in request_tool_tool_security table for each security_id
                         foreach ($securityIds as $securityId) {
                             RequestToolToolSecurityKey::create([
@@ -176,6 +177,7 @@ class RequestForm extends Component
                         }
                     
                         $request->update(['current_security_id' =>  $minSecurityId]);
+                        $request->update(['max_security_id' =>  $maxSecurityId]);
                     }
                 }
 

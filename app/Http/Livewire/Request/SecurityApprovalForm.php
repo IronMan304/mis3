@@ -48,7 +48,29 @@ class SecurityApprovalForm extends Component
 
             $request = Request::find($this->requestId);
             $allApproved = true; // Flag to track if all rtts_keys are approved
-            $request->update(['current_security_id' => 5]); //5 means vp
+            // $request->update(['current_security_id' => 5]); //5 means vp
+            $currentSecurityId = null; // Initialize to null
+            $foundSecurityId = false; // Flag to track if a security_id greater than 3 is found
+            
+            foreach ($request->tool_keys as $toolKey) {
+                foreach ($toolKey->rtts_keys as $rtts_key) {
+                    if ($rtts_key->security_id > 3) {
+                        // If a security_id greater than 3 is found and it's not yet set
+                        // Set currentSecurityId to this security_id
+                        if (!$foundSecurityId || $rtts_key->security_id < $currentSecurityId) {
+                            $currentSecurityId = $rtts_key->security_id;
+                            $foundSecurityId = true; // Set the flag to true since a valid security_id is found
+                        }
+                    }
+                }
+            }
+            
+            // If a security_id greater than 3 is found, update the Request status
+            if ($foundSecurityId) {
+                $request->update(['current_security_id' => $currentSecurityId]);
+            }
+            
+            
 
             foreach ($request->tool_keys as $toolKey) {
                 foreach ($toolKey->rtts_keys as $rtts_key) {
@@ -61,9 +83,9 @@ class SecurityApprovalForm extends Component
                             $rtts_key->update(['status_id' => 10]); // Update the status to "Approved"
                             $rtts_key->update(['user_id' => auth()->user()->id]);
                             $this->approvalStatus['head_of_office'] =  10;
-                               // Save the ID of the approved rtts_key
-                        $this->approvedRttsKeys[] = $rtts_key->id;
-                           //dd($this->approvedRttsKeys);
+                            // Save the ID of the approved rtts_key
+                            $this->approvedRttsKeys[] = $rtts_key->id;
+                            //dd($this->approvedRttsKeys);
                         }
                         // Check if any rtts_key is not approved
                         if ($rtts_key->status_id != 10) {
@@ -72,6 +94,7 @@ class SecurityApprovalForm extends Component
                     }
                 }
             }
+
             // If all rtts_keys are approved, update the Request status
             if ($allApproved) {
                 $request->update(['status_id' => 10]);
@@ -94,7 +117,27 @@ class SecurityApprovalForm extends Component
         if ($this->requestId) {
             $request = Request::find($this->requestId);
             $allApproved = true; // Flag to track if all rtts_keys are approved
-            $request->update(['current_security_id' => 6]); //5 means p
+            $currentSecurityId = null; // Initialize to null
+            $foundSecurityId = false; // Flag to track if a security_id greater than 3 is found
+            
+            foreach ($request->tool_keys as $toolKey) {
+                foreach ($toolKey->rtts_keys as $rtts_key) {
+                    if ($rtts_key->security_id > 5) {
+                        // If a security_id greater than 3 is found and it's not yet set
+                        // Set currentSecurityId to this security_id
+                        if (!$foundSecurityId || $rtts_key->security_id < $currentSecurityId) {
+                            $currentSecurityId = $rtts_key->security_id;
+                            $foundSecurityId = true; // Set the flag to true since a valid security_id is found
+                        }
+                    }
+                }
+            }
+            
+            // If a security_id greater than 3 is found, update the Request status
+            if ($foundSecurityId) {
+                $request->update(['current_security_id' => $currentSecurityId]);
+            }
+            
 
             foreach ($request->tool_keys as $toolKey) {
                 foreach ($toolKey->rtts_keys as $rtts_key) {
@@ -115,6 +158,8 @@ class SecurityApprovalForm extends Component
                     }
                 }
             }
+
+           
             // If all rtts_keys are approved, update the Request status
             if ($allApproved) {
                 $request->update(['status_id' => 10]);
@@ -131,7 +176,7 @@ class SecurityApprovalForm extends Component
         $this->emit('refreshTable');
     }
 
-    public function pAprroval($requestId)
+    public function pApproval($requestId)
     {
         if ($this->requestId) {
             $request = Request::find($this->requestId);

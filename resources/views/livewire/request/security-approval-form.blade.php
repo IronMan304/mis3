@@ -108,13 +108,14 @@
                     @if (!in_array($rtts_key->security->description, $shownSecurityIds))
                     {{-- Check if the status is null and security ID meets the condition --}}
                     @if($rtts_key->status_id == 11 && ($rtts_key->security_id == 3 || $rtts_key->security_id == 5 || $rtts_key->security_id == 6))
-                    
+
 
                     @if($rtts_key->status_id == 11 && $rtts_key->security_id == 6 && $request->current_security_id == 6)
-                    <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="pAprroval({{ $request->id }})" title="Approval">
+                    <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="pApproval({{ $request->id }})" title="Approval">
                         <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
                     </button>
                     @endif
+
 
                     @php
                     $shownSecurityIds[] = $rtts_key->security->description;
