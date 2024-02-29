@@ -1,12 +1,12 @@
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        Livewire.hook('message.processed', (component) => {
-            setTimeout(function() {
-                $('#alert').fadeOut('fast');
-            }, 5000);
-        });
+  document.addEventListener("DOMContentLoaded", () => {
+    Livewire.hook('message.processed', (component) => {
+      setTimeout(function() {
+        $('#alert').fadeOut('fast');
+      }, 5000);
+    });
 
-        window.livewire.on('closeRequestModal', () => {
+    window.livewire.on('closeRequestModal', () => {
       $('#requestModal').modal('hide');
     });
 
@@ -46,27 +46,14 @@
       $('#securityApprovalModal').modal('show');
     });
 
-
-        $('#requestModal').on('shown.bs.modal', function() {
-            if (!$.fn.DataTable.isDataTable('.datatable')) {
-                table = $('.datatable').DataTable({
-                    searching: false,
-                    //order: [[1, 'desc']], 
-                    //paging: false,
-                });
-            }
-        });
-
-        Livewire.hook('message.processed', (message, component) => {
-            // Reinitialize DataTable after Livewire update
-            
-                $('.datatable').DataTable().destroy();
-            
-
-            $('.datatable').DataTable({
-                searching: false
-                // Add other DataTable options here if needed
-            });
-        });
+    window.livewire.on('closeRequestStartFormModal', () => {
+      $('#requestStartFormModal').modal('hide');
     });
+
+    window.livewire.on('openRequestStartFormModal', () => {
+      $('#requestStartFormModal').modal('show');
+    });
+
+
+  });
 </script>

@@ -120,6 +120,9 @@
                     <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="pApproval({{ $request->id }})" title="Approval">
                         <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
                     </button>
+                    <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="pReject({{ $request->id }})" title="Reject">
+                    <i class="fa-solid fa-thumbs-down"></i>{{ $rtts_key->security->description ?? ''}}
+                    </button>
                     @endif
 
 

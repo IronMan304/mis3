@@ -104,6 +104,7 @@ class SecurityApprovalForm extends Component
             // If all rtts_keys are approved, update the Request status
             if ($allApproved) {
                 $request->update(['status_id' => 10]);
+                //$toolKey->update(['status_id' => 6]);
             }
 
             $action = 'edit';
@@ -145,6 +146,7 @@ class SecurityApprovalForm extends Component
                         }
                     }
                 }
+                $toolKey->update(['status_id' => 15]);
             }
 
             $action = 'cancel';
@@ -229,7 +231,7 @@ class SecurityApprovalForm extends Component
             $request = Request::find($this->requestId);
 
             foreach ($request->tool_keys as $toolKey) {
-      
+
                 foreach ($toolKey->rtts_keys as $rtts_key) {
                     $request = Request::find($requestId);
 
@@ -246,16 +248,13 @@ class SecurityApprovalForm extends Component
 
                             // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
                             Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
-                            ToolRequest::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
-
-                           
                         }
                     }
                 }
 
-         
-                    $toolKey->update(['status_id' => 15]);
-                
+
+                $toolKey->update(['status_id' => 15]);
+
 
                 $action = 'cancel';
                 $message = 'Request Rejected';
@@ -306,6 +305,50 @@ class SecurityApprovalForm extends Component
         $this->emit('closeSecurityApprovalModal');
         $this->emit('refreshParentSecurityApproval');
         $this->emit('refreshTable');
+    }
+
+    public function pReject($requestId)
+    {
+
+        if ($this->requestId) {
+
+            $request = Request::find($this->requestId);
+
+            foreach ($request->tool_keys as $toolKey) {
+
+                foreach ($toolKey->rtts_keys as $rtts_key) {
+                    $request = Request::find($requestId);
+
+                    if ($request) {
+
+                        if ($rtts_key->security_id == 6) //president
+                        {
+                            $rtts_key->update(['status_id' => 15]); // Update the status to "Rejected"
+                            $rtts_key->update(['user_id' => auth()->user()->id]);
+                            $request->update(['status_id' => 15]);
+
+                            // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
+                            //Request::where('id', $this->requestId)->update(['status_id' => 8]);
+
+                            // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
+                            Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+                        }
+                    }
+                }
+
+
+                $toolKey->update(['status_id' => 15]);
+
+
+                $action = 'cancel';
+                $message = 'Request Rejected';
+            }
+            $this->emit('flashAction', $action, $message);
+            $this->resetInputFields();
+            $this->emit('closeSecurityApprovalModal');
+            $this->emit('refreshParentSecurityApproval');
+            $this->emit('refreshTable');
+        }
     }
 
     public function render()

@@ -93,9 +93,18 @@ class ReturnForm extends Component
             foreach ($this->return_toolItems as $toolId) {
                 $tool = Tool::find($toolId);
 
-                if ($tool->status_id == 2) {
+               
                     $tool->update(['status_id' => $this->selectedConditionStatus]);
-                }
+                
+            }
+            
+
+            $request = Request::find($this->returnId);
+            if ($request) {
+                $request->update(['status_id' => 12]); // Completed
+                // foreach ($request->tool_keys as $toolKey) {
+                //     $toolKey->update(['status_id' => 6]);
+                // }
             }
 
             $action = 'edit';

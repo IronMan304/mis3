@@ -29,6 +29,7 @@ class RequestList extends Component
         'refreshParentReturn' => '$refresh',
         'refreshParentApproval' => '$refresh',
         'refreshParentSecurityApproval' => '$refresh',
+        'refreshParentRequestStartForm' => '$refresh',
         'deleteRequest',
         'editRequest',
         'deleteConfirmRequest',
@@ -91,6 +92,13 @@ class RequestList extends Component
         $this->requestId = $requestId;
         $this->emit('requestId', $this->requestId);
         $this->emit('openSecurityApprovalModal');
+    }
+
+    public function requestStartForm($requestId)
+    {
+        $this->requestId = $requestId;
+        $this->emit('requestId', $this->requestId);
+        $this->emit('openRequestStartFormModal');
     }
     public function handleCancelRequest($requestId)
     {

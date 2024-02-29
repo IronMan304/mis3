@@ -141,7 +141,7 @@
 									</td>
 
 									<td>
-										{{'Request'}}: {{ $request->status->description }} 
+										{{'Request'}}: {{ $request->status->description }}
 										<br>
 
 										@if ($request->tool_keys)
@@ -164,7 +164,7 @@
 										@endphp
 										@endif
 
-									
+
 										@endforeach
 										@if (!$loop->last)
 										{{-- Add a Space or separator between department names --}}
@@ -223,37 +223,30 @@
 											<i class='fa fa-pen-to-square'></i>
 											</button>--}}
 											@if ($request->tool_keys)
-											@php $returnButtonShown = false; @endphp
+
 											{{--@if($request->status_id == 11)
-											<button class="btn btn-success btn-sm mx-1" type="button" wire:click="approveRequest({{ $request->id }})">
+												<button class="btn btn-success btn-sm mx-1" type="button" wire:click="approveRequest({{ $request->id }})">
 											<i class="fa-solid fa-thumbs-up"></i>
 											</button>
 											@endif--}}
 
-											@if(auth()->user()->hasRole('staff') || auth()->user()->hasRole('admin'))
-											@if($request->status_id == 11 || $request->status_id == 6)
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
-												<i class="fa-solid fa-arrow-right-arrow-left"></i>
-											</button>
-											@else
-											<button disabled type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
-												<i class="fa-solid fa-arrow-right-arrow-left"></i>
-											</button>
-											@endif
-											@endif
-
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="View Tool">
 												<i class="fa-solid fa-toolbox"></i>
 											</button>
-											@foreach ($request->tool_keys as $toolKey)
-											@if($toolKey->status_id == 6 && !$returnButtonShown)
-											@php $returnButtonShown = true; @endphp
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);">
-												<i class="fa-solid fa-arrow-right-arrow-left"></i>
-											</button>
 
+											@if(auth()->user()->hasRole('staff') || auth()->user()->hasRole('admin'))
+											@if($request->status_id == 11 || $request->status_id == 6)
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
+											<i class="fas fa-toggle-on"></i>
+
+											</button>
+											@else
+											<button disabled type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
+											<i class="fas fa-toggle-on"></i>
+											</button>
 											@endif
-											@endforeach
+											@endif
+
 											@endif
 											<!-- 
 											@if ($request->tool_keys)
@@ -288,6 +281,22 @@
 											@endif
 
 
+
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="requestStartForm({{ $request->id }})" title="Start" @if ($request->status_id != 10) disabled @endif>
+												<i class="fa-solid fa-play"></i>
+											</button>
+
+											@if ($request->tool_keys)
+											@php $returnButtonShown = false; @endphp
+											@foreach ($request->tool_keys as $toolKey)
+											@if(!$returnButtonShown)
+											@php $returnButtonShown = true; @endphp
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);" @if ($toolKey->status_id != 6) disabled @endif >
+												<i class="fa-solid fa-arrow-right-arrow-left"></i>
+											</button>
+											@endif
+											@endforeach
+											@endif
 
 
 
@@ -339,6 +348,13 @@
 			<livewire:request.security-approval-form />
 		</div>
 	</div>
+
+	<div wire.ignore.self class="modal fade" id="requestStartFormModal" tabindex="-1" role="dialog" aria-labelledby="requestStartFormModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:request.request-start-form />
+		</div>
+	</div>
+
 </div>
 
 @section('custom_script')

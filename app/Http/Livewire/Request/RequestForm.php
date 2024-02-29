@@ -217,7 +217,7 @@ class RequestForm extends Component
         } else {
             $borrowers = Borrower::all();
         }
-
+        $borrowers = Borrower::all();
         $options = Option::all();
 
         //dd($selectedBorrower);
