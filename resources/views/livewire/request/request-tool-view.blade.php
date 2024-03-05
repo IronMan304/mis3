@@ -17,10 +17,14 @@
 					<thead>
 						<tr>
 
-							<th>Equipment Category:Type</th>
+							<th>Equipment Category: Type</th>
 							<th>Equipment</th>
 							<th>Date Requested</th>
+							<th>Date Reviewed</th>
+							<th>Date Approved</th>
 							<th>Date Returned</th>
+							<th>Date Rejected</th>
+							<th>Date Cancelled</th>
 							{{--<th>Action</th>--}}
 						</tr>
 					</thead>
@@ -28,7 +32,7 @@
 						@foreach ($requests as $request)
 						<tr>
 
-
+							<!-- Equipment Category: Type -->
 							<td>
 								@if ($request->tool_keys)
 								@foreach ($request->tool_keys as $toolKey)
@@ -42,6 +46,7 @@
 								@endif
 							</td>
 
+							<!-- Equipment -->
 							<td>
 								@if ($request->tool_keys)
 								@foreach ($request->tool_keys as $toolKey)
@@ -61,10 +66,17 @@
 								{{ $request->created_at->format('m-d-Y H:i A')}}
 							</td>--}}
 
+							<!-- Date Requested-->
 							<td>{{ $request->created_at->setTimezone('Asia/Manila')->format('m-d-Y H:i:s') }}<br>
 								({{ $request->user->position->description ?? 'N/A' }}) {{ $request->user->first_name ?? '' }} {{ $request->user->last_name ?? '' }}
 							</td>
 
+							<!-- Date Reviewed -->
+							<td></td>
+							<!-- Date Approved -->
+							<td></td>
+
+							<!-- Date Returned -->
 							<td>
 								@if ($request->tool_keys)
 								@foreach ($request->tool_keys as $toolKey)

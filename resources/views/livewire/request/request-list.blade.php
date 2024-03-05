@@ -332,7 +332,7 @@
 	</div>
 
 	<div wire.ignore.self class="modal fade" id="requestToolViewModal" tabindex="-1" role="dialog" aria-labelledby="requestToolViewModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-dialog modal-dialog-centered modal-xl">
 			<livewire:request.request-tool-view />
 		</div>
 	</div>

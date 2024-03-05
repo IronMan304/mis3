@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Request;
 
+use App\Models\Tool;
 use App\Models\Option;
 use App\Models\Request;
 use Livewire\Component;
@@ -14,6 +15,7 @@ class RequestStartForm extends Component
     public $action = '';  //flash
     public $message = '';  //flash
     public $operatorItems = [];
+    public $approval_toolItems = [];
 
     protected $listeners = [
         'requestId',
@@ -35,6 +37,9 @@ class RequestStartForm extends Component
         $this->option_id = $request->option_id;
         $this->operatorItems = $request->request_operator_keys->map(function ($operator) {
             return $operator->operator_id;
+        })->toArray();
+        $this->approval_toolItems = $request->tool_keys->map(function ($tool) {
+            return $tool->tool_id;
         })->toArray();
     }
 
@@ -60,6 +65,14 @@ class RequestStartForm extends Component
                     $toolKey->update(['status_id' => 6]);
                 }
             }
+
+            foreach ($this->approval_toolItems as $toolId) {
+             
+                    $tool = Tool::find($toolId);
+                    $tool->update(['status_id' => 2]); // if approved, the tool in the inventory will be "In Use"
+                
+            }
+            
 
 
             $action = 'edit';
