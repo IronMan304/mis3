@@ -139,7 +139,11 @@ class ApprovalForm extends Component
                             //     RequestToolToolSecurityKey::where('security_id', $securityIds)
                             //     ->update(['status_id' => 15]);
                             // }
-
+                            // Update status_id in RequestToolToolSecurityKey for the corresponding tool_request
+                            // RequestToolToolSecurityKey::where('request_tools_id', $tool_request->id)
+                            //     ->update(['status_id' => 15]);
+                            RequestToolToolSecurityKey::where('request_tools_id', $tool_request->id)
+                            ->delete();
                         } elseif ($this->selectedConditionStatus == 15) {
                             // If status is rejected and tool is not in approval_toolItems, set tool in the inventory to "On hold"
                             $tool->update(['status_id' => 17]);
