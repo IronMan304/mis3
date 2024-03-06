@@ -234,17 +234,13 @@
 												<i class="fa-solid fa-toolbox"></i>
 											</button>
 
-											@if(auth()->user()->hasRole('staff') || auth()->user()->hasRole('admin'))
-											@if($request->status_id == 11 || $request->status_id == 6)
+											@if(auth()->user()->hasRole('staff') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('head of office'))
+									
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
 											<i class="fas fa-toggle-on"></i>
 
 											</button>
-											@else
-											<button disabled type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
-											<i class="fas fa-toggle-on"></i>
-											</button>
-											@endif
+											
 											@endif
 
 											@endif
@@ -282,7 +278,7 @@
 
 
 
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="requestStartForm({{ $request->id }})" title="Start" @if ($request->status_id != 10) disabled @endif>
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="requestStartForm({{ $request->id }})" title="Start" {{--@if ($request->status_id != 10) disabled @endif--}}>
 												<i class="fa-solid fa-play"></i>
 											</button>
 
@@ -291,7 +287,7 @@
 											@foreach ($request->tool_keys as $toolKey)
 											@if(!$returnButtonShown)
 											@php $returnButtonShown = true; @endphp
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);" @if ($toolKey->status_id != 6) disabled @endif >
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);" {{--@if ($toolKey->status_id != 6) disabled @endif--}} >
 												<i class="fa-solid fa-arrow-right-arrow-left"></i>
 											</button>
 											@endif

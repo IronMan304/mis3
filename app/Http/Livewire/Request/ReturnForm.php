@@ -14,7 +14,7 @@ use Carbon\Carbon;
 
 class ReturnForm extends Component
 {
-    public $returnId, $borrower_id, $status_id, $selectedCondition, $selectedToolId, $description;
+    public $returnId, $borrower_id, $status_id, $selectedCondition, $selectedToolId, $description, $errorMessage;
     public $return_toolItems = [];
     public $action = '';  //flash
     public $message = '';  //flash
@@ -57,69 +57,74 @@ class ReturnForm extends Component
     {
         $data = $this->validate([
             'borrower_id' => 'required',
-            'return_toolItems' => 'required|array',
+            'return_toolItems' => 'required|array|min:1',
+            'selectedConditionStatus' => 'required',
         ]);
+
         $data['user_id'] = auth()->user()->id;
         $data['status_id'] = 7; //for returning
 
         if ($this->returnId) {
+            $return = Request::find($this->returnId);
+            foreach ($return->tool_keys as $toolKey) {
+                if ($toolKey->status_id == 6) {
 
-            // Update the status_id and returned_at for the returned tools in the ToolRequest table
-            foreach ($this->return_toolItems as $toolId) {
-                $toolRequest = ToolRequest::where('request_id', $this->returnId)
-                    ->where('tool_id', $toolId)
-                    ->first();
-            
-                if ($toolRequest->returned_at == null) {
-                    $statusId = ($this->selectedConditionStatus == 3) ? 9 : 7;
-            
-                    $toolRequest->update([
-                        'status_id' => $statusId,
-                        'user_id' => auth()->user()->id,
-                        'returner_id' => $this->borrower_id,
-                        'tool_status_id' => $this->selectedConditionStatus,
-                        'description' => $this->description,
-                        'returned_at' => Carbon::now()->setTimezone('Asia/Manila'),
-                    ]);
+                    // Update the status_id and returned_at for the returned tools in the ToolRequest table
+                    foreach ($this->return_toolItems as $toolId) {
+                        $toolRequest = ToolRequest::where('request_id', $this->returnId)
+                            ->where('tool_id', $toolId)
+                            ->first();
+
+                        if ($toolRequest->returned_at == null) {
+                            $statusId = ($this->selectedConditionStatus == 3) ? 9 : 7;
+
+                            $toolRequest->update([
+                                'status_id' => $statusId,
+                                'user_id' => auth()->user()->id,
+                                'returner_id' => $this->borrower_id,
+                                'tool_status_id' => $this->selectedConditionStatus,
+                                'description' => $this->description,
+                                'returned_at' => Carbon::now()->setTimezone('Asia/Manila'),
+                            ]);
+                        } else {
+                            // Handle the case where returned_at is not null
+                            $toolRequest->update([
+                                //'status_id' => 7,
+                                'user_id' => auth()->user()->id,
+                            ]);
+                        }
+                    }
+
+                    foreach ($this->return_toolItems as $toolId) {
+                        $tool = Tool::find($toolId);
+
+
+                        $tool->update(['status_id' => $this->selectedConditionStatus]);
+                    }
+
+
+                    $request = Request::find($this->returnId);
+                    if ($request) {
+                        $request->update(['status_id' => 12]); // Completed
+                        // foreach ($request->tool_keys as $toolKey) {
+                        //     $toolKey->update(['status_id' => 6]);
+                        // }
+                    }
+
+                    $action = 'edit';
+                    $message = 'Successfully Returned';
+                    $this->emit('flashAction', $action, $message);
+                    $this->resetInputFields();
+                    $this->emit('closeReturnModal');
+                    $this->emit('refreshParentReturn');
+                    $this->emit('refreshTable');
                 } else {
-                    // Handle the case where returned_at is not null
-                    $toolRequest->update([
-                        //'status_id' => 7,
-                        'user_id' => auth()->user()->id,
-                    ]);
+                    $this->errorMessage = 'You can only return tools that are In progress';
                 }
             }
-            
-            foreach ($this->return_toolItems as $toolId) {
-                $tool = Tool::find($toolId);
+        } 
 
-               
-                    $tool->update(['status_id' => $this->selectedConditionStatus]);
-                
-            }
-            
-
-            $request = Request::find($this->returnId);
-            if ($request) {
-                $request->update(['status_id' => 12]); // Completed
-                // foreach ($request->tool_keys as $toolKey) {
-                //     $toolKey->update(['status_id' => 6]);
-                // }
-            }
-
-            $action = 'edit';
-            $message = 'Successfully Returned';
-        } else {
-            Request::create($data);
-            $action = 'store';
-            $message = 'Successfully Created';
-        }
-
-        $this->emit('flashAction', $action, $message);
-        $this->resetInputFields();
-        $this->emit('closeReturnModal');
-        $this->emit('refreshParentReturn');
-        $this->emit('refreshTable');
+     
     }
 
     public function render()
@@ -143,6 +148,7 @@ class ReturnForm extends Component
             'tool_requests' => $tool_requests,
             'statuses' => $statuses,
             'selectedConditionStatus' => $this->selectedConditionStatus,
+            'errorMessage' => $this->errorMessage,
         ]);
     }
 }

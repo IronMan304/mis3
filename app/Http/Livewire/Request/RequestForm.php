@@ -112,7 +112,7 @@ class RequestForm extends Component
                 $data['user_id'] = auth()->user()->id;
              
 
-                if (auth()->user()->hasRole('staff')) {
+                if (auth()->user()->hasRole('staffss')) {
                     $data['status_id'] = 16; // "Reviewed" is the status of a requests table if admin makes the request
                     Tool::whereIn('id', $this->toolItems)->update(['status_id' => 17]); // "On hold" is the status of a tool if staff makes the request
                     $request = Request::create($data);

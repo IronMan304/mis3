@@ -10,14 +10,16 @@ use App\Models\Request;
 use Livewire\Component;
 use App\Models\Borrower;
 use App\Models\Operator;
-use App\Models\RequestOperatorKey;
 use App\Models\ToolRequest;
+use App\Models\ToolSecurity;
+use App\Models\RequestOperatorKey;
+use App\Models\RequestToolToolSecurityKey;
 use Illuminate\Support\Facades\Request as IlluminateRequest;
 
 
 class ApprovalForm extends Component
 {
-    public $approvalId, $borrower_id, $status_id, $selectedCondition, $selectedToolId, $description, $option_id, $estimated_return_date, $purpose, $request_status_id;
+    public $approvalId, $borrower_id, $status_id, $selectedCondition, $selectedToolId, $description, $option_id, $estimated_return_date, $errorMessage, $purpose, $request_status_id;
     public $approval_toolItems = [];
     public $operatorItems = [];
     public $action = '';  //flash
@@ -26,6 +28,7 @@ class ApprovalForm extends Component
     public $selectedTools = [];
     // Add this property to your Livewire component
     public $selectedConditionStatus;
+    public $toolItems = [];
 
     protected $listeners = [
         'approvalId',
@@ -62,6 +65,9 @@ class ApprovalForm extends Component
         $this->operatorItems = $return->request_operator_keys->map(function ($operator) {
             return $operator->operator_id;
         })->toArray();
+
+        // Populate toolItems with the IDs of associated tools
+        $this->toolItems = $return->tool_keys->pluck('tool_id')->toArray();
     }
 
     //store
@@ -70,105 +76,113 @@ class ApprovalForm extends Component
         $data = $this->validate([
             'borrower_id' => 'nullable',
             'approval_toolItems' => 'required|array',
+            'selectedConditionStatus' => 'required',
             //'operatorItems' => $this->option_id == 1  && $this->request_status_id == 6 ? 'required|array' : 'nullable|array',
         ]);
         //$data['user_id'] = auth()->user()->id;
         //$data['status_id'] = 16; //for returning
 
         if ($this->approvalId) {
+            $request = Request::whereId($this->approvalId)->first();
+            if ($request->status_id == 11) {
+                // Update the status_id and returned_at for the returned tools in the ToolRequest table
+                foreach ($this->approval_toolItems as $toolId) {
+                    $toolRequest = ToolRequest::where('request_id', $this->approvalId)
+                        ->where('tool_id', $toolId)
+                        ->first();
 
-            // Update the status_id and returned_at for the returned tools in the ToolRequest table
-            foreach ($this->approval_toolItems as $toolId) {
-                $toolRequest = ToolRequest::where('request_id', $this->approvalId)
-                    ->where('tool_id', $toolId)
-                    ->first();
+                    if ($toolRequest->approval_at == null) {
+                        $statusId = ($this->selectedConditionStatus == 10) ? 10 : 15; // 10 = approved, 17 = On hold, 15 = Rejected
 
-                if ($toolRequest->approval_at == null) {
-                    $statusId = ($this->selectedConditionStatus == 10) ? 10 : 15; // 10 = approved, 17 = On hold, 15 = Rejected
+                        $toolRequest->update([
+                            'status_id' => $statusId, //to know whether it is approved or rejected
+                            'user_id' => auth()->user()->id, //rejected by
+                            //'returner_id' => $this->borrower_id,
+                            //'tool_status_id' => $this->selectedConditionStatus,
+                            'description' => $this->description,
+                            'approval_at' => Carbon::now()->setTimezone('Asia/Manila'),
+                        ]);
 
-                    $toolRequest->update([
-                        'status_id' => $statusId, //to know whether it is approved or rejected
-                        'user_id' => auth()->user()->id, //rejected by
-                        //'returner_id' => $this->borrower_id,
-                        //'tool_status_id' => $this->selectedConditionStatus,
-                        'description' => $this->description,
-                        'approval_at' => Carbon::now()->setTimezone('Asia/Manila'),
+                        if ($statusId == 10) {
+                            $tool = Tool::find($toolId);
+                            $tool->update(['status_id' => 17]); // if approved, the tool in the inventory will be "On hold"
+                        }
+                        if ($statusId == 15) {
+                            $tool = Tool::find($toolId);
+                            $tool->update(['status_id' => 1]); // if rejected, the tool in the inventory will be "In stock"
+
+                        }
+                    }
+                }
+
+                foreach ($this->operatorItems as $operatorId) {
+                    RequestOperatorKey::create([
+                        'request_id' => $this->approvalId,
+                        'operator_id' => $operatorId,
                     ]);
-
-                    if ($statusId == 10) {
-                        $tool = Tool::find($toolId);
-                        $tool->update(['status_id' => 17]); // if approved, the tool in the inventory will be "On hold"
-                    }
-                    if ($statusId == 15) {
-                        $tool = Tool::find($toolId);
-                        $tool->update(['status_id' => 1]); // if rejected, the tool in the inventory will be "In stock"
-                    }
                 }
-            }
-         
-            foreach ($this->operatorItems as $operatorId) {
-                RequestOperatorKey::create([
-                    'request_id' => $this->approvalId,
-                    'operator_id' => $operatorId,
-                ]);
-            }
 
-            // Handle tools that are not in $this->approval_toolItems
-            $unapprovedTools = Tool::whereNotIn('id', $this->approval_toolItems)->get();
+                // Handle tools that are not in $this->approval_toolItems
+                $unapprovedTools = Tool::whereNotIn('id', $this->approval_toolItems)->get();
 
-            foreach ($unapprovedTools as $tool) {
-                $tool_requests = ToolRequest::where('request_id', $this->approvalId)->where('tool_id', $tool->id)->where('status_id', 14)->get();
+                foreach ($unapprovedTools as $tool) {
+                    $tool_requests = ToolRequest::where('request_id', $this->approvalId)->where('tool_id', $tool->id)->where('status_id', 14)->get();
 
-                foreach ($tool_requests as $tool_request) {
-                    if ($this->selectedConditionStatus == 10) {
-                        // If status is approved and tool is not in approval_toolItems, set tool in the inventory to "In stock"
-                        $tool->update(['status_id' => 1]);
-                        $tool_request->update(['status_id' => 15]);//rejected
-                    } elseif ($this->selectedConditionStatus == 15) {
-                        // If status is rejected and tool is not in approval_toolItems, set tool in the inventory to "On hold"
-                        $tool->update(['status_id' => 17]);
-                        $tool_request->update(['status_id' => 10]); //approved
+                    foreach ($tool_requests as $tool_request) {
+                        if ($this->selectedConditionStatus == 10) {
+                            // If status is approved and tool is not in approval_toolItems, set tool in the inventory to "In stock"
+                            $tool->update(['status_id' => 1]);
+                            $tool_request->update(['status_id' => 15]); //rejected
+                            // foreach ($this->toolItems as $toolId) {
+                            //     $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
+                            //     // Update records in RequestToolToolSecurityKey where the tool_id matches
+                            //     RequestToolToolSecurityKey::where('security_id', $securityIds)
+                            //     ->update(['status_id' => 15]);
+                            // }
+
+                        } elseif ($this->selectedConditionStatus == 15) {
+                            // If status is rejected and tool is not in approval_toolItems, set tool in the inventory to "On hold"
+                            $tool->update(['status_id' => 17]);
+                            $tool_request->update(['status_id' => 10]); //approved
+                        }
                     }
                 }
-            }
 
-            // Check if all $statusId values were 15, then set the status of the request to rejected (16)
-            $allRejected = true;
+                // Check if all $statusId values were 15, then set the status of the request to rejected (16)
+                $allRejected = true;
 
-            foreach ($this->approval_toolItems as $toolId) {
-                $toolRequest = ToolRequest::where('request_id', $this->approvalId)
-                    ->where('tool_id', $toolId)
-                    ->first();
+                foreach ($this->approval_toolItems as $toolId) {
+                    $toolRequest = ToolRequest::where('request_id', $this->approvalId)
+                        ->where('tool_id', $toolId)
+                        ->first();
 
-                if ($toolRequest->approval_at == null && $toolRequest->status_id != 15) {
-                    $allRejected = false;
-                    break;
+                    if ($toolRequest->approval_at == null && $toolRequest->status_id != 15) {
+                        $allRejected = false;
+                        break;
+                    }
                 }
-            }
 
-            if ($allRejected) {
-                $return = Request::find($this->approvalId);
-                $return->update(['status_id' => 15]); // rejected
+                if ($allRejected) {
+                    $return = Request::find($this->approvalId);
+                    $return->update(['status_id' => 15]); // rejected
+                } else {
+                    // Set the status_id for the Request model to 16
+                    $return = Request::find($this->approvalId);
+                    $return->update(['status_id' => 16]); // reviewed
+                }
+
+
+                $action = 'edit';
+                $message = 'Successfully Responsed';
+                $this->emit('flashAction', $action, $message);
+                $this->resetInputFields();
+                $this->emit('closeApprovalModal');
+                $this->emit('refreshParentApproval');
+                $this->emit('refreshTable');
             } else {
-                // Set the status_id for the Request model to 16
-                $return = Request::find($this->approvalId);
-                $return->update(['status_id' => 16]); // reviewed
+                $this->errorMessage = 'You can only approve/reject if this request is still in pending status';
             }
-
-
-            $action = 'edit';
-            $message = 'Successfully Responsed';
-        } else {
-            Request::create($data);
-            $action = 'store';
-            $message = 'Successfully Created';
         }
-
-        $this->emit('flashAction', $action, $message);
-        $this->resetInputFields();
-        $this->emit('closeApprovalModal');
-        $this->emit('refreshParentApproval');
-        $this->emit('refreshTable');
     }
 
     public function render()
@@ -197,6 +211,7 @@ class ApprovalForm extends Component
             'options' => $options,
             'operators' => $operators,
             //'option_id' => $this->option_id,
+            'errorMessage' => $this->errorMessage,
         ]);
     }
 }

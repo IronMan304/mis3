@@ -11,7 +11,18 @@
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     @if ($errors->any())
-    {{ implode('', $errors->all('<div>:message</div>')) }}
+    <span class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </span>
+    @endif
+    @if(isset($errorMessage))
+    <div class="alert alert-danger">
+        {{ $errorMessage }}
+    </div>
     @endif
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
@@ -68,7 +79,7 @@
 
                     @endphp
 
-                    @if($request->status_id == 16)
+              
                     @foreach ($request->tool_keys as $toolKey)
                     @foreach ($toolKey->rtts_keys as $rtts_key)
 
@@ -95,7 +106,7 @@
 
                     @endforeach
                     @endforeach
-                    @endif
+                 
                     @endif
                 </div>
 

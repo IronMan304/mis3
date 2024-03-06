@@ -3,7 +3,7 @@
     <div class="modal-header">
         <h1 class="modal-title fs-5">
             @if ($requestId)
-            Request Start
+           Start this request?
             @else
             Add Request
             @endif
@@ -11,7 +11,18 @@
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     @if ($errors->any())
-    {{ implode('', $errors->all('<div>:message</div>')) }}
+    <span class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </span>
+    @endif
+    @if(isset($errorMessage))
+    <div class="alert alert-danger">
+        {{ $errorMessage }}
+    </div>
     @endif
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">

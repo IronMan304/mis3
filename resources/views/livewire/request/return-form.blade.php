@@ -10,8 +10,20 @@
         </h1>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
+
     @if ($errors->any())
-    {{ implode('', $errors->all('<div>:message</div>')) }}
+    <span class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </span>
+    @endif
+    @if(isset($errorMessage))
+    <div class="alert alert-danger">
+        {{ $errorMessage }}
+    </div>
     @endif
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
@@ -56,7 +68,7 @@
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Tools</label>
-                        <select class="form-control select" id="return_toolItems" wire:model="return_toolItems" multiple>
+                        <select class="form-control select" wire:model="return_toolItems" id="return_toolItems"  multiple>
                             <option value="" selected>Select Tools</option>
                             @foreach($tool_requests as $tool_request)
                             @if($tool_request->request_id == $returnId && $tool_request->status_id == 6)

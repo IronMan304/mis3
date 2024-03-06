@@ -11,7 +11,7 @@ use App\Models\RequestOperatorKey;
 
 class RequestStartForm extends Component
 {
-    public $requestId, $option_id;
+    public $requestId, $option_id, $errorMessage;
     public $action = '';  //flash
     public $message = '';  //flash
     public $operatorItems = [];
@@ -51,39 +51,45 @@ class RequestStartForm extends Component
         ]);
 
         if ($this->requestId) {
-
-            foreach ($this->operatorItems as $operatorId) {
-                RequestOperatorKey::create([
-                    'request_id' => $this->requestId,
-                    'operator_id' => $operatorId,
-                ]);
-            }
-            $request = Request::find($this->requestId);
-            if ($request) {
-                $request->update(['status_id' => 6]); // In progress
-                foreach ($request->tool_keys as $toolKey) {
-                    $toolKey->update(['status_id' => 6]);
+            $request = Request::whereId($this->requestId)->first();
+            if ($request->status_id == 10){
+                foreach ($this->operatorItems as $operatorId) {
+                    RequestOperatorKey::create([
+                        'request_id' => $this->requestId,
+                        'operator_id' => $operatorId,
+                    ]);
                 }
-            }
-
-            foreach ($this->approval_toolItems as $toolId) {
-             
-                    $tool = Tool::find($toolId);
-                    $tool->update(['status_id' => 2]); // if approved, the tool in the inventory will be "In Use"
+                $request = Request::find($this->requestId);
+                if ($request) {
+                    $request->update(['status_id' => 6]); // In progress
+                    foreach ($request->tool_keys as $toolKey) {
+                        $toolKey->update(['status_id' => 6]);
+                    }
+                }
+    
+                foreach ($this->approval_toolItems as $toolId) {
+                 
+                        $tool = Tool::find($toolId);
+                        $tool->update(['status_id' => 2]); // if approved, the tool in the inventory will be "In Use"
+                    
+                }
                 
+    
+    
+                $action = 'edit';
+                $message = 'Successfully Updated';
+                $this->emit('flashAction', $action, $message);
+                $this->resetInputFields();
+                $this->emit('closeRequestStartFormModal');
+                $this->emit('refreshParentRequestStartForm');
+                $this->emit('refreshTable');
+            } else{
+                $this->errorMessage = 'You can only start once this requests has been Approved';
             }
-            
 
-
-            $action = 'edit';
-            $message = 'Successfully Updated';
         }
 
-        $this->emit('flashAction', $action, $message);
-        $this->resetInputFields();
-        $this->emit('closeRequestStartFormModal');
-        $this->emit('refreshParentRequestStartForm');
-        $this->emit('refreshTable');
+       
     }
 
     public function render()
@@ -93,6 +99,7 @@ class RequestStartForm extends Component
         return view('livewire.request.request-start-form', [
             'options' => $options,
             'operators' => $operators,
+            'errorMessage' => $this->errorMessage,
         ]);
     }
 }
