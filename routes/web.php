@@ -20,6 +20,7 @@ use App\Http\Livewire\College\CollegeList;
 use App\Http\Livewire\Request\RequestList;
 use App\Http\Livewire\Service\ServiceList;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Livewire\Request\RequestList1;
 use App\Http\Livewire\Borrower\BorrowerList;
 use App\Http\Livewire\Category\CategoryList;
@@ -29,7 +30,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
-use App\Http\Controllers\WelcomeController;
+use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +90,7 @@ Route::group(['middleware' => ['role:admin|staff|head of office']], function () 
 
 Route::group(['middleware' => ['role:admin|requester|staff|head of office']], function () {
     Route::get('requests', RequestList::class);
+    Route::get('service_requests', ServiceRequestList::class);
 });
 
 require __DIR__ . '/auth.php';

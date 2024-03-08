@@ -147,30 +147,28 @@
 										@if ($request->tool_keys)
 										@php
 										$shownSecurityIds = []; // Initialize an array to keep track of shown security IDs
+										$hasContent = false;
 										@endphp
 
 										@foreach ($request->tool_keys as $toolKey)
 										@foreach ($toolKey->rtts_keys as $rtts_key)
 										{{-- Check if the security ID has already been shown --}}
 										@if (!in_array($rtts_key->security->description, $shownSecurityIds))
-										{{ $rtts_key->security->description }}: {{ $rtts_key->status->description ?? ''}}
-										{{-- Add the security ID to the list of shown IDs --}}
-										@if (!$loop->last)
-										{{-- Add a Space or separator between department names --}}
-										<br>
-										@endif
+										{{ $rtts_key->security->description }}: {{ $rtts_key->status->description ?? ''}}<br>
+
+								
+
 										@php
 										$shownSecurityIds[] = $rtts_key->security->description;
+										$hasContent = true;
 										@endphp
-										@endif
 
-
-										@endforeach
-										@if (!$loop->last)
-										{{-- Add a Space or separator between department names --}}
-										<br>
 										@endif
 										@endforeach
+
+								
+										@endforeach
+										
 										@endif
 									</td>
 
@@ -235,12 +233,12 @@
 											</button>
 
 											@if(auth()->user()->hasRole('staff') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('head of office'))
-									
+
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
-											<i class="fas fa-toggle-on"></i>
+												<i class="fas fa-toggle-on"></i>
 
 											</button>
-											
+
 											@endif
 
 											@endif
@@ -287,7 +285,7 @@
 											@foreach ($request->tool_keys as $toolKey)
 											@if(!$returnButtonShown)
 											@php $returnButtonShown = true; @endphp
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);" {{--@if ($toolKey->status_id != 6) disabled @endif--}} >
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);" {{--@if ($toolKey->status_id != 6) disabled @endif--}}>
 												<i class="fa-solid fa-arrow-right-arrow-left"></i>
 											</button>
 											@endif

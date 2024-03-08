@@ -52,7 +52,7 @@ class RequestStartForm extends Component
 
         if ($this->requestId) {
             $request = Request::whereId($this->requestId)->first();
-            if ($request->status_id == 10){
+            if ($request->status_id == 10) {
                 foreach ($this->operatorItems as $operatorId) {
                     RequestOperatorKey::create([
                         'request_id' => $this->requestId,
@@ -61,21 +61,25 @@ class RequestStartForm extends Component
                 }
                 $request = Request::find($this->requestId);
                 if ($request) {
+
+
                     $request->update(['status_id' => 6]); // In progress
                     foreach ($request->tool_keys as $toolKey) {
-                        $toolKey->update(['status_id' => 6]);
+                        if ($toolKey->status_id == 10) {
+                            $toolKey->update(['status_id' => 6]);
+                        }
                     }
                 }
-    
+
                 foreach ($this->approval_toolItems as $toolId) {
-                 
-                        $tool = Tool::find($toolId);
+                    $tool = Tool::find($toolId);
+                    if ($tool && $tool->status_id == 17) {
                         $tool->update(['status_id' => 2]); // if approved, the tool in the inventory will be "In Use"
-                    
+                    }
                 }
-                
-    
-    
+
+
+
                 $action = 'edit';
                 $message = 'Successfully Updated';
                 $this->emit('flashAction', $action, $message);
@@ -83,13 +87,10 @@ class RequestStartForm extends Component
                 $this->emit('closeRequestStartFormModal');
                 $this->emit('refreshParentRequestStartForm');
                 $this->emit('refreshTable');
-            } else{
+            } else {
                 $this->errorMessage = 'You can only start once this requests has been Approved';
             }
-
         }
-
-       
     }
 
     public function render()

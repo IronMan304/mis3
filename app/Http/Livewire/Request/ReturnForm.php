@@ -76,16 +76,22 @@ class ReturnForm extends Component
                             ->first();
 
                         if ($toolRequest->returned_at == null) {
-                            $statusId = ($this->selectedConditionStatus == 3) ? 9 : 7;
+                            $request = Request::find($this->returnId);
+                            foreach ($request->tool_keys as $toolKey) {
+                                if ($toolKey->status_id == 6) {
 
-                            $toolRequest->update([
-                                'status_id' => $statusId,
-                                'user_id' => auth()->user()->id,
-                                'returner_id' => $this->borrower_id,
-                                'tool_status_id' => $this->selectedConditionStatus,
-                                'description' => $this->description,
-                                'returned_at' => Carbon::now()->setTimezone('Asia/Manila'),
-                            ]);
+                                    $statusId = ($this->selectedConditionStatus == 3) ? 9 : 7;
+
+                                    $toolRequest->update([
+                                        'status_id' => $statusId,
+                                        'user_id' => auth()->user()->id,
+                                        'returner_id' => $this->borrower_id,
+                                        'tool_status_id' => $this->selectedConditionStatus,
+                                        'description' => $this->description,
+                                        'returned_at' => Carbon::now()->setTimezone('Asia/Manila'),
+                                    ]);
+                                }
+                            }
                         } else {
                             // Handle the case where returned_at is not null
                             $toolRequest->update([
@@ -97,9 +103,14 @@ class ReturnForm extends Component
 
                     foreach ($this->return_toolItems as $toolId) {
                         $tool = Tool::find($toolId);
-
-
-                        $tool->update(['status_id' => $this->selectedConditionStatus]);
+                        // $request = Request::find($this->returnId);
+                    
+                        // $toolKey = $request->tool_keys->where('tool_id', $toolId)->where('status_id', 6)->first();
+                    
+                        if ($tool && $tool->status_id == 2) {  // if in use pa ang tool 
+                            $tool->update(['status_id' => $this->selectedConditionStatus]);
+                        }
+                        
                     }
 
 
@@ -122,9 +133,7 @@ class ReturnForm extends Component
                     $this->errorMessage = 'You can only return tools that are In progress';
                 }
             }
-        } 
-
-     
+        }
     }
 
     public function render()
