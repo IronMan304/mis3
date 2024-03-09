@@ -9,13 +9,14 @@ use App\Http\Livewire\User\UserList;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Trial\TrialList;
 
+use App\Http\Livewire\Venue\VenueList;
+
+
 use App\Http\Livewire\Course\CourseList;
-
-
 use App\Http\Livewire\Option\OptionList;
 use App\Http\Livewire\Source\SourceList;
-use App\Http\Livewire\Status\StatusList;
 
+use App\Http\Livewire\Status\StatusList;
 use App\Http\Livewire\College\CollegeList;
 use App\Http\Livewire\Request\RequestList;
 use App\Http\Livewire\Service\ServiceList;
@@ -81,6 +82,7 @@ Route::group(['middleware' => ['role:admin|staff|head of office']], function () 
     Route::get('categories', CategoryList::class);
     Route::get('types', TypeList::class);
     Route::get('tools', ToolList::class);
+    Route::get('venues', VenueList::class);
   
    //Route::get('requests', RequestList::class);
     //Route::get('requests1', RequestList1::class);

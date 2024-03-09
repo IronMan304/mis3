@@ -12,8 +12,13 @@ class Status extends Model
     use SoftDeletes;
 
     public $guarded = [];
-    
+
     protected $table = 'statuses';
     protected $primaryKey = 'id';
-    protected $fillable = [ 'description' ];
+    protected $fillable = ['description'];
+
+    public function tools()
+    {
+        return $this->hasMany(Tool::class);
+    }
 }
