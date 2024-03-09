@@ -20,6 +20,7 @@ class SecurityApprovalForm extends Component
 
     protected $approvedRttsKeys = [];
     public $toolItems = [];
+    public $approval_toolItems = [];
 
     protected $listeners = [
         'requestId',
@@ -43,6 +44,9 @@ class SecurityApprovalForm extends Component
         $this->borrower_id = $request->borrower_id;
         // Populate toolItems with the IDs of associated tools
         $this->toolItems = $request->tool_keys->pluck('tool_id')->toArray();
+        $this->approval_toolItems = $request->tool_keys->map(function ($tool) {
+            return $tool->tool_id;
+        })->toArray();
     }
 
 
@@ -250,7 +254,17 @@ class SecurityApprovalForm extends Component
                                 //Request::where('id', $this->requestId)->update(['status_id' => 8]);
 
                                 // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
-                                Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+                                //Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+
+
+                                // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
+                                //Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+
+                                Tool::whereHas('status', function ($query) {
+                                    $query->where('id', 17);
+                                })
+                                    ->whereIn('id', $this->toolItems)
+                                    ->update(['status_id' => 1]);
                             }
                         }
                     }
@@ -283,7 +297,7 @@ class SecurityApprovalForm extends Component
                 foreach ($request->tool_keys as $toolKey) {
                     foreach ($toolKey->rtts_keys as $rtts_key) {
                         $request = Request::find($requestId);
-    
+
                         if ($request) {
                             if ($rtts_key->security_id == 6) //president
                             {
@@ -313,10 +327,7 @@ class SecurityApprovalForm extends Component
             } else {
                 $this->errorMessage = 'You can only approve once this requests has been Reviewed by CICTSO';
             }
-     
         }
-
-       
     }
 
     public function pReject($requestId)
@@ -330,28 +341,28 @@ class SecurityApprovalForm extends Component
 
                     foreach ($toolKey->rtts_keys as $rtts_key) {
                         $request = Request::find($requestId);
-    
+
                         if ($request) {
-    
+
                             if ($rtts_key->security_id == 6) //president
                             {
                                 $rtts_key->update(['status_id' => 15]); // Update the status to "Rejected"
                                 $rtts_key->update(['user_id' => auth()->user()->id]);
                                 $request->update(['status_id' => 15]);
-    
+
                                 // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
                                 //Request::where('id', $this->requestId)->update(['status_id' => 8]);
-    
+
                                 // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
                                 Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
                             }
                         }
                     }
-    
-    
+
+
                     $toolKey->update(['status_id' => 15]);
-    
-    
+
+
                     $action = 'cancel';
                     $message = 'Request Rejected';
                 }
@@ -363,8 +374,6 @@ class SecurityApprovalForm extends Component
             } else {
                 $this->errorMessage = 'You can only reject once this requests has been Reviewed by CICTSO';
             }
-
-           
         }
     }
 
