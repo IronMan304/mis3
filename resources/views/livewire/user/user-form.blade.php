@@ -65,6 +65,20 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group local-forms">
+                                <label>Honorific
+                                </label>
+                                <select class="form-control select" wire:model="honorific_id">
+                                    <option value="" selected>What do you want to be called</option>
+                                    @foreach ($honorifics as $honorific)
+                                    <option value="{{ $honorific->id }}">
+                                        {{ $honorific->description }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group local-forms">
                                 <label>
                                     Email
                                     <span class="login-danger">*</span>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\User;
 
+use App\Models\Honorific;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -11,7 +12,7 @@ use Spatie\Permission\Models\Role;
 
 class UserForm extends Component
 {
-    public $userId, $first_name, $middle_name, $last_name, $position_id, $email, $password, $password_confirmation;
+    public $userId, $first_name, $middle_name, $last_name, $position_id, $email, $password, $password_confirmation, $honorific_id;
     public $action = '';  //flash
     public $message = '';  //flash
     public $roleCheck = array();
@@ -37,6 +38,7 @@ class UserForm extends Component
         $this->middle_name = $user->middle_name;
         $this->last_name = $user->last_name;
         $this->position_id = $user->position_id; // Changed from position to position
+        $this->honorific_id = $user->honorific_id; 
         $this->email = $user->email;
 
         $this->selectedRoles = $user->getRoleNames()->toArray();
@@ -59,6 +61,7 @@ class UserForm extends Component
                 'middle_name'   => 'nullable',
                 'last_name'     => 'required',
                 'position_id'      => 'nullable',
+                'honorific_id'      => 'nullable',
                 'email'         => ['required', 'email'],
                 
             ]);
@@ -116,6 +119,7 @@ class UserForm extends Component
                 'middle_name'   => 'nullable',
                 'last_name'     => 'required',
                 'position_id'      => 'required',
+                'honorific_id'      => 'nullable',
                 'email'         => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
                 'password'      => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
@@ -125,6 +129,7 @@ class UserForm extends Component
                 'middle_name'   => $this->middle_name,
                 'last_name'     => $this->last_name,
                 'position_id'      => $this->position_id,
+                'honorific_id'      => 'nullable',
                 'email'         => $this->email,
                 'password'      => Hash::make($this->password)
             ]);
@@ -157,9 +162,11 @@ class UserForm extends Component
     {
         $roles = Role::all();
         $positions = Position::all();
+        $honorifics = Honorific::all();
         return view('livewire.user.user-form', [
             'roles' => $roles,
             'positions' => $positions,
+            'honorifics' => $honorifics,
         ]);
     }
 }

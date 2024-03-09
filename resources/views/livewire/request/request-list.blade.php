@@ -338,7 +338,7 @@
 	</div>
 
 	<div wire.ignore.self class="modal fade" id="securityApprovalModal" tabindex="-1" role="dialog" aria-labelledby="securityApprovalModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<livewire:request.security-approval-form />
 		</div>
 	</div>

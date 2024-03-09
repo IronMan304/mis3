@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Position extends Model
+class Honorific extends Model
 {
     use HasFactory;
     
     public $guarded = [];
     
-    protected $table = 'positions';
+    protected $table = 'honorifics';
     protected $primaryKey = 'id';
     protected $fillable = [ 'description' ];
 

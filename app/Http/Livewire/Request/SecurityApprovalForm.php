@@ -3,13 +3,15 @@
 namespace App\Http\Livewire\Request;
 
 use App\Models\Tool;
+use App\Models\User;
 use App\Models\Request;
 use Livewire\Component;
+use App\Models\Position;
 use App\Models\ToolRequest;
 
 class SecurityApprovalForm extends Component
 {
-    public $requestId, $borrower_id, $request, $rttskStatusId = 0, $errorMessage;
+    public $requestId, $borrower_id, $request, $rttskStatusId = 0, $errorMessage, $position, $president, $vp;
     public $action = '';  //flash
     public $message = '';  //flash
     public $approvalStatus = [
@@ -41,6 +43,17 @@ class SecurityApprovalForm extends Component
         // $request = Request::whereId($requestId)->first();
         $request = Request::with('tool_keys.tools')->findOrFail($requestId);
         $this->request = $request;
+
+        $president = User::with('position')->whereHas('position', function ($query) {
+            $query->where('id', 6);
+        })->firstOrFail();
+        $this->president = $president;
+
+        $vp = User::with('position')->whereHas('position', function ($query) {
+            $query->where('id', 5);
+        })->firstOrFail();
+        $this->vp = $vp;
+
         $this->borrower_id = $request->borrower_id;
         // Populate toolItems with the IDs of associated tools
         $this->toolItems = $request->tool_keys->pluck('tool_id')->toArray();
@@ -381,9 +394,11 @@ class SecurityApprovalForm extends Component
     {
 
         $approvalStatus =  $this->approvalStatus['head_of_office'];
+        $requests = Request::with('borrower')->where('id', $this->requestId)->get();
         return view('livewire.request.security-approval-form', [
             'approvalStatus' => $approvalStatus,
             'errorMessage' => $this->errorMessage,
+            'requests' => $requests,
         ]);
     }
 }
