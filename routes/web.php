@@ -29,6 +29,7 @@ use App\Http\Livewire\Operator\OperatorList;
 use App\Http\Livewire\Position\PositionList;
 use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
+use App\Http\Controllers\Request\PrintController;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
 use App\Http\Livewire\ServiceRequest\ServiceRequestList;
@@ -93,6 +94,7 @@ Route::group(['middleware' => ['role:admin|staff|head of office']], function () 
 Route::group(['middleware' => ['role:admin|requester|staff|head of office']], function () {
     Route::get('requests', RequestList::class);
     Route::get('service_requests', ServiceRequestList::class);
+    Route::get('/print/request_letter/{id}', [PrintController::class, 'print_request_letter'])->name('print.request');
 });
 
 require __DIR__ . '/auth.php';
