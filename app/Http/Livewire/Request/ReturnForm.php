@@ -78,10 +78,11 @@ class ReturnForm extends Component
                         if ($toolRequest->returned_at == null) {
                             $request = Request::find($this->returnId);
                             foreach ($request->tool_keys as $toolKey) {
-                                if ($toolKey->status_id == 6) {
+                                if ($toolRequest->status_id == 6) {
 
                                     $statusId = ($this->selectedConditionStatus == 3) ? 9 : 7;
 
+                                 
                                     $toolRequest->update([
                                         'status_id' => $statusId,
                                         'user_id' => auth()->user()->id,
