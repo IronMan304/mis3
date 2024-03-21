@@ -10,12 +10,13 @@
         <div class="navbar-nav ms-auto py-0">
             <a href="/" class="nav-item nav-link">Home</a>
             <a href="#" class="nav-item nav-link">About</a>
+            <a href="#" class="nav-item nav-link">Equipment</a>
             <a href="#" class="nav-item nav-link">Service</a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                 <div class="dropdown-menu m-0">
-                    <a href="" class="dropdown-item">Our Clinics</a>
-                    <a href="" class="dropdown-item">Our Dentist</a>
+                    <a href="" class="dropdown-item">Our Operators</a>
+                    <a href="" class="dropdown-item">Our Team</a>
                 </div>
             </div>
             <a href="{{ route('login') }}" class="nav-item nav-link">My Account</a>

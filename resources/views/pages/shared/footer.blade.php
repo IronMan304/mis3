@@ -10,10 +10,10 @@
 
                         <a class="text-light mb-2" href="{{ url('/clinics') }}"><i
                                 class="bi bi-arrow-right text-primary me-2"></i>Our
-                            Locations</a>
+                            Equipments</a>
                         <a class="text-light mb-2" href="{{ url('/dentists') }}"><i
                                 class="bi bi-arrow-right text-primary me-2"></i>Our
-                            Dentists</a>
+                            Team</a>
                         @auth
                             <a class="text-light mb-2" href="{{ url('/create_ticket') }}"><i
                                     class="bi bi-arrow-right text-primary me-2"></i>Clinic Application</a>
@@ -28,9 +28,9 @@
                     <h3 class="text-white mb-4">Get In Touch</h3>
                     <p class="mb-2"><i class="bi bi-geo-alt text-primary me-2"></i>Kagawasan Ave., Dumaguete City,
                         Negros Oriental</p>
-                    <p class="mb-2"><i class="bi bi-envelope-open text-primary me-2"></i>gabriellesaranillo@gmail.com
+                    <p class="mb-2"><i class="bi bi-envelope-open text-primary me-2"></i>jerechoreyinatilleza@gmail.com
                     </p>
-                    <p class="mb-0"><i class="bi bi-telephone text-primary me-2"></i>+63906 267 7306</p>
+                    <p class="mb-0"><i class="bi bi-telephone text-primary me-2"></i>+63 952 816 592</p>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h3 class="text-white mb-4">Follow Us</h3>
@@ -52,7 +52,7 @@
         <div class="container">
             <div class="row g-0">
                 <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-md-0">&copy; <a class="text-white border-bottom" href="/">DentaLink</a>.
+                    <p class="mb-md-0">&copy; <a class="text-white border-bottom" href="/">NCICTSOMIS</a>.
                         All Rights Reserved.</p>
                 </div>
             </div>

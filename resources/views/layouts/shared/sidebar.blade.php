@@ -37,7 +37,7 @@
 						@if(auth()->user()->hasRole('admin'))
 						<li><a href="/users">User</a></li>
 						@endif
-						<li><a href="/borrowers">Borrower</a></li>
+						<li><a href="/borrowers">Requester</a></li>
 						<li><a href="/operators">Operator</a></li>
 					</ul>
 				</li>

@@ -18,11 +18,19 @@ class ToolList extends Component
 
     protected $listeners = [
         'refreshParentTool' => '$refresh',
+        //'refreshToolList' => 'refreshToolList',
         'deleteTool',
         'editTool',
-        'deleteConfirmTool'
+        'deleteConfirmTool',
+        //'echo:tool-list-channel,ToolListUpdated' => 'refreshComponent',
+        'App\Http\Livewire\Request\RequestForm@refreshToolList' => '$refresh',
+        //'echo:tool-list-channel,ToolListUpdated' => 'refreshComponent',
     ];
 
+    public function refreshToolList()
+    {
+        $this->emit('refreshTable'); // Emit event to refresh table
+    }
     public function updatingSearch()
     {
         $this->emit('refreshTable');

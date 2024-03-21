@@ -141,7 +141,7 @@
 									</td>
 
 									<td>
-										{{'Request'}}: {{ $request->status->description }}
+										{{'Request'}}: {{ $request->status->description ?? ''}}
 										<br>
 
 										@if ($request->tool_keys)

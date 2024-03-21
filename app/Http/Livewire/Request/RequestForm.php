@@ -14,6 +14,7 @@ use App\Models\ToolRequest;
 use App\Models\ToolPosition;
 use App\Models\ToolSecurity;
 use App\Models\RequestToolToolSecurityKey;
+use Illuminate\Support\Facades\Broadcast;
 
 class RequestForm extends Component
 {
@@ -110,7 +111,7 @@ class RequestForm extends Component
             if ($toolsWithStatusOne->count() === count($this->toolItems)) {
                 // When creating a new tool request, set the 'user_id'
                 $data['user_id'] = auth()->user()->id;
-             
+
 
                 if (auth()->user()->hasRole('staffss')) {
                     $data['status_id'] = 16; // "Reviewed" is the status of a requests table if admin makes the request
@@ -163,8 +164,8 @@ class RequestForm extends Component
                         // Fetch all security_ids for the current tool
                         $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
 
-                        $minSecurityId = min($securityIds);  
-                        $maxSecurityId = max($securityIds); 
+                        $minSecurityId = min($securityIds);
+                        $maxSecurityId = max($securityIds);
                         // Create a record in request_tool_tool_security table for each security_id
                         foreach ($securityIds as $securityId) {
                             RequestToolToolSecurityKey::create([
@@ -173,9 +174,8 @@ class RequestForm extends Component
                                 'status_id' => 11,
                                 'request_id' => $request->id,
                             ]);
-                           
                         }
-                    
+
                         $request->update(['current_security_id' =>  $minSecurityId]);
                         $request->update(['max_security_id' =>  $maxSecurityId]);
                     }
@@ -192,12 +192,16 @@ class RequestForm extends Component
                 $this->emit('flashAction', $action, $message);
                 $this->resetInputFields();
                 $this->emit('closeRequestModal');
+                $this->emit('refreshToolList');
                 $this->emit('refreshParentRequest');
                 $this->emit('refreshTable');
+                // After the request is created or updated, broadcast an event
+                // Broadcast::channel('tool-list-channel', 'ToolListUpdated', [
+                //     'message' => 'Tool list updated',
+                // ]);
             } else {
                 $this->errorMessage = 'You can only request tools that are In stock';
             }
-        
         }
     }
 
