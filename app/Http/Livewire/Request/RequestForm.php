@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Broadcast;
 
 class RequestForm extends Component
 {
-    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id, $first_name, $option_id, $estimated_return_date, $purpose, $date_needed, $errorMessage;
+    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id, $first_name, $option_id, $estimated_return_date, $purpose, $date_needed, $errorMessage, $borrowerId;
 
     public $toolItems = [];
     public $action = '';  //flash
@@ -36,9 +36,17 @@ class RequestForm extends Component
             $this->position_id = Borrower::where('user_id', auth()->user()->id)->value('position_id');
         }
     }
+    public function setBorrowerId($borrowerId)
+    {
+        $this->borrowerId = $borrowerId;
+        
+        // Update the borrower_id field with the received borrowerId
+        $this->borrower_id = $borrowerId;
+    }
     protected $listeners = [
         'requestId',
-        'resetInputFields'
+        'resetInputFields',
+        'borrowerId' => 'setBorrowerId',
     ];
 
     public function resetInputFields()
@@ -49,13 +57,12 @@ class RequestForm extends Component
         //$this->dispatchBrowserEvent('resetSelect2', ['id' => 'tools']);
     }
 
-
     // edit
     public function requestId($requestId)
     {
         $this->requestId = $requestId;
         $request = Request::with('tool_keys.tools')->findOrFail($requestId);
-
+        //$this->borrowerId = $this->borrowerId;
         $this->tool_id = $request->tool_id;
         $this->borrower_id = $request->borrower_id;
         $this->option_id = $request->option_id;

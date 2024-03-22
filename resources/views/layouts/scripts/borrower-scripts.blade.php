@@ -22,4 +22,12 @@
   window.livewire.on('openBorrowerAccountModal', () => {
     $('#borrowerAccountModal').modal('show');
   });
+
+  window.livewire.on('closeRequestModal', () => {
+      $('#requestModal').modal('hide');
+    });
+
+    window.livewire.on('openRequestModal', () => {
+      $('#requestModal').modal('show');
+    });
 </script>

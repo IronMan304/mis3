@@ -35,6 +35,7 @@ class RequestList extends Component
         'deleteConfirmRequest',
         'cancelRequest' => 'handleCancelRequest',
         'approveBooking',
+        'borrowerId'
     ];
 
     // public function mount()

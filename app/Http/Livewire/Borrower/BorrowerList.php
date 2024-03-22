@@ -28,6 +28,13 @@ class BorrowerList extends Component
     {
         $this->emit('refreshTable');
     }
+    public function createRequest($borrowerId)
+    {
+        $this->borrowerId = $borrowerId;
+        $this->emit('resetInputFields');
+        $this->emit('borrowerId', $this->borrowerId);
+        $this->emit('openRequestModal');
+    }
 
     public function createBorrowerAccount($borrowerId)
     {

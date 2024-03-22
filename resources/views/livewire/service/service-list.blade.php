@@ -61,9 +61,9 @@
 													wire:click="editService({{ $service->id }})" title="Edit">
 													<i class='fa fa-pen-to-square'></i>
 												</button>
-												<a class="btn btn-danger btn-sm mx-1" wire:click="deleteService({{ $service->id }})" title="Delete">
+												{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteService({{ $service->id }})" title="Delete">
 													<i class="fa fa-trash"></i>
-												</a>
+												</a>--}}
 											</div>
 										</td>
 

@@ -29,6 +29,8 @@
         <div class="modal-body">
             <div class="row">
                 @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff'))
+
+
                 <div class="col-md-12" wire:ignore>
                     <div class="form-group local-forms">
                         <label>Borrower
