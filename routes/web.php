@@ -30,6 +30,7 @@ use App\Http\Livewire\Position\PositionList;
 use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Controllers\Request\PrintController;
+use App\Http\Controllers\RequesterProfileController;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
 use App\Http\Livewire\ServiceRequest\ServiceRequestList;
@@ -44,6 +45,7 @@ use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/', [WelcomeController::class, 'index']);
 Route::get('/', function () {
     return view('welcome');
@@ -79,16 +81,16 @@ Route::group(['middleware' => ['role:admin|staff|head of office']], function () 
 
     Route::get('borrowers', BorrowerList::class);
     Route::get('operators', OperatorList::class);
-   
+
     Route::get('categories', CategoryList::class);
     Route::get('types', TypeList::class);
     Route::get('tools', ToolList::class);
     Route::get('venues', VenueList::class);
-  
-   //Route::get('requests', RequestList::class);
+
+    //Route::get('requests', RequestList::class);
     //Route::get('requests1', RequestList1::class);
 
-   
+    Route::get('/requesters/{requesterId}/profile', [RequesterProfileController::class, 'index'])->name('rp.index');
 });
 
 Route::group(['middleware' => ['role:admin|requester|staff|head of office']], function () {

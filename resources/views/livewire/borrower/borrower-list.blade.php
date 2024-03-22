@@ -84,6 +84,10 @@
 									<td class="text-center">
 										<div class="btn-group" role="group">
 
+										<a class="btn btn-primary btn mx-1" href="{{ route('rp.index', $borrower->id) }}" target="_blank"
+													title="Requester Profile">
+													<i class="fa-solid fa-clipboard-list"></i>
+												</a>
 											@if(auth()->user()->hasRole('admin'))
 											@if ($borrower->user_id == null)
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createBorrowerAccount({{ $borrower->id }})" title="Add">
@@ -92,7 +96,7 @@
 											@endif
 											@if($borrower->user_id != null)
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createBorrowerAccount({{ $borrower->id }})" title="Add" disabled>
-											<i class="fa-solid fa-user-check"></i>
+												<i class="fa-solid fa-user-check"></i>
 											</button>
 											@endif
 											@endif
@@ -100,12 +104,12 @@
 												<i class='fa fa-pen-to-square'></i>
 											</button>
 											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteBorrower({{ $borrower->id }})" title="Delete">
-												<i class="fa fa-trash"></i>
+											<i class="fa fa-trash"></i>
 											</a>--}}
-											   <!-- Add Request button here -->
-        <button type="button" class="btn btn-success btn-sm mx-1" wire:click="createRequest({{ $borrower->id }})" title="Make Request">
-            <i class="fa fa-plus"></i> Request
-        </button>
+											<!-- Add Request button here -->
+											<button type="button" class="btn btn-success btn-sm mx-1" wire:click="createRequest({{ $borrower->id }})" title="Make Request">
+												<i class="fa fa-plus"></i> Request
+											</button>
 										</div>
 									</td>
 
@@ -129,10 +133,10 @@
 				</div>
 			</div>
 			<div wire.ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered">
-			<livewire:request.request-form />
-		</div>
-	</div>
+				<div class="modal-dialog modal-dialog-centered">
+					<livewire:request.request-form />
+				</div>
+			</div>
 			@section('custom_script')
 			@include('layouts.scripts.borrower-scripts')
 			@endsection
