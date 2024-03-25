@@ -27,23 +27,24 @@ class RequestController extends Controller
     {
         $borrower = Borrower::where('user_id', auth()->user()->id)->first();
 
-        $tools = Tool::with(['category', 'type'])->get();
+        $tools = Tool::with(['category', 'type', 'status', 'security_keys', 'position_keys'])->get();
         $options = Option::all();
-    
+
         // Combine tools and operators into a single array
         $data = [
             'borrower' => [
                 'first_name' => $borrower->first_name,
                 'middle_name' => $borrower->middle_name,
                 'last_name' => $borrower->last_name,
+                'position_id' => $borrower->position_id,
             ],
             'tools' => $tools,
             'options' => $options,
         ];
-    
+
         return response()->json($data);
     }
-    
+
 
     public function id($id)
     {
@@ -88,6 +89,13 @@ class RequestController extends Controller
 
         // Set the default status_id for non-admin requests
         $data['status_id'] = 11; // Pending
+
+        // Validate the status of selected tools
+        $invalidTools = Tool::whereIn('id', $data['toolItems'])->where('status_id', '<>', 1)->exists();
+        if ($invalidTools) {
+            return response()->json(['error' => 'All selected tools must have status "Available" (status_id: 1)'], 400);
+        }
+
         // Update the status of tools associated with the request to "In request"
         Tool::whereIn('id', $data['toolItems'])->update(['status_id' => 14]);
         $data['user_id'] = auth()->user()->id;

@@ -46,7 +46,7 @@ class Tool extends Model
     // {
     //     return $this->belongsTo(Position::class, 'position_id', 'id');
     // }
-    public function position_keys()
+    public function position_keys() // applicability
     {
         return $this->hasMany(ToolPosition::class);
     }
