@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class OperatorForm extends Component
 {
-    public $operatorId, $first_name, $middle_name, $last_name, $contact_number, $sex_id, $status_id;
+    public $operatorId, $first_name, $middle_name, $last_name, $contact_number, $sex_id, $status_id, $user_id;
     public $action = '';  //flash
     public $message = '';  //flash
 

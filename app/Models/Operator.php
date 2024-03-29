@@ -12,7 +12,7 @@ class Operator extends Model
     
     protected $table = 'operators';
     protected $primaryKey = 'id';
-    protected $fillable = [ 'first_name', 'middle_name', 'last_name', 'contact_number', 'sex_id', 'status_id' ];
+    protected $fillable = [ 'first_name', 'middle_name', 'last_name', 'contact_number', 'sex_id', 'status_id', 'user_id' ];
 
     public function sex(){
         return $this->belongsTo(Sex::class, 'sex_id', 'id');
@@ -20,5 +20,9 @@ class Operator extends Model
 
     public function status(){
         return $this->belongsTo(Status::class, 'status_id', 'id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

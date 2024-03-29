@@ -41,7 +41,7 @@
 					</div>
 
 					<div class="table-responsive">
-						<table class="table border-0 custom-table comman-table datatable mb-0">
+						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
 									<th>First name</th>
@@ -77,11 +77,25 @@
 
 									<td class="text-center">
 										<div class="btn-group" role="group">
+
+											@if(auth()->user()->hasRole('admin'))
+											@if ($operator->user_id == null)
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createOperatorAccount({{ $operator->id }})" title="Add">
+												<i class="fa-solid fa-user-plus"></i>
+											</button>
+											@endif
+											@if($operator->user_id != null)
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createOperatorAccount({{ $operator->id }})" title="Add" disabled>
+												<i class="fa-solid fa-user-check"></i>
+											</button>
+											@endif
+											@endif
+
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editOperator({{ $operator->id }})" title="Edit">
 												<i class='fa fa-pen-to-square'></i>
 											</button>
 											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteOperator({{ $operator->id }})" title="Delete">
-												<i class="fa fa-trash"></i>
+											<i class="fa fa-trash"></i>
 											</a>--}}
 										</div>
 									</td>
@@ -94,15 +108,24 @@
 				</div>
 			</div>
 		</div>
+				<!-- Pagination links -->
+				{{ $operators->links() }}
+	</div>
+	{{-- Modal --}}
+	<div wire.ignore.self class="modal fade" id="operatorModal" tabindex="-1" role="dialog" aria-labelledby="operatorModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:operator.operator-form />
+		</div>
+	</div>
+	<div wire.ignore.self class="modal fade" id="operatorAccountModal" tabindex="-1" role="dialog" aria-labelledby="operatorAccountModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:operator.operator-account-form />
+		</div>
 	</div>
 </div>
-{{-- Modal --}}
 
-<div wire.ignore.self class="modal fade" id="operatorModal" tabindex="-1" role="dialog" aria-labelledby="operatorModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-	<div class="modal-dialog modal-dialog-centered">
-		<livewire:operator.operator-form />
-	</div>
-</div>
+
+
 @section('custom_script')
 @include('layouts.scripts.operator-scripts')
 @endsection

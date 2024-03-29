@@ -95,6 +95,7 @@ Route::group(['middleware' => ['role:admin|staff|head of office']], function () 
 
 Route::group(['middleware' => ['role:admin|requester|staff|head of office']], function () {
     Route::get('requests', RequestList::class);
+    //Route::get('requests', RequestList::class);
     Route::get('service_requests', ServiceRequestList::class);
     Route::get('/print/request_letter/{id}', [PrintController::class, 'print_request_letter'])->name('print.request');
 });

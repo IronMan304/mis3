@@ -13,5 +13,11 @@
     window.livewire.on('openOperatorModal', () => {
         $('#operatorModal').modal('show');
     });
+    window.livewire.on('closeOperatorAccountModal', () => {
+        $('#operatorAccountModal').modal('hide');
+    });
+    window.livewire.on('openOperatorAccountModal', () => {
+        $('#operatorAccountModal').modal('show');
+    });
 
 </script>

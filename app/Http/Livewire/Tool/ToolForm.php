@@ -14,7 +14,7 @@ use App\Models\ToolSecurity;
 
 class ToolForm extends Component
 {
-    public $toolId, $user_id, $category_id, $source_id, $type_id, $status_id, $property_number, $barcode, $brand, $position_id;
+    public $toolId, $user_id, $category_id, $source_id, $type_id, $status_id, $property_number, $barcode, $brand, $position_id, $owner_id;
     public $action = '';  //flash
     public $message = '';  //flash
     public $selectedCategory;
@@ -46,6 +46,8 @@ class ToolForm extends Component
         $this->property_number = $tool->property_number;
         $this->barcode = $tool->barcode;
         $this->brand = $tool->brand;
+        $this->owner_id = $tool->owner_id;
+
         //$this->position_id = $tool->position;
         // Populate toolItems with the IDs of associated tools
         $this->positionItems = $tool->position_keys->pluck('position_id')->toArray();
@@ -61,7 +63,7 @@ class ToolForm extends Component
     public function store()
     {
         // dd(auth()->user()->id);
-        $data = $this->validate([
+        $rules = [
             'user_id' => 'nullable',
             'category_id' => 'required',
             'source_id' => 'required',
@@ -73,7 +75,18 @@ class ToolForm extends Component
             'positionItems' => 'nullable|array',
             'securityItems' => 'nullable|array',
             //'position_id' => 'nullable',
-        ]);
+            'owner_id' => 'nullable',
+        ];
+
+        if($this->source_id == 4){
+            $rules['owner_id'] = 'required'; 
+        }
+
+        $data = $this->validate($rules);
+
+        if($this->source_id == 4){
+            $data['status_id'] = 4;
+        }
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
      
@@ -147,6 +160,7 @@ class ToolForm extends Component
         $tools = Tool::all();
          // Fetch the user_id from the Borrower table using the authenticated user's id
         $borrower = Borrower::where('user_id', auth()->user()->id)->value('id');
+        $borrowers = Borrower::all();
 
         return view('livewire.tool.tool-form', [
             'categories' => $categories,
@@ -156,6 +170,7 @@ class ToolForm extends Component
             'tools' => $tools,
             'borrower' => $borrower,
             'securities' => $securities,
+            'borrowers' => $borrowers,
         ]);
     }
 }

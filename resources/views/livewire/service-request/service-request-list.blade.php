@@ -5,7 +5,7 @@
 				<ul class="breadcrumb">
 					<li class="breadcrumb-item"><a href="/">Dashboard</a></li>
 					<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-					<li class="breadcrumb-item active">Service List</li>
+					<li class="breadcrumb-item active">Service Request List</li>
 				</ul>
 			</div>
 		</div>
@@ -19,11 +19,11 @@
 					<div class="page-table-header mb-2">
 						<div class="row align-items-center">
 							<div class="col">
-                                <div class="doctor-table-blk">
-									<h3>Service List</h3>
+								<div class="doctor-table-blk">
+									<h3>Service Request List</h3>
 									<div class="doctor-search-blk">
 										<div class="add-group">
-											<a wire:click="createService" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
+											<a wire:click="createServiceRequest" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
 											</a>
 										</div>
 									</div>
@@ -41,33 +41,62 @@
 					</div>
 
 					<div class="table-responsive">
-						<table class="table border-0 custom-table comman-table datatable mb-0">
+						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
-									<td>Service</td>
+									<td>Requester</td>
+									<th>Service</th>
+									<th>Equipment Type</th>
+									<th>Property Number</th>
+									<th>Operator</th>
+									<th>Status</th>
 									<td>Action</td>
 								</tr>
 							</thead>
 							<tbody>
-								@foreach ($services as $service)
-									<tr>
-										<td>
-											{{ $service->description }}
-										</td>
+								@foreach ($service_requests as $service_request)
+								<tr>
+									<td>
+										{{ $service_request->borrower->first_name ?? ''}}
+									</td>
+									<td>
+										{{$service_request->service->description ?? ''}}
+									</td>
+									<td>
+										{{ $service_request->tool->type->description ?? ''}}
+									</td>
+									<td>
+										{{ $service_request->tool->property_number ?? ''}}
+									</td>
+									<td>
+										{{ $service_request->operator->first_name ?? 'TBA'}}
+									</td>
+									<td>
+										{{ $service_request->status->description ?? ''}}
+									</td>
 
-										<td class="text-center">
-											<div class="btn-group" role="group">
-												<button type="button" class="btn btn-primary btn-sm mx-1"
-													wire:click="editService({{ $service->id }})" title="Edit">
-													<i class='fa fa-pen-to-square'></i>
-												</button>
-												{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteService({{ $service->id }})" title="Delete">
-													<i class="fa fa-trash"></i>
-												</a>--}}
-											</div>
-										</td>
+									<td class="text-center">
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createAssignSROperator({{ $service_request->id }})" title="Assign">
+											<i class="fa-solid fa-calendar"></i>
+											</button>
 
-									</tr>
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="serviceRequestStart({{ $service_request->id }})" title="Start" {{--@if ($request->status_id != 10) disabled @endif--}}>
+												<i class="fa-solid fa-play"></i>
+											</button>
+
+											<!-- <a wire:click="createAssignSROperator" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
+											</a> -->
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editServiceRequest({{ $service_request->id }})" title="Edit">
+												<i class='fa fa-pen-to-square'></i>
+											</button>
+											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteService({{ $service_request->id }})" title="Delete">
+											<i class="fa fa-trash"></i>
+											</a>--}}
+										</div>
+									</td>
+
+								</tr>
 								@endforeach
 							</tbody>
 						</table>
@@ -75,16 +104,31 @@
 				</div>
 			</div>
 		</div>
+		<!-- Pagination links -->
+		{{ $service_requests->links() }}
 	</div>
+	<div wire.ignore.self class="modal fade" id="serviceRequestModal" tabindex="-1" role="dialog" aria-labelledby="serviceRequestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:service-request.service-request-form />
+		</div>
+	</div>
+
+	<div wire.ignore.self class="modal fade" id="assignSROperatorModal" tabindex="-1" role="dialog" aria-labelledby="assignSROperatorModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:service-request.assign-s-r-operator />
+		</div>
+	</div>
+
+	<div wire.ignore.self class="modal fade" id="serviceRequestStartModal" tabindex="-1" role="dialog" aria-labelledby="serviceRequestStartModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+		<livewire:service-request.service-request-start />
+		</div>
+	</div>
+
 </div>
 {{-- Modal --}}
 
-<div wire.ignore.self class="modal fade" id="serviceModal" tabindex="-1" role="dialog"
-	aria-labelledby="serviceModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-	<div class="modal-dialog modal-dialog-centered">
-		<livewire:service.service-form />
-	</div>
-</div>
+
 @section('custom_script')
-	@include('layouts.scripts.service-scripts')
+@include('layouts.scripts.service-request-scripts')
 @endsection

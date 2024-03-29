@@ -3,7 +3,7 @@
 		<div class="sidebar-menu" id="sidebar-menu">
 			<ul>
 
-			
+
 				@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))
 				<li>
 					<a href="/dashboard"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
@@ -24,8 +24,30 @@
 
 						<li><a href="/requests">Tool</a></li>
 						<li><a href="/service_requests">Service</a></li>
+						<!-- <li class="submenu">
+							<a href="javascript:void(0);"><span>Service <br>Management</span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="service_requests"><span>Service Request</span></a></li>
+
+								<li><a href="javascript:void(0);"><span>Assign</span></a></li>
+							</ul>
+						</li> -->
 					</ul>
 				</li>
+
+				{{--<li class="submenu">
+                            <a href="javascript:void(0);"><i class="fa fa-share-alt"></i> <span>Multi Level</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li class="submenu">
+                                    <a href="javascript:void(0);"><span>Level 1</span> <span class="menu-arrow"></span></a>
+                                    <ul style="display: none;">
+                                        <li><a href="javascript:void(0);"><span>Level 2</span></a></li>
+                                        
+                                        <li><a href="javascript:void(0);"><span>Level 2</span></a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>--}}
 
 
 				<li class="submenu">
@@ -87,9 +109,10 @@
 						<li><a href="/types">Type</a></li> -->
 						<li><a href="/sources">Source</a></li>
 						<li><a href="/statuses">Status</a></li>
-						<li><a href="/borrower_types">Borrower Type</a></li>
+						<!-- <li><a href="/borrower_types">Borrower Type</a></li> -->
 						<li><a href="/services">Service</a></li>
 						<li><a href="/positions">Position</a></li>
+						<li><a href="/options">Option</a></li>
 					</ul>
 				</li>
 

@@ -108,7 +108,7 @@
 											</a>--}}
 											<!-- Add Request button here -->
 											<button type="button" class="btn btn-success btn-sm mx-1" wire:click="createRequest({{ $borrower->id }})" title="Make Request">
-												<i class="fa fa-plus"></i> Request
+												<i class="fa fa-plus"></i>
 											</button>
 										</div>
 									</td>

@@ -13,7 +13,7 @@ class ServiceRequest extends Model
     
     protected $table = 'service_requests';
     protected $primaryKey = 'id';
-    protected $fillable = [ 'service_id', 'borrower_id', 'staff_user_id' ];
+    protected $fillable = [ 'service_id', 'borrower_id', 'staff_user_id', 'tool_id', 'status_id', 'source_id', 'operator_id', 'set_date' ];
 
     public function service()
     {
@@ -21,10 +21,26 @@ class ServiceRequest extends Model
     }
     public function borrower()
     {
-        return $this->belongsTo(Service::class, 'borrower_id', 'id');
+        return $this->belongsTo(Borrower::class, 'borrower_id', 'id');
     }
     public function user()
     {
         return $this->belongsTo(Service::class, 'staff_user_id', 'id');
+    }
+    public function tool()
+    {
+        return $this->belongsTo(Tool::class, 'tool_id', 'id');
+    }
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id', 'id');
+    }
+    public function source()
+    {
+        return $this->belongsTo(Source::class, 'source_id', 'id');
+    }
+    public function operator()
+    {
+        return $this->belongsTo(Operator::class, 'operator_id', 'id');
     }
 }

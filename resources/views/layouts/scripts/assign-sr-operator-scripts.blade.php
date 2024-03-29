@@ -7,24 +7,11 @@
         });
     });
 
-    window.livewire.on('closeServiceRequestModal', () => {
-        $('#serviceRequestModal').modal('hide');
-    });
-    window.livewire.on('openServiceRequestModal', () => {
-        $('#serviceRequestModal').modal('show');
-    });
     window.livewire.on('closeAssignSROperatorModal', () => {
         $('#assignSROperatorModal').modal('hide');
     });
     window.livewire.on('openAssignSROperatorModal', () => {
         $('#assignSROperatorModal').modal('show');
-    });
-    window.livewire.on('closeServiceRequestStartModal', () => {
-      $('#serviceRequestStartModal').modal('hide');
-    });
-
-    window.livewire.on('openServiceRequestStartModal', () => {
-      $('#serviceRequestStartModal').modal('show');
     });
 
 </script>

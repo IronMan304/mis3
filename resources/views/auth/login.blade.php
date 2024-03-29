@@ -20,12 +20,12 @@
     <!-- Main CSS -->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <style>
-    /* Responsive CSS for logo */
-    img {
-        max-width: 100%;
-        height: auto;
-    }
-</style>
+        /* Responsive CSS for logo */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 
 </head>
 
@@ -55,6 +55,10 @@
                                         <a href="index.html"><img src="assets/img/top-logo.png" alt=""></a>
                                     </div>
                                     <h2>Login</h2>
+                                    @error('msg')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+
 
                                     <!-- Form -->
                                     <!-- Session Status -->
@@ -82,7 +86,7 @@
                                         <!-- Remember Me -->
                                         <div class="forgotpass">
                                             <div class="remember-me">
-                                                <label class="custom_check mr-2 mb-0 d-inline-flex remember-me"> Remember me
+                                                <label for="remember_me" class="custom_check mr-2 mb-0 d-inline-flex remember-me"> Remember me
                                                     <input id="remember_me" type="checkbox" name="radio" name="remember">
                                                     <span class="checkmark"></span>
                                                 </label>

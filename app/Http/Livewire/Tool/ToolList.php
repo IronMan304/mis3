@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Tool;
 
 use App\Models\Tool;
+use App\Models\Source;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,7 +16,7 @@ class ToolList extends Component
     public $search = '';
     public $action = '';  //flash
     public $message = '';  //flash
-
+    public $source_id = '';
     protected $listeners = [
         'refreshParentTool' => '$refresh',
         //'refreshToolList' => 'refreshToolList',
@@ -70,19 +71,26 @@ class ToolList extends Component
 
     public function render()
     {
-        if (empty($this->search)) {
-            $tools = Tool::paginate($this->perPage);
-        } else {
-            $tools = Tool::where('brand', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('property_number', 'LIKE', '%' . $this->search . '%') // Added this line for property_number search
+        $query = Tool::query();
+    
+        if (!empty($this->search)) {
+            $query->where('brand', 'LIKE', '%' . $this->search . '%')
+                ->orWhere('property_number', 'LIKE', '%' . $this->search . '%')
                 ->orWhereHas('type', function ($query) {
                     $query->where('description', 'LIKE', '%' . $this->search . '%');
-                })
-                ->paginate($this->perPage);
+                });
         }
-
+    
+        if (!empty($this->source_id)) {
+            $query->where('source_id', $this->source_id);
+        }
+    
+        $tools = $query->paginate($this->perPage);
+        $sources = Source::all();
+    
         return view('livewire.Tool.Tool-list', [
-            'tools' => $tools
+            'tools' => $tools,
+            'sources' => $sources,
         ]);
     }
 }

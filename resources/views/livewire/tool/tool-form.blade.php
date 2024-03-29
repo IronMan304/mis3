@@ -84,7 +84,25 @@
                         <input class="form-control" type="text" wire:model="property_number" placeholder="ABC123456789XYZ" />
                     </div>
                 </div>
+
+                @if($source_id == 4)
+                <div class="col-md-6">
+                    <div class="form-group local-forms">
+                        <label>Owner
+                        </label>
+                        <select class="form-control select" wire:model="owner_id" >
+                            <option value=""  selected>Assign who is the owner</option>
+                            @foreach ($borrowers as $borrower)
+                            <option value="{{ $borrower->id }}">
+                                {{ $borrower->first_name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                @endif
        
+                @if($source_id != 4)
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Applicability
@@ -105,7 +123,7 @@
                         <label>Security
                         </label>
                         <select class="form-control select" wire:model="securityItems" multiple id="securityItems">
-                            <option value=""  selected>Assign who will need to sign</option>
+                            <option value=""  selected>Assign who will need to approve</option>
                             @foreach ($securities as $security)
                             <option value="{{ $security->id }}">
                                 {{ $security->description }}
@@ -114,6 +132,7 @@
                         </select>
                     </div>
                 </div>
+                @endif
 
                 {{--<div class="col-md-12">
                     <div class="form-group local-forms">

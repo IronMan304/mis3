@@ -4,19 +4,25 @@ namespace App\Http\Livewire\ServiceRequest;
 
 use App\Models\ServiceRequest;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ServiceRequestList extends Component
 {
-    public $serviceId;
+    use withPagination;
+    public $serviceRequestId;
     public $search = '';
     public $action = '';  //flash
     public $message = '';  //flash
+    public $perPage = 10;
+    protected $paginationTheme = 'bootstrap';
 
     protected $listeners = [
-        'refreshParentService' => '$refresh',
-        'deleteService',
-        'editService',
-        'deleteConfirmService'
+        'refreshParentServiceRequest' => '$refresh',
+        'refreshParentASRO' => '$refresh',
+        'refreshParentRequestStart' => '$refresh',
+        'deleteServiceRequest',
+        'editServiceRequest',
+        'deleteConfirmServiceRequest'
     ];
 
     public function updatingSearch()
@@ -24,22 +30,42 @@ class ServiceRequestList extends Component
         $this->emit('refreshTable');
     }
 
-    public function createService()
+    public function createServiceRequest()
     {
         $this->emit('resetInputFields');
-        $this->emit('openServiceModal');
+        $this->emit('openServiceRequestModal');
+    }
+    public function serviceRequestStart($serviceRequestId)
+    {
+        $this->serviceRequestId = $serviceRequestId;
+        $this->emit('serviceRequestId', $this->serviceRequestId);
+        $this->emit('openServiceRequestStartModal');
     }
 
-    public function editService($serviceId)
+    public function editServiceRequest($serviceRequestId)
     {
-        $this->serviceId = $serviceId;
-        $this->emit('serviceId', $this->serviceId);
-        $this->emit('openServiceModal');
+        $this->serviceRequestId = $serviceRequestId;
+        $this->emit('serviceRequestId', $this->serviceRequestId);
+        $this->emit('openServiceRequestModal');
     }
 
-    public function deleteService($serviceId)
+    // public function createAssignSROperator()
+    // {
+    //     //dd('a');
+    //     $this->emit('resetInputFields');
+    //     $this->emit('openAssignSROperatorModal');
+    // }
+
+    public function createAssignSROperator($serviceRequestId)
     {
-        Service::destroy($serviceId);
+        $this->serviceRequestId = $serviceRequestId;
+        $this->emit('serviceRequestId', $this->serviceRequestId);
+        $this->emit('openAssignSROperatorModal');
+    }
+
+    public function deleteServiceRequest($serviceRequestId)
+    {
+        ServiceRequest::destroy($serviceRequestId);
 
         $action = 'error';
         $message = 'Successfully Deleted';
@@ -51,13 +77,14 @@ class ServiceRequestList extends Component
     public function render()
     {
         if (empty($this->search)) {
-            $services  = Service::all();
+            $service_requests = ServiceRequest::paginate($this->perPage);
         } else {
-            $services  = Service::where('description', 'LIKE', '%' . $this->search . '%')->get();
+            $service_requests = ServiceRequest::where('borrower_id', 'LIKE', '%' . $this->search . '%')
+                ->paginate($this->perPage);
         }
-
-        return view('livewire.service.service-list', [
-            'services' => $services
+    
+        return view('livewire.service-request.service-request-list', [
+            'service_requests' => $service_requests
         ]);
     }
 }
