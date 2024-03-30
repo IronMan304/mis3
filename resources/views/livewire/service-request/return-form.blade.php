@@ -86,7 +86,7 @@
 						<label>
 							Description
 						</label>
-						<input class="form-control" type="text" wire:model="description" placeholder />
+                        <textarea class="form-control" wire:model="description" placeholder="Enter description..." rows="5"></textarea>
 					</div>
 				</div>
 
