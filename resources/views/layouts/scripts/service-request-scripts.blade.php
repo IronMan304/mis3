@@ -26,5 +26,12 @@
     window.livewire.on('openServiceRequestStartModal', () => {
       $('#serviceRequestStartModal').modal('show');
     });
+    window.livewire.on('closeSReturnModal', () => {
+      $('#sreturnModal').modal('hide');
+    });
+
+    window.livewire.on('openSReturnModal', () => {
+      $('#sreturnModal').modal('show');
+    });
 
 </script>

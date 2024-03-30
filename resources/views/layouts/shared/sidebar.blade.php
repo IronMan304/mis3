@@ -16,7 +16,7 @@
 				</li> -->
 
 				<li class="submenu">
-					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
+					<a href="#"><span class="menu-side"><i class="fa-solid fa-code-pull-request"></i></span>
 						<span>Request <br> Management</span> <span class="menu-arrow"></span>
 					</a>
 
@@ -65,7 +65,7 @@
 				</li>
 
 				<li class="submenu">
-					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
+					<a href="#"><span class="menu-side"><i class="fa-solid fa-screwdriver-wrench"></i></i></span>
 						<span>Equipment <br> Management</span> <span class="menu-arrow"></span>
 					</a>
 
@@ -82,7 +82,7 @@
 
 
 				<li class="submenu">
-					<a href="#"><span class="menu-side"><i class="fa-solid fa-list"></i></span>
+					<a href="#"><span class="menu-side"><i class="fa-solid fa-folder"></i></span>
 						<span>Reports</span> <span class="menu-arrow"></span>
 					</a>
 
@@ -96,7 +96,7 @@
 				<li class="menu-title">Setup</li>
 
 				<li class="submenu">
-					<a href="#"><span class="menu-side"><i class="fa-solid fa-user-group"></i></span>
+					<a href="#"><span class="menu-side"><i class="fa-solid fa-bars"></i></span>
 						<span>System</span> <span class="menu-arrow"></span>
 					</a>
 

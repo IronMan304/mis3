@@ -2,14 +2,15 @@
 
 namespace App\Http\Livewire\ServiceRequest;
 
-use App\Models\ServiceRequest;
+use App\Models\Tool;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\ServiceRequest;
 
 class ServiceRequestList extends Component
 {
     use withPagination;
-    public $serviceRequestId;
+    public $serviceRequestId, $tool_id;
     public $search = '';
     public $action = '';  //flash
     public $message = '';  //flash
@@ -20,6 +21,7 @@ class ServiceRequestList extends Component
         'refreshParentServiceRequest' => '$refresh',
         'refreshParentASRO' => '$refresh',
         'refreshParentRequestStart' => '$refresh',
+        'refreshParentSReturn' => '$refresh',
         'deleteServiceRequest',
         'editServiceRequest',
         'deleteConfirmServiceRequest'
@@ -40,6 +42,13 @@ class ServiceRequestList extends Component
         $this->serviceRequestId = $serviceRequestId;
         $this->emit('serviceRequestId', $this->serviceRequestId);
         $this->emit('openServiceRequestStartModal');
+    }
+    public function returnSRequest($serviceRequestId)
+    {
+        //dd($serviceRequestId);
+        $this->serviceRequestId = $serviceRequestId;
+        $this->emit('returnId', $this->serviceRequestId);
+        $this->emit('openSReturnModal');
     }
 
     public function editServiceRequest($serviceRequestId)
@@ -83,8 +92,9 @@ class ServiceRequestList extends Component
                 ->paginate($this->perPage);
         }
     
+
         return view('livewire.service-request.service-request-list', [
-            'service_requests' => $service_requests
+            'service_requests' => $service_requests,
         ]);
     }
 }

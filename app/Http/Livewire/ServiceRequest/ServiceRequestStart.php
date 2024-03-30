@@ -75,9 +75,10 @@ class ServiceRequestStart extends Component
                 // }
 
                 $tool = Tool::find($this->tool_id);
-                if ($tool && $tool->status_id == 21) { // to be handed
+                if ($tool && $tool->status_id == 21 || $tool->status_id == 23) { // to be handed || TO be checked
                     $tool->update(['status_id' => 5]); // if In progress sr, the tool in the inventory will be "In Repair"
                 }
+                
 
                 $action = 'edit';
                 $message = 'Successfully Updated';

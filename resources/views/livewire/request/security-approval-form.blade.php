@@ -36,7 +36,7 @@
             @else
             Add Sex
             @endif
-            <button type="button" aria-label="Print"><i class="fa-solid fa-print"></i></button>
+            <!-- <button type="button" aria-label="Print"><i class="fa-solid fa-print"></i></button> -->
             <a class="btn btn-primary btn-sm mx-1" title="Print Request Letter" href="{{ route('print.request', 170) }}" target="_blank">
                 <i class="fa-solid fa-print"></i>
             </a>

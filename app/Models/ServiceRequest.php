@@ -13,7 +13,7 @@ class ServiceRequest extends Model
     
     protected $table = 'service_requests';
     protected $primaryKey = 'id';
-    protected $fillable = [ 'service_id', 'borrower_id', 'staff_user_id', 'tool_id', 'status_id', 'source_id', 'operator_id', 'set_date' ];
+    protected $fillable = [ 'service_id', 'borrower_id', 'staff_user_id', 'tool_id', 'status_id', 'source_id', 'operator_id', 'set_date', 'description' ];
 
     public function service()
     {

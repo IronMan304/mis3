@@ -20,14 +20,14 @@
 
 <div class="header">
 	<div class="header-left">
-		{{--<a href="/" class="logo">
-			<img src="{{ asset('assets/img/logo.png') }}" width="35" height="35" alt> <span>Diagcare</span>
-		</a>--}}
+		<a href="/" class="logo">
+			<img src="{{ asset('assets/img/ncictso.png') }}" width="60" height="60" alt> <span>CICTSO</span>
+		</a>
+
 	</div>
 	<a id="toggle_btn" href="#"><img src="{{ asset('assets/img/icons/bar-icon.svg') }}" alt></a>
 
-		<a id="mobile_btn" class="mobile_btn float-start" href="#sidebar"><img
-				src="{{ asset('assets/img/icons/bar-icon.svg') }}" alt></a>
+	<a id="mobile_btn" class="mobile_btn float-start" href="#sidebar"><img src="{{ asset('assets/img/icons/bar-icon.svg') }}" alt></a>
 
 	<!-- <div class="top-nav-search mob-view">
 		<form>
@@ -52,8 +52,7 @@
 				</span> -->
 			</a>
 			<div class="dropdown-menu">
-				<a class="dropdown-item" href="{{ route('logout') }}"
-					onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+				<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 					Logout
 					<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 						@csrf
@@ -78,12 +77,10 @@
 		</span>
 	</div> -->
 	<div class="dropdown mobile-user-menu float-end">
-		<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i
-				class="fa-solid fa-ellipsis-vertical"></i></a>
+		<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></a>
 		<div class="dropdown-menu dropdown-menu-end">
 			<!-- <a class="dropdown-item" href="/profile">My Profile</a> -->
-			<a class="dropdown-item" href="{{ route('logout') }}"
-				onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+			<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 				Logout
 				<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 					@csrf

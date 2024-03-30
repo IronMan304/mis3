@@ -1,7 +1,7 @@
 <!-- Navbar Start -->
 <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0">
     <a href="/" class="navbar-brand p-0">
-        <h1 class="m-0 text-primary">NORSU <img src="{{ asset('assets/img/ncictso.png') }}" alt="NORSU CICTSO MIS" style="width:100px; height:100%">MIS</h1>
+        <h2 class="m-0 text-primary"> <img src="{{ asset('assets/img/ncictso.png') }}" alt="NORSU CICTSO MIS" style="width:100px; height:100%">CICTSO</h2>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>

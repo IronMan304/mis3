@@ -45,10 +45,12 @@
 							<thead>
 								<tr>
 									<td>Requester</td>
+									<th>Source</th>
 									<th>Service</th>
 									<th>Equipment Type</th>
 									<th>Property Number</th>
 									<th>Operator</th>
+									<th>Appointed Date</th>
 									<th>Status</th>
 									<td>Action</td>
 								</tr>
@@ -58,6 +60,9 @@
 								<tr>
 									<td>
 										{{ $service_request->borrower->first_name ?? ''}}
+									</td>
+									<td>
+										{{ $service_request->tool->source->description ?? ''}}
 									</td>
 									<td>
 										{{$service_request->service->description ?? ''}}
@@ -72,24 +77,31 @@
 										{{ $service_request->operator->first_name ?? 'TBA'}}
 									</td>
 									<td>
+										{{ $service_request->set_date ?? ''}}
+									</td>
+									<td>
 										{{ $service_request->status->description ?? ''}}
 									</td>
 
 									<td class="text-center">
 										<div class="btn-group" role="group">
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createAssignSROperator({{ $service_request->id }})" title="Assign">
-											<i class="fa-solid fa-calendar"></i>
+												<i class="fa-solid fa-calendar"></i>
 											</button>
 
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="serviceRequestStart({{ $service_request->id }})" title="Start" {{--@if ($request->status_id != 10) disabled @endif--}}>
 												<i class="fa-solid fa-play"></i>
 											</button>
 
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnSRequest({{ $service_request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);" >
+												<i class="fa-solid fa-arrow-right-arrow-left"></i>
+											</button>
+
 											<!-- <a wire:click="createAssignSROperator" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
 											</a> -->
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editServiceRequest({{ $service_request->id }})" title="Edit">
+											<!-- <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editServiceRequest({{ $service_request->id }})" title="Edit">
 												<i class='fa fa-pen-to-square'></i>
-											</button>
+											</button> -->
 											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteService({{ $service_request->id }})" title="Delete">
 											<i class="fa fa-trash"></i>
 											</a>--}}
@@ -121,7 +133,12 @@
 
 	<div wire.ignore.self class="modal fade" id="serviceRequestStartModal" tabindex="-1" role="dialog" aria-labelledby="serviceRequestStartModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 		<div class="modal-dialog modal-dialog-centered">
-		<livewire:service-request.service-request-start />
+			<livewire:service-request.service-request-start />
+		</div>
+	</div>
+	<div wire.ignore.self class="modal fade" id="sreturnModal" tabindex="-1" role="dialog" aria-labelledby="sreturnModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:service-request.return-form />
 		</div>
 	</div>
 
