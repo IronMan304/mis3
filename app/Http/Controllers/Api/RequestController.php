@@ -25,11 +25,14 @@ class RequestController extends Controller
      */
     public function index()
     {
-        $borrower = Borrower::where('user_id', auth()->user()->id)->first();
+        $borrower = Borrower::where('user_id', auth()->user()->id)
+        ->with('requests.tool_keys.tools','requests.tool_keys.status','requests.tool_keys.toolStatus', 'course')
+        ->first();
+    
 
         $tools = Tool::with(['category', 'type', 'status', 'security_keys', 'position_keys'])->get();
         $options = Option::all();
-
+    
         // Combine tools and operators into a single array
         $data = [
             'borrower' => [
@@ -37,6 +40,8 @@ class RequestController extends Controller
                 'middle_name' => $borrower->middle_name,
                 'last_name' => $borrower->last_name,
                 'position_id' => $borrower->position_id,
+                'requests' => $borrower->requests,
+                //'request_tools' => $requestToolKeys,
             ],
             'tools' => $tools,
             'options' => $options,

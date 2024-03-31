@@ -10,9 +10,13 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request as HttpRequest;
+use Livewire\WithPagination;
 
 class RequesterProfileController extends Controller
 {
+    use withPagination;
+    public $perPage = 5;
+    protected $paginationTheme = 'simple-tailwind';
     public function index($requesterId)
     {
         $requester = Borrower::with('requests')->find($requesterId);
@@ -23,7 +27,7 @@ class RequesterProfileController extends Controller
         }
 
         // Get the requester's bookings
-        $requests = $requester->requests;
+        $requests = $requester->requests()->paginate($this->perPage);
         // Check if civil_statuses is not null before accessing its name property
         //$civilStatuses = $requester->civil_statuses ? $requester->civil_statuses->name : null;
 
