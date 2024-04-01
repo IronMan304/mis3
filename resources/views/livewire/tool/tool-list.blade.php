@@ -69,22 +69,49 @@
 						</div>
 					</div>--}}
 					<div class="staff-search-table">
-						<form>
-							<div class="row">
-								<div class="col-12 col-md-6 col-xl-3">
-									<div class="form-group local-forms">
-										<label>Equipment Source </label>
-										<select class="form-control select" wire:model="source_id" type="text">
-											<option value="" selected>Filter by Source</option>
-											@foreach ($sources as $source)
-											<option value="{{ $source->id }}">
-												({{$source->code}}) {{ $source->description }}
-											</option>
-											@endforeach
-										</select>
-									</div>
+
+						<div class="row">
+							<div class="col-12 col-md-6 col-xl-3">
+								<div class="form-group local-forms">
+									<label>Equipment Type </label>
+									<select class="form-control " wire:model="type_id" wire:change="applyFilters">
+										<option value="" selected>All Type</option>
+										@foreach ($types as $type)
+										<option value="{{ $type->id }}">
+											{{ $type->description }}
+										</option>
+										@endforeach
+									</select>
+
 								</div>
-								{{--<div class="col-12 col-md-6 col-xl-3">
+							</div>
+							<div class="col-12 col-md-6 col-xl-3">
+								<div class="form-group local-forms">
+									<label>Equipment Status </label>
+									<select class="form-control" wire:model="status_id" wire:change="applyFilters">
+										<option value="" selected>All Status</option>
+										@foreach ($statuses as $status)
+										<option value="{{ $status->id }}">
+											{{ $status->description }}
+										</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+							<div class="col-12 col-md-6 col-xl-3">
+								<div class="form-group local-forms">
+									<label>Equipment Source </label>
+									<select class="form-control" wire:model="source_id" wire:change="applyFilters">
+										<option value="" selected>All Source</option>
+										@foreach ($sources as $source)
+										<option value="{{ $source->id }}">
+											{{ $source->description }}
+										</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+							{{--<div class="col-12 col-md-6 col-xl-3">
 									<div class="form-group local-forms cal-icon">
 										<label>From </label>
 										<input class="form-control datetimepicker" type="text">
@@ -95,22 +122,30 @@
 										<label>To </label>
 										<input class="form-control datetimepicker" type="text">
 									</div>
-								</div>
-								<div class="col-12 col-md-6 col-xl-3">
-									<div class="doctor-submit">
-										<button type="submit" class="btn btn-primary submit-list-form me-2">Search</button>
-									</div>
 								</div>--}}
+							<!-- <div class="col-12 col-md-6 col-xl-3">
+								<div class="doctor-submit">
+									<button type="submit" class="btn btn-primary submit-list-form me-2">Search</button>
+								</div>
+							</div> -->
+							<div class="col-12 col-md-6 col-xl-3">
+								<div class="doctor-submit">
+								<button  class="btn btn-primary submit-list-form me-2" wire:click="resetFilters">Reset Filters</button>
+
+								</div>
 							</div>
-						</form>
+						</div>
+
 					</div>
 				</div>
+
+
 
 				<div class="table-responsive">
 					<table class="table border-0 custom-table comman-table mb-0">
 						<thead>
 							<tr>
-								<th>ID</th>
+								<!-- <th>ID</th> -->
 								<th>Type</th>
 								<th>Property Number</th>
 								<th>Brand</th>
@@ -118,7 +153,7 @@
 								<th>Security</th>
 								<th>Source</th>
 								<th>Date Updated</th>
-								<th>Added By</th>
+								<!-- <th>Added By</th> -->
 								<th>Status</th>
 								<th>Action</th>
 							</tr>
@@ -127,9 +162,9 @@
 
 							@foreach ($tools as $tool)
 							<tr>
-								<td>
+								<!-- <td>
 									{{ $tool->id }}
-								</td>
+								</td> -->
 								<td>
 									{{ $tool->type->description}}
 								</td>
@@ -183,8 +218,8 @@
 
 
 
-
-								<td> ({{ $tool->user->position->description ?? 'N/A' }}) <br>{{ $tool->user->first_name ?? '' }} {{ $tool->user->last_name ?? '' }}</td>
+								<!-- 
+								<td> ({{ $tool->user->position->description ?? 'N/A' }}) <br>{{ $tool->user->first_name ?? '' }} {{ $tool->user->last_name ?? '' }}</td> -->
 
 								{{-- green, pink, gray, orange, blue--}}
 

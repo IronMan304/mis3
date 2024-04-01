@@ -9,6 +9,8 @@
 					<a href="/dashboard"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
 						<span>Dashboard</span></a>
 				</li>
+
+
 				@endif
 				<!-- <li>
 					<a href="/repairs"><span class="menu-side"><i class="fa-solid fa-house"></i></span>
@@ -88,8 +90,14 @@
 
 					<ul style="display: none;">
 
-						<li><a href="/report">Report 1</a></li>
+						<li><a href="/tool_reports">Equipment</a></li>
+						<li><a href="/service_reports">Service</a></li>
 					</ul>
+				</li>
+
+				<li>
+					<a href="/logs"><span class="menu-side"> <i class="fa-solid fa-book"></i></span>
+						<span>Logs</span></a>
 				</li>
 
 				@if(auth()->user()->hasRole('admin'))
