@@ -33,6 +33,7 @@ use App\Http\Controllers\Request\PrintController;
 use App\Http\Controllers\RequesterProfileController;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
+use App\Http\Livewire\Request\ReportList;
 use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 
 /*
@@ -91,6 +92,7 @@ Route::group(['middleware' => ['role:admin|staff|head of office']], function () 
     //Route::get('requests1', RequestList1::class);
 
     Route::get('/requesters/{requesterId}/profile', [RequesterProfileController::class, 'index'])->name('rp.index');
+    Route::get('tool_reports', ReportList::class);
 });
 
 Route::group(['middleware' => ['role:admin|requester|staff|head of office']], function () {
