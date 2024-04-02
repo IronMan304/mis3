@@ -72,7 +72,7 @@
                                         <div class="form-group">
                                             <x-input-label for="email" :value="__('Email')" />
                                             <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-                                            <x-input-error :messages="$errors->get('email')" class="login-danger" />
+                                            <x-input-error :messages="$errors->get('email')" class="alert alert-danger" />
                                         </div>
 
                                         <!-- Password -->

@@ -53,6 +53,21 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-3">
+                                <div class="form-group local-forms">
+                                    <label for="dateFrom">Date From:</label>
+                                    <input type="date" class="form-control" wire:model="dateFrom" id="dateFrom">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group local-forms">
+                                    <label for="dateTo">Date To:</label>
+                                    <input type="date" class="form-control" wire:model="dateTo" id="dateTo">
+                                </div>
+                            </div>
+
+
                             <div class="col-6 col-md-6 col-xl-3">
                                 <div class="doctor-submit">
                                     <button class="btn btn-primary submit-list-form me-2" wire:click="resetFilters">Reset Filters</button>
@@ -63,53 +78,8 @@
 
                     </div>
 
-                    <div class="staff-search-table">
-
-                        <div class="row">
-                            <div class="col-12 col-md-6 col-xl-3">
-                                <div class="form-group local-forms cal-icon">
-                                    <label>From </label>
-                                    <input class="form-control datetimepicker" type="text" wire:model="dateFrom" id="dateFrom">
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-xl-3">
-                                <div class="form-group local-forms cal-icon">
-                                    <label>To </label>
-                                    <input class="form-control datetimepicker" type="text" wire:model="dateTo" id="dateFrom">
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-6 col-xl-3">
-                                <div class="doctor-submit">
-                                    <button type="submit" class="btn btn-primary submit-list-form me-2" wire:click="applyFilters">Search</button>
-                                </div>
-                            </div>
 
 
-                            <div class="col-12 col-md-6 col-xl-3">
-                                <div class="doctor-submit">
-                                    <button class="btn btn-primary submit-list-form me-2" wire:click="resetFilters">Reset Filters</button>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <div class="form-group local-forms">
-                                <label for="dateFrom">Date From:</label>
-                                <input type="date" class="form-control" wire:model="dateFrom" id="dateFrom">
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group local-forms">
-                                <label for="dateTo">Date To:</label>
-                                <input type="date" class="form-control" wire:model="dateTo" id="dateTo">
-                            </div>
-                        </div>
-                    </div>
                     <div class="table-responsive">
                         <table class="table border-0 custom-table comman-table mb-0">
                             <thead>
@@ -173,6 +143,37 @@
 
                                         @if ($request->option_id == 2)
                                         {{ 'N/A' }}
+                                        @endif
+                                    </td>
+
+
+                                    <!-- Equipment Category: Type -->
+                                    <td>
+                                        @if ($request->tool_keys)
+                                        @foreach ($request->tool_keys as $toolKey)
+                                        {{ $toolKey->tools->type->category->description }}: {{ $toolKey->tools->type->description }}
+                                        @if (!$loop->last)
+                                        <br>
+                                        @endif
+                                        @endforeach
+                                        @else
+                                        No Tools Assigned
+                                        @endif
+                                    </td>
+
+                                    <!-- Equipment -->
+                                    <td>
+                                        @if ($request->tool_keys)
+                                        @foreach ($request->tool_keys as $toolKey)
+                                        {{ $toolKey->tools->property_number ?? ''}}: {{ $toolKey->status->description ?? ''}} ({{ $toolKey->toolStatus->description ?? ''}})
+
+                                        @if (!$loop->last)
+                                        {{-- Add a Space or separator between department names --}}
+                                        <br>
+                                        @endif
+                                        @endforeach
+                                        @else
+                                        No Tools Assigned
                                         @endif
                                     </td>
 

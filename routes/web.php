@@ -56,7 +56,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::group(['middleware' => ['role:admin']], function () {
+Route::group(['middleware' => ['role:admin|operator']], function () {
     Route::get('users', UserList::class);
     Route::get('role', RoleList::class);
     Route::get('permission', PermissionList::class);
@@ -74,7 +74,7 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::get('trials', TrialList::class);
 });
 
-Route::group(['middleware' => ['role:admin|staff|head of office']], function () {
+Route::group(['middleware' => ['role:admin|staff|head of office|operator']], function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -95,7 +95,7 @@ Route::group(['middleware' => ['role:admin|staff|head of office']], function () 
     Route::get('tool_reports', ReportList::class);
 });
 
-Route::group(['middleware' => ['role:admin|requester|staff|head of office']], function () {
+Route::group(['middleware' => ['role:admin|requester|staff|head of office|operator']], function () {
     Route::get('requests', RequestList::class);
     //Route::get('requests', RequestList::class);
     Route::get('service_requests', ServiceRequestList::class);

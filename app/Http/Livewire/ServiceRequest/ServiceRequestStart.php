@@ -35,7 +35,14 @@ class ServiceRequestStart extends Component
     {
         $this->serviceRequestId = $serviceRequestId;
         $serviceRequest = ServiceRequest::whereId($serviceRequestId)->first();
+        if (auth()->user()->hasRole('operator')) {
+            // Fetch the user_id from the Borrower table using the authenticated user's id
+            $this->operator_id = Operator::where('user_id', auth()->user()->id)->value('id');
+     
+        }
+        else {
         $this->operator_id = $serviceRequest->operator_id;
+        }
 
         // $this->operatorItems = $request->request_operator_keys->map(function ($operator) {
         //     return $operator->operator_id;

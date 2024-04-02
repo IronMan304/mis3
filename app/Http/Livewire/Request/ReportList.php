@@ -41,6 +41,13 @@ class ReportList extends Component
         //$this->dateTo = null;
         $this->dateTo = now()->endOfDay(); 
     }
+    public function resetFilters()
+    {
+        $this->reset(['type_id', 'dateFrom', 'dateTo']);
+        $this->search = ''; // Also reset search input
+        $this->resetPage(); // Reset pagination
+        $this->render(); // Render the component
+    }
 
     public function createRequest()
     {
@@ -101,7 +108,16 @@ class ReportList extends Component
 
     // Filter requests based on search query
     if (!empty($this->search)) {
-        $query->where('description', 'LIKE', '%' . $this->search . '%');
+        $query->whereHas('borrower', function ($query){
+            $query->where('first_name', 'LIKE', '%' . $this->search . '%')
+            ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
+            ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');
+        })
+        ->orWhereHas('tool_keys', function ($query){
+            $query->whereHas('tools', function ($query){
+                $query->where('property_number', 'LIKE', '%' . $this->search . '%');
+            });
+        });
     }
 
     // Paginate the filtered requests

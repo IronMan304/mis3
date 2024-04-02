@@ -44,7 +44,7 @@
                 </div>--}}
 
                 @if (auth()->user()->hasRole('admin'))
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Operator
                         </label>
@@ -52,14 +52,14 @@
                             <option value="" selected>Choose an operator</option>
                             @foreach ($operators as $operator)
                             <option value="{{ $operator->id }}">
-                                {{ $operator->first_name ?? ''}}
+                                {{ $operator->first_name ?? ''}} {{ $operator->middle_name ?? ''}}  {{ $operator->last_name ?? ''}}
                             </option>
                             @endforeach
                         </select>
                     </div>
                 </div>
                 @elseif (auth()->user()->hasRole('operator'))
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Operator
                         </label>
@@ -67,7 +67,7 @@
                             <option value="" selected>Choose an operator</option>
                             @foreach ($operators as $operator)
                             <option value="{{ $operator->id }}">
-                                {{ $operator->first_name ?? ''}}
+                                {{ $operator->first_name ?? ''}}  {{ $operator->middle_name ?? ''}}  {{ $operator->last_name ?? ''}}
                             </option>
                             @endforeach
                         </select>

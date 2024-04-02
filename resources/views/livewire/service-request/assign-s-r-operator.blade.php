@@ -38,7 +38,7 @@
 					</div>
 				</div> -->
 
-				<div class="col-md-6">
+				<div class="col-md-12">
 					<div class="form-group local-forms">
 						<label>Set Date</label>
 						<input class="form-control" type="date" wire:model="set_date" placeholder="mm/dd/yyyy" />

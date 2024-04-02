@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-md-12" wire:ignore>
                     <div class="form-group local-forms">
-                        <label>Borrower
+                        <label>Requester
 
                         </label>
                         <select class="form-control select" id="returner_id" wire:model="borrower_id" disabled>
@@ -67,7 +67,7 @@
 
                 <div class="col-md-12">
                     <div class="form-group local-forms">
-                        <label>Tools</label>
+                        <label>Equipment</label>
                         <select class="form-control select" wire:model="tool_id"  disabled>
                             <option value="" selected>Select Tools</option>
                             @foreach($service_requests as $tool_request)
