@@ -103,7 +103,7 @@
                 @endif
        
                 @if($source_id != 4)
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Applicability
                         </label>
@@ -118,7 +118,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="form-group local-forms">
                         <label>Security
                         </label>

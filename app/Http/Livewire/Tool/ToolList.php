@@ -7,6 +7,8 @@ use App\Models\Type;
 use App\Models\Source;
 use App\Models\Status;
 use Livewire\Component;
+use App\Models\Borrower;
+use App\Models\Position;
 use Livewire\WithPagination;
 
 class ToolList extends Component
@@ -22,7 +24,10 @@ class ToolList extends Component
     public $type_id = '0';
     public $status_id = '0';
     public $source_id = '0';
-    public $selectedFilters = [];
+    public $applicability_id = '0';
+    public $security_id = '0';
+    public $owner_id = '0';
+
 
     protected $listeners = [
         'refreshParentTool' => '$refresh',
@@ -43,12 +48,12 @@ class ToolList extends Component
         $this->render(); // Render the component to apply new filters
     }
     public function resetFilters()
-{
-    $this->reset(['type_id', 'status_id', 'source_id']);
-    $this->search = ''; // Also reset search input
-    $this->resetPage(); // Reset pagination
-    $this->render(); // Render the component
-}
+    {
+        $this->reset(['type_id', 'status_id', 'source_id', 'applicability_id', 'security_id', 'owner_id']);
+        $this->search = ''; // Also reset search input
+        $this->resetPage(); // Reset pagination
+        $this->render(); // Render the component
+    }
 
 
     public function viewTool($toolId)
@@ -89,8 +94,16 @@ class ToolList extends Component
                 ->orWhere('property_number', 'LIKE', '%' . $this->search . '%')
                 ->orWhereHas('type', function ($query) {
                     $query->where('description', 'LIKE', '%' . $this->search . '%');
+                })
+                ->orWhereHas('owner', function ($query) {
+                    $query->where('first_name', 'LIKE', '%' . $this->search . '%');
                 });
         }
+        
+        if (!empty($this->owner_id)) {
+            $query->where('owner_id', $this->owner_id);
+        }
+
 
         if (!empty($this->type_id)) {
             $query->where('type_id', $this->type_id);
@@ -103,17 +116,35 @@ class ToolList extends Component
         if (!empty($this->source_id)) {
             $query->where('source_id', $this->source_id);
         }
+        
+        if (!empty($this->applicability_id)) {
+            $query
+            ->orWhereHas('position_keys', function ($query) {
+                $query->where('position_id', 'LIKE', '%' . $this->applicability_id . '%');
+            });
+        }
+
+        if (!empty($this->security_id)) {
+            $query
+            ->orWhereHas('security_keys', function ($query) {
+                $query->where('security_id', 'LIKE', '%' . $this->security_id . '%');
+            });
+        }
 
         $tools = $query->paginate($this->perPage);
         $sources = Source::all();
         $types = Type::all();
         $statuses = Status::all();
+        $applicabilities = Position::all();
+        $borrowers = Borrower::all();
 
         return view('livewire.Tool.Tool-list', [
             'tools' => $tools,
             'sources' => $sources,
             'types' => $types,
             'statuses' => $statuses,
+            'applicabilities' => $applicabilities,
+            'borrowers' => $borrowers,
         ]);
     }
 }

@@ -6479,6 +6479,19 @@ a.btn.add-links:hover {
     font-weight: bold;
     margin: 15px 0 0;
 }
+.custom-text {
+
+    display: inline-block;
+    font-size: 12px;
+    min-width: 115px;
+    padding: 5px 15px;
+    text-align: center;
+    border: 0;
+}
+.text-green,
+a.text-light-green {
+    color: #00d789;
+}
 .custom-badge {
     border-radius: 8px;
     display: inline-block;
@@ -6512,6 +6525,16 @@ a.status-blue {
 a.status-purple {
     background-color: #f3e7fd;
     color: #8f13fd;
+}
+.status-light-green,
+a.status-light-green {
+    background: rgba(0, 211, 99, 0.1);
+    color: #00d789;
+}
+.status-dark-purple,
+a.status-dark-purple {
+    background: rgb(183, 236, 139);
+    color: #2A4C0E;
 }
 .status-pink,
 a.status-pink {

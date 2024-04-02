@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" id="list-content-tool">
 	<style>
 		#status-one-row {
 			background-color: #00ff00;
@@ -74,7 +74,7 @@
 							<div class="col-12 col-md-6 col-xl-3">
 								<div class="form-group local-forms">
 									<label>Equipment Type </label>
-									<select class="form-control " wire:model="type_id" wire:change="applyFilters">
+									<select class="form-control " wire:model="type_id" wire:change="applyFilters" id="type_id">
 										<option value="" selected>All Type</option>
 										@foreach ($types as $type)
 										<option value="{{ $type->id }}">
@@ -88,7 +88,7 @@
 							<div class="col-12 col-md-6 col-xl-3">
 								<div class="form-group local-forms">
 									<label>Equipment Status </label>
-									<select class="form-control" wire:model="status_id" wire:change="applyFilters">
+									<select class="form-control" wire:model="status_id" wire:change="applyFilters" id="status_id">
 										<option value="" selected>All Status</option>
 										@foreach ($statuses as $status)
 										<option value="{{ $status->id }}">
@@ -101,7 +101,7 @@
 							<div class="col-12 col-md-6 col-xl-3">
 								<div class="form-group local-forms">
 									<label>Equipment Source </label>
-									<select class="form-control" wire:model="source_id" wire:change="applyFilters">
+									<select class="form-control" wire:model="source_id" wire:change="applyFilters" id="source_id">
 										<option value="" selected>All Source</option>
 										@foreach ($sources as $source)
 										<option value="{{ $source->id }}">
@@ -130,8 +130,49 @@
 							</div> -->
 							<div class="col-12 col-md-6 col-xl-3">
 								<div class="doctor-submit">
-								<button  class="btn btn-primary submit-list-form me-2" wire:click="resetFilters">Reset Filters</button>
+									<button class="btn btn-primary submit-list-form me-2" wire:click="resetFilters">Reset Filters</button>
 
+								</div>
+							</div>
+							<div class="col-12 col-md-6 col-xl-3">
+								<div class="form-group local-forms">
+									<label>Equipment Applicability </label>
+									<select class="form-control" wire:model="applicability_id" wire:change="applyFilters" id="applicability_id">
+										<option value="" selected>All Applicability</option>
+										@foreach ($applicabilities as $applicability)
+										<option value="{{ $applicability->id }}">
+											{{ $applicability->description }}
+										</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+
+							<div class="col-12 col-md-6 col-xl-3">
+								<div class="form-group local-forms">
+									<label>Equipment Security </label>
+									<select class="form-control" wire:model="security_id" wire:change="applyFilters" id="security_id">
+										<option value="" selected>All Security</option>
+										@foreach ($applicabilities as $applicability)
+										<option value="{{ $applicability->id }}">
+											{{ $applicability->description }}
+										</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+
+							<div class="col-12 col-md-6 col-xl-3">
+								<div class="form-group local-forms">
+									<label>Equipment Owner </label>
+									<select class="form-control" wire:model="owner_id" wire:change="applyFilters" id="owner_id">
+										<option value="" selected>All Owner</option>
+										@foreach ($borrowers as $borrower)
+										<option value="{{ $borrower->id }}">
+											{{ $borrower->first_name }} {{ $borrower->middle_name }} {{ $borrower->last_name }}
+										</option>
+										@endforeach
+									</select>
 								</div>
 							</div>
 						</div>
@@ -178,24 +219,24 @@
 								<td>
 									@if ($tool->position_keys)
 									@foreach ($tool->position_keys as $positionKey)
-									{{ $positionKey->positions->description ?? 'N/A' }}
+									- {{ $positionKey->positions->description ?? 'N/A' }}
 
 									@if (!$loop->last)
 									{{-- Add a Space or separator between department names --}}
 									<br>
 									@endif
 									@endforeach
-									@elseif ($tool->source_id == 4)
-									{{ 'N/A' }}
-									@else
-									No Tools Assigned
+
+									@endif
+									@if($tool->source_id == 4)
+									{{ 'N/A'}}
 									@endif
 								</td>
 
 								<td>
 									@if ($tool->security_keys)
 									@foreach ($tool->security_keys as $securityKey)
-									{{ $securityKey->securities->description ?? ''}}
+									- {{ $securityKey->securities->description ?? 'N/A'}}
 
 									@if (!$loop->last)
 									{{-- Add a Space or separator between department names --}}
@@ -205,10 +246,14 @@
 									@else
 									No Tools Assigned
 									@endif
+									@if($tool->source_id == 4)
+									{{ 'N/A'}}
+									@endif
 								</td>
 
 								<td>
-									{{$tool->source->description ?? ''}}
+									{{$tool->source->description ?? ''}} <br>
+									({{ $tool->owner->first_name ?? ''}} {{ $tool->owner->middle_name ?? ''}} {{ $tool->owner->last_name ?? ''}})
 								</td>
 
 								<td class="appoint-time">
@@ -224,7 +269,7 @@
 								{{-- green, pink, gray, orange, blue--}}
 
 								<td>
-									<button @if($tool->status_id == 1) class="custom-badge status-green" @elseif ($tool->status_id == 2) class="custom-badge status-blue" @elseif($tool->status_id == 3) class="custom-badge status-gray" @elseif($tool->status_id == 4) class="custom-badge status-red" @elseif($tool->status_id == 17) class="custom-badge status-pink" @elseif($tool->status_id == 14) class="custom-badge status-orange" @endif>
+									<button @if($tool->status_id == 1) class="custom-badge status-light-green" @elseif ($tool->status_id == 2) class="custom-badge status-blue" @elseif($tool->status_id == 3) class="custom-badge status-gray" @elseif($tool->status_id == 4) class="custom-badge status-red" @elseif($tool->status_id == 17) class="custom-badge status-gray" @elseif($tool->status_id == 14) class="custom-badge status-orange" @elseif($tool->status_id == 5) class="custom-badge status-pink" @elseif($tool->status_id == 21) class="custom-badge status-purple" @elseif($tool->status_id == 23) class="custom-badge status-green" @elseif($tool->status_id == 22) class="custom-badge status-dark-purple" @endif>
 										{{ $tool->status->description ?? ''}}
 									</button>
 								</td>
@@ -260,6 +305,85 @@
 		<livewire:tool.tool-form />
 	</div>
 </div>
+
+<script>
+	document.addEventListener('livewire:load', function() {
+		// Type Select2
+		$('#type_id').select2({
+			dropdownParent: $('#list-content-tool')
+		});
+
+		$('#type_id').on('change', function(e) {
+			let data = $(this).val();
+			console.log(data);
+			@this.set('type_id', data);
+		});
+
+			// Status Select2
+			$('#status_id').select2({
+			dropdownParent: $('#list-content-tool')
+		});
+
+		$('#status_id').on('change', function(e) {
+			let data = $(this).val();
+			console.log(data);
+			@this.set('status_id', data);
+		});
+
+			// Source Select2
+			$('#source_id').select2({
+			dropdownParent: $('#list-content-tool')
+		});
+
+		$('#source_id').on('change', function(e) {
+			let data = $(this).val();
+			console.log(data);
+			@this.set('source_id', data);
+		});
+
+			// Applicability Select2
+			$('#applicability_id').select2({
+			dropdownParent: $('#list-content-tool')
+		});
+
+		$('#applicability_id').on('change', function(e) {
+			let data = $(this).val();
+			console.log(data);
+			@this.set('applicability_id', data);
+		});
+
+			// Security Select2
+			$('#security_id').select2({
+			dropdownParent: $('#list-content-tool')
+		});
+
+		$('#security_id').on('change', function(e) {
+			let data = $(this).val();
+			console.log(data);
+			@this.set('security_id', data);
+		});
+
+			// Owner Select2
+			$('#owner_id').select2({
+			dropdownParent: $('#list-content-tool')
+		});
+
+		$('#owner_id').on('change', function(e) {
+			let data = $(this).val();
+			console.log(data);
+			@this.set('owner_id', data);
+		});
+
+	});
+
+
+	document.addEventListener('livewire:update', function() {
+		// Refresh Select2 on Livewire update
+		$('#owner_id, #type_id, #status_id, #source_id, #applicability_id, #security_id, #owner_id').select2({
+			dropdownParent: $('#list-content-tool')
+		});
+	});
+</script>
 </div>
 
 @section('custom_script')

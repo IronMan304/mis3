@@ -85,7 +85,7 @@ class ToolForm extends Component
         $data = $this->validate($rules);
 
         if($this->source_id == 4){
-            $data['status_id'] = 4;
+            $data['status_id'] = 22;
         }
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;

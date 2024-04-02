@@ -24,7 +24,7 @@
 
 					<ul style="display: none;">
 
-						<li><a href="/requests">Tool</a></li>
+						<li><a href="/requests">Equipment</a></li>
 						<li><a href="/service_requests">Service</a></li>
 						<!-- <li class="submenu">
 							<a href="javascript:void(0);"><span>Service <br>Management</span> <span class="menu-arrow"></span></a>
