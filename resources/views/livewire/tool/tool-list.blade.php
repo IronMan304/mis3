@@ -56,7 +56,19 @@
 										<div class="add-group">
 											<a wire:click="createTool" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
 											</a>
+											<a wire:click="refreshPage" class="btn btn-primary doctor-refresh ms-2"><img src="assets/img/icons/re-fresh.svg" alt=""></a>
 										</div>
+
+									</div>
+									@if($exporting)
+									<div class="loading-indicator">Exporting...</div>
+									@endif
+									<div class="col-auto text-end float-end ms-auto download-grp">
+										<a wire:click="exportToPdf" class="btn btn-light ms-2"><img src="assets/img/icons/pdf-icon-01.svg" alt=""></a>
+										<!-- <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-02.svg" alt=""></a>
+											<a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-03.svg" alt=""></a> -->
+										<a href="javascript:;"  class="btn btn-light ms-2"><img src="assets/img/icons/pdf-icon-04.svg" alt=""></a>
+
 									</div>
 								</div>
 							</div>
@@ -319,8 +331,8 @@
 			@this.set('type_id', data);
 		});
 
-			// Status Select2
-			$('#status_id').select2({
+		// Status Select2
+		$('#status_id').select2({
 			dropdownParent: $('#list-content-tool')
 		});
 
@@ -330,8 +342,8 @@
 			@this.set('status_id', data);
 		});
 
-			// Source Select2
-			$('#source_id').select2({
+		// Source Select2
+		$('#source_id').select2({
 			dropdownParent: $('#list-content-tool')
 		});
 
@@ -341,8 +353,8 @@
 			@this.set('source_id', data);
 		});
 
-			// Applicability Select2
-			$('#applicability_id').select2({
+		// Applicability Select2
+		$('#applicability_id').select2({
 			dropdownParent: $('#list-content-tool')
 		});
 
@@ -352,8 +364,8 @@
 			@this.set('applicability_id', data);
 		});
 
-			// Security Select2
-			$('#security_id').select2({
+		// Security Select2
+		$('#security_id').select2({
 			dropdownParent: $('#list-content-tool')
 		});
 
@@ -363,8 +375,8 @@
 			@this.set('security_id', data);
 		});
 
-			// Owner Select2
-			$('#owner_id').select2({
+		// Owner Select2
+		$('#owner_id').select2({
 			dropdownParent: $('#list-content-tool')
 		});
 
@@ -372,6 +384,10 @@
 			let data = $(this).val();
 			console.log(data);
 			@this.set('owner_id', data);
+		});
+
+		Livewire.on('refreshPage', function() {
+			window.location.reload();
 		});
 
 	});

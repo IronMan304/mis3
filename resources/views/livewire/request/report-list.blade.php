@@ -22,19 +22,20 @@
                                 <div class="doctor-table-blk">
                                     <h3>Equipment Request Report</h3>
                                     <div class="doctor-search-blk">
+                                        <div class="top-nav-search table-search-blk">
+                                            <form>
+                                                <input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
+                                                <a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
+                                            </form>
+                                        </div>
                                         <div class="add-group">
-
+                                            <a href="javascript:;" class="btn btn-primary doctor-refresh ms-2"><img src="assets/img/icons/re-fresh.svg" alt=""></a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
-                                <div class="top-nav-search table-search-blk">
-                                    <form>
-                                        <input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
-                                        <a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
-                                    </form>
-                                </div>
+
                             </div>
                         </div>
                     </div>
