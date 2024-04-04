@@ -56,7 +56,7 @@
 										<div class="add-group">
 											<a wire:click="createTool" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt title="Add Equipment">
 											</a>
-											<a wire:click="createTool" class="btn btn-light ms-2" title="Import from Excel"><i class="fa-solid fa-file-import"></i>
+											<a wire:click="createTool" class="btn btn-primary ms-2 bt-sty"  title="Import from Excel"><i class="fa-solid fa-file-import fs-6"></i>
 											</a>
 											<a wire:click="refreshPage" class="btn btn-primary doctor-refresh ms-2"><img src="assets/img/icons/re-fresh.svg" alt="" title="Refresh page"></a>
 										</div>
