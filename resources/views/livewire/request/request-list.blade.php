@@ -228,7 +228,7 @@
 											</button>
 											@endif--}}
 
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="View Tool">
+											<button type="button" class="btn btn-info btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="View Tool">
 												<i class="fa-solid fa-toolbox"></i>
 											</button>
 
@@ -268,7 +268,7 @@
 											@endif -->
 
 											@if($securityButton || auth()->user()->hasRole('admin'))
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="securityApprovalForm({{ $request->id }})" title="Letter">
+											<button type="button" class="btn btn-warning btn-sm mx-1" wire:click="securityApprovalForm({{ $request->id }})" title="Letter">
 												<i class="fa-solid fa-envelope"></i>
 											</button>
 
@@ -276,7 +276,7 @@
 
 
 
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="requestStartForm({{ $request->id }})" title="Start" {{--@if ($request->status_id != 10) disabled @endif--}}>
+											<button type="button" class="btn btn-success btn-sm mx-1" wire:click="requestStartForm({{ $request->id }})" title="Start" {{--@if ($request->status_id != 10) disabled @endif--}}>
 												<i class="fa-solid fa-play"></i>
 											</button>
 

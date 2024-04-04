@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" id="list-content-tool-request-report">
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
@@ -43,14 +43,11 @@
                     <div class="staff-search-table">
 
                         <div class="row">
-                            <div class="col-12 col-md-6 col-xl-3">
+
+                            <div class="col-md-3">
                                 <div class="form-group local-forms">
-                                    <label>Request Type </label>
-                                    <select class="form-control" wire:model="type_id" wire:change="applyFilters">
-                                        <option value="" selected>All Types</option>
-                                        <option value="mobile">Mobile</option>
-                                        <option value="ftof">FTOF</option>
-                                    </select>
+                                    <label for="date">Request Date</label>
+                                    <input type="date" class="form-control" wire:model="date" id="date">
                                 </div>
                             </div>
 
@@ -75,6 +72,99 @@
 
                                 </div>
                             </div>
+
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="form-group local-forms">
+                                    <label>Request Type </label>
+                                    <select class="form-control" wire:model="type_id" wire:change="applyFilters">
+                                        <option value="" selected>All Types</option>
+                                        <option value="mobile">Mobile</option>
+                                        <option value="ftof">FTOF</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="form-group local-forms">
+                                    <label>Equipment Category </label>
+                                    <select class="form-control" wire:model="category_id" wire:change="applyFilters" id="category_id">
+                                        <option value="" selected>All Equipment Categories</option>
+                                        @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">
+                                            {{ $category->description }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="form-group local-forms">
+                                    <label>Equipment Type </label>
+                                    <select class="form-control" wire:model="tool_type_id" wire:change="applyFilters" id="tool_type_id">
+                                        <option value="" selected>All Equipment Types</option>
+                                        @foreach ($types as $type)
+                                        @if($type->category_id == $category_id)
+                                        <option value="{{ $type->id }}">
+                                            {{ $type->description }}
+                                        </option>
+                                        @elseif(!$category_id)
+                                        <option value="{{ $type->id }}">
+                                            {{ $type->description }}
+                                        </option>
+                                        @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="form-group local-forms">
+                                    <label>Equipment </label>
+                                    <select class="form-control" wire:model="tool_id" wire:change="applyFilters" id="tool_id">
+                                        <option value="" selected>All Equipments</option>
+                                        @foreach ($tools as $tool)
+                                        @if($tool->type_id == $tool_type_id)
+                                        <option value="{{ $tool->id }}">
+                                            {{ $tool->property_number }}
+                                        </option>
+                                        @elseif(!$tool_type_id)
+                                        <option value="{{ $tool->id }}">
+                                            {{ $tool->property_number }}
+                                        </option>
+                                        @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="form-group local-forms">
+                                    <label>Requester </label>
+                                    <select class="form-control" wire:model="borrower_id" wire:change="applyFilters" id="borrower_id">
+                                        <option value="" selected>All Requesters</option>
+                                        @foreach ($borrowers as $borrower)
+                                        <option value="{{ $borrower->id }}">
+                                            {{ $borrower->first_name }} {{ $borrower->middle_name }} {{ $borrower->last_name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="form-group local-forms">
+                                    <label>Operators </label>
+                                    <select class="form-control" wire:model="operator_id" wire:change="applyFilters" id="operator_id">
+                                        <option value="" selected>All Operators</option>
+                                        @foreach ($operators as $operator)
+                                        <option value="{{ $operator->id }}">
+                                            {{ $operator->first_name }} {{ $operator->middle_name }} {{ $operator->last_name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -96,7 +186,10 @@
                                     <th>Date Needed</th>
                                     <th>Return Date</th>
                                     <th>Operator</th>
+                                    <th>Category: Type</th>
+                                    <th>Equipment</th>
                                     <th>Status</th>
+                                    <th>Date Requested</th>
 
                                 </tr>
                             </thead>
@@ -210,6 +303,10 @@
                                         @endif
                                     </td>
 
+                                    <td>
+                                        {{ $request->created_at }}
+                                    </td>
+
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -221,4 +318,26 @@
         <!-- Pagination links -->
         {{ $requests->links() }}
     </div>
+    <script>
+        document.addEventListener('livewire:load', function() {
+            // Type Select2
+            $('#borrower_id').select2({
+                dropdownParent: $('#list-content-tool-request-report')
+            });
+
+            $('#borrower_id').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('borrower_id', data);
+            });
+
+        });
+
+        document.addEventListener('livewire:update', function() {
+            // Refresh Select2 on Livewire update
+            $('#borrower_id').select2({
+                dropdownParent: $('#list-content-tool-request-report')
+            });
+        });
+    </script>
 </div>

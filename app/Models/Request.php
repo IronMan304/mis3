@@ -34,6 +34,11 @@ class Request extends Model
         return $this->hasMany(ToolRequest::class, 'request_id');
     }
 
+    public function tool_keyss()
+    {
+        return $this->hasMany(ToolRequest::class);
+    }
+
     // public function tool_keys()
     // {
     //     return $this->hasMany(ToolRequest::class);
