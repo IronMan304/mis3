@@ -31,15 +31,22 @@
     </style>
     <div class="modal-header">
         <h1 class="modal-title fs-5">
-            @if ($requestId)
-            Request letter
-            @else
-            Add Sex
+            <div class="add-group">
+                @if ($requestId)
+                Request letter
+                @else
+                Add Sex
+                @endif
+                <!-- <button type="button" aria-label="Print"><i class="fa-solid fa-print"></i></button> -->
+                @if($request)
+
+
+
+                <a class="btn btn-primary btn-sm mx-1 bt-sty" title="Print Request Letter" href="{{ route('print.request', $request->id) }}" target="_blank">
+                    <i class="fa-solid fa-print"></i>
+                </a>
+            </div>
             @endif
-            <!-- <button type="button" aria-label="Print"><i class="fa-solid fa-print"></i></button> -->
-            <a class="btn btn-primary btn-sm mx-1" title="Print Request Letter" href="{{ route('print.request', 170) }}" target="_blank">
-                <i class="fa-solid fa-print"></i>
-            </a>
         </h1>
         <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
@@ -91,16 +98,51 @@
                         <p>{{ $request?->created_at ? \Carbon\Carbon::parse($request->created_at)->format('F d, Y') : '' }}</p>
 
 
+                        <br>
+                        <br>
 
-                        <p>
-                            <strong>{{ $president->honorific->description ?? '' }} {{ $president->first_name ?? '' }} {{ $president->middle_name ?? '' }} {{ $president->last_name ?? '' }}<br>
-                                {{$president->position->description ?? ''}}</strong><br>
-                            Negros Oriental State University<br>
-                            Dumaguete City
+                        @if($request)
+                        @if ($request->status_id == 10)
+
+                        {{--@if($request->current_security_id == 6)--}}
+                        @if (isset($president->security->esignature))
+                        <div style="position: relative;">
+                            <!-- Move the image above the name -->
+                            <img src="{{ asset('/storage/' . $president->security->esignature) }}" alt="e_signature" style="width: 20%; position: absolute; top: -30px; left: -10px; z-index: 1;">
+                        </div>
+                        @endif
+                        @endif
+                        @endif
+                        <p style="position: relative; z-index: 2;">
+                            <!-- Adjust the position of the name -->
+                            <strong>
+                                <!-- Place the name here -->
+                                {{ $president->honorific->description ?? '' }}
+                                {{ $president->first_name ?? '' }}
+                                {{ $president->middle_name ?? '' }}
+                                {{ $president->last_name ?? '' }}<br>
+                                {{ $president->position->description ?? '' }}<br>
+                                Negros Oriental State University<br>
+                                Dumaguete City
+                            </strong>
                         </p>
 
 
-                        <p>
+                        <br>
+
+                        @if($request)
+                        @if ($request->current_security_id == 6 || $request->status_id == 10)
+                        {{--@if($request->current_security_id == 6)--}}
+                        @if (isset($vp->security->esignature))
+                        <div style="position: relative;">
+                            <!-- Move the image above the name -->
+                            <img src="{{ asset('/storage/' . $vp->security->esignature) }}" alt="e_signature" style="width: 20%; position: absolute; top: -30px; left: 40px; z-index: 1;">
+                        </div>
+
+                        @endif
+                        @endif
+                        @endif
+                        <p style="position: relative; z-index: 2;">
                             Thru: <strong>{{ $vp->honorific->description ?? '' }} {{ $vp->first_name ?? '' }} {{ $vp->middle_name ?? '' }} {{ $vp->last_name ?? '' }}<br></strong>
                             &emsp;&emsp;&emsp;{{$vp->position->description ?? ''}}<br>
                             &emsp;&emsp;&emsp;Negros Oriental State University
@@ -119,49 +161,66 @@
 
                         <p>I would like to request the borrowing of the following equipment:</p>
 
-                        <table class="table border-0 custom-table comman-table mb-0">
+                        <!-- <table class="table border-0 custom-table comman-table mb-0"> -->
+                        <!-- <table class="table border-0 custom-table comman-table mb-0" style="font-size: 1px"> -->
+                        <table class="table table-bordered mb-0">
                             <thead>
                                 <tr>
                                     <th>Category: Type</th>
-                                    <th>Equipment</th>
+                                    <th>Brand</th>
+                                    <th>Property Number</th>
+                                    <th>Signature</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($requests as $request)
+                                @forelse ($requests as $request)
+                                @if ($request->tool_keys)
+                                @foreach ($request->tool_keys as $toolKey)
                                 <tr>
-                                    <!-- Equipment Category: Type -->
-                                    <td>
-                                        @if ($request->tool_keys)
-                                        @foreach ($request->tool_keys as $toolKey)
-                                        {{ $toolKey->tools->type->category->description }}: {{ $toolKey->tools->type->description }}
-                                        @if (!$loop->last)
-                                        <br>
-                                        @endif
-                                        @endforeach
-                                        @else
-                                        No Tools Assigned
-                                        @endif
+                                    <td style="font-size: 10px;">
+                                        <!-- Equipment Category: Type -->
+                                        {{ $toolKey->tools->type->category->description ?? ''}}: {{ $toolKey->tools->type->description ?? ''}}
                                     </td>
-
-                                    <!-- Equipment -->
-                                    <td>
-                                        @if ($request->tool_keys)
-                                        @foreach ($request->tool_keys as $toolKey)
-                                        {{ $toolKey->tools->brand ?? ''}}: {{ $toolKey->status->description ?? ''}} ({{ $toolKey->toolStatus->description ?? ''}})
-
-                                        @if (!$loop->last)
-                                        {{-- Add a Space or separator between department names --}}
-                                        <br>
-                                        @endif
-                                        @endforeach
+                                    <td style="font-size: 10px;">
+                                        <!-- Equipment brand-->
+                                        <div>
+                                            {{ $toolKey->tools->brand ?? ''}} <br>
+                                        </div>
+                                    </td>
+                                    <td style="font-size: 10px;">
+                                        <!-- Equipment Property number-->
+                                        <div>
+                                            {{ $toolKey->tools->property_number ?? ''}}
+                                        </div>
+                                    </td>
+                                    <td style="font-size: 10px;">
+                                        @if($toolKey->status_id != 15 || $request->status_id == 15)
+                                        @if ($toolKey->user)
+                                        <div style="max-width: 100px;">
+                                            <!-- Signature -->
+                                            <img src="{{ asset('/storage/' . $toolKey->user->security->esignature) }}" alt="e_signature" style="max-width: 50%; height: 50;">
+                                        </div>
                                         @else
-                                        No Tools Assigned
+                                        {{ $toolKey->status->description ?? ''}}
+                                        @endif
                                         @endif
                                     </td>
                                 </tr>
                                 @endforeach
+                                @else
+                                <tr>
+                                    <td colspan="4">No Tools Assigned</td>
+                                </tr>
+                                @endif
+                                @empty
+                                <tr>
+                                    <td colspan="4">No Requests Found</td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
+
+
 
                         <br>
 

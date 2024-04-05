@@ -2,13 +2,14 @@
 
 namespace App\Http\Livewire\User;
 
-use App\Models\Honorific;
-use App\Models\Position;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Livewire\Component;
+use App\Models\Position;
+use App\Models\Security;
+use App\Models\Honorific;
+use Illuminate\Validation\Rules;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class UserForm extends Component
 {
@@ -38,7 +39,7 @@ class UserForm extends Component
         $this->middle_name = $user->middle_name;
         $this->last_name = $user->last_name;
         $this->position_id = $user->position_id; // Changed from position to position
-        $this->honorific_id = $user->honorific_id; 
+        $this->honorific_id = $user->honorific_id;
         $this->email = $user->email;
 
         $this->selectedRoles = $user->getRoleNames()->toArray();
@@ -46,12 +47,19 @@ class UserForm extends Component
 
     public function store()
     {
-          if (is_object($this->selectedRoles)) {
+        if (is_object($this->selectedRoles)) {
             $this->selectedRoles = json_decode(json_encode($this->selectedRoles), true);
         }
 
         if (empty($this->roleCheck)) {
             $this->roleCheck = array_map('strval', $this->selectedRoles);
+        }
+
+        $is_president = false;
+        foreach ($this->roleCheck as $role) {
+            if ($role == 'president' || $role == 'vice-president' || $role == 'admin' || $role == 'staff'|| $role == 'head of office') {
+                $is_president = true;
+            }
         }
 
         if ($this->userId) {
@@ -63,39 +71,39 @@ class UserForm extends Component
                 'position_id'      => 'nullable',
                 'honorific_id'      => 'nullable',
                 'email'         => ['required', 'email'],
-                
+
             ]);
-            
-            
+
+
             $user = User::find($this->userId);
             $user->update($data);
 
-            // $doc = Doctor::where('user_id', $user->id)->first();
-            // if ($is_doc == true) {
-            //     if ($doc == null) {
-            //         Doctor::create([
-            //             'user_id'       => $user->id,
-            //             'first_name'    => $this->first_name,
-            //             'middle_name'   => $this->middle_name,
-            //             'last_name'     => $this->last_name
-            //         ]);
-            //     } else {
-            //         $doc->update([
-            //             'first_name'    => $this->first_name,
-            //             'middle_name'   => $this->middle_name,
-            //             'last_name'     => $this->last_name
-            //         ]);
-            //     }
-            // } else {
-            //     if ($doc != null) {
-            //         $doc->delete();
-            //     }
-            // }
+           $president = Security::where('user_id', $user->id)->first();
+            if ($is_president == true) {
+                if ($president == null) {
+                    Security::create([
+                        'user_id'       => $user->id,
+                        'first_name'    => $this->first_name,
+                        'middle_name'   => $this->middle_name,
+                        'last_name'     => $this->last_name
+                    ]);
+                } else {
+                   $president->update([
+                        'first_name'    => $this->first_name,
+                        'middle_name'   => $this->middle_name,
+                        'last_name'     => $this->last_name
+                    ]);
+                }
+            } else {
+                if ($president != null) {
+                   $president->delete();
+                }
+            }
             if (!empty($this->password)) {
                 $this->validate([
                     'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 ]);
-    
+
                 $user->update([
                     'password' => Hash::make($this->password),
                 ]);
@@ -129,21 +137,21 @@ class UserForm extends Component
                 'middle_name'   => $this->middle_name,
                 'last_name'     => $this->last_name,
                 'position_id'      => $this->position_id,
-                'honorific_id'      => 'nullable',
+                'honorific_id'      => $this->honorific_id,
                 'email'         => $this->email,
                 'password'      => Hash::make($this->password)
             ]);
 
             $user->assignRole($this->roleCheck);
 
-            // if ($is_doc == true) {
-            //     Doctor::create([
-            //         'user_id'       => $user->id,
-            //         'first_name'    => $this->first_name,
-            //         'middle_name'   => $this->middle_name,
-            //         'last_name'     => $this->last_name
-            //     ]);
-            // }
+            if ($is_president == true) {
+                Security::create([
+                    'user_id'       => $user->id,
+                    'first_name'    => $this->first_name,
+                    'middle_name'   => $this->middle_name,
+                    'last_name'     => $this->last_name
+                ]);
+            }
             // $this->createUserBranches($user);
             // $this->createUserDepartments($user);
 

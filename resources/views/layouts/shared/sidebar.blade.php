@@ -63,6 +63,7 @@
 						@endif
 						<li><a href="/borrowers">Requester</a></li>
 						<li><a href="/operators">Operator</a></li>
+						<li><a href="/securities">Security</a></li>
 					</ul>
 				</li>
 

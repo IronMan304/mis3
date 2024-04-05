@@ -17,6 +17,10 @@ class ToolRequest extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['tool_id', 'request_id', 'status_id', 'user_id', 'returner_id', 'tool_status_id', 'description', 'returned_at'];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function tools()
     {
         return $this->belongsTo(Tool::class, 'tool_id', 'id');

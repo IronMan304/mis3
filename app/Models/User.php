@@ -32,6 +32,11 @@ class User extends Authenticatable
         return $this->belongsTo(Honorific::class, 'honorific_id', 'id');
     }
 
+    public function security()
+    {
+        return $this->hasOne(Security::class, 'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -11,7 +11,7 @@ use App\Models\ToolRequest;
 
 class SecurityApprovalForm extends Component
 {
-    public $requestId, $borrower_id, $request, $rttskStatusId = 0, $errorMessage, $position, $president, $vp;
+    public $requestId, $borrower_id, $request, $rttskStatusId = 0, $errorMessage, $position, $president, $vp, $hoo, $request_id;
     public $action = '';  //flash
     public $message = '';  //flash
     public $approvalStatus = [
@@ -19,10 +19,15 @@ class SecurityApprovalForm extends Component
         'vp' => 11,
         'president' => 11
     ];
+    public $vpApprove = false;
+    public $pApprove = false;
 
     protected $approvedRttsKeys = [];
     public $toolItems = [];
     public $approval_toolItems = [];
+    public $showButton = false;
+    public $tool_approval_user_id;
+    public $tool_approval_user_ids = [];
 
     protected $listeners = [
         'requestId',
@@ -40,6 +45,7 @@ class SecurityApprovalForm extends Component
     public function requestId($requestId)
     {
         $this->requestId = $requestId;
+        $this->request_id = Request::find($requestId);
         // $request = Request::whereId($requestId)->first();
         $request = Request::with('tool_keys.tools')->findOrFail($requestId);
         $this->request = $request;
@@ -49,10 +55,31 @@ class SecurityApprovalForm extends Component
         })->firstOrFail();
         $this->president = $president;
 
+        $hoo = User::with('position', 'security')->whereHas('position', function ($query) {
+            $query->where('id', 3);
+        })->firstOrFail();
+        $this->hoo = $hoo;
+
+        $tool_approval_user_id = ToolRequest::where('request_id', $requestId)->firstOrFail()->user_id;
+        $this->tool_approval_user_id = $tool_approval_user_id;
+
+        $userIds = [];
+        foreach ($request->tool_keys as $toolKey) {
+            $userIds[] = $toolKey->user_id;
+        }
+        $this->tool_approval_user_ids = $userIds;
+
+
+        // dd($this->tool_approval_user_ids);
+
+        //dd($hoo->security->esignature);
+
         $vp = User::with('position')->whereHas('position', function ($query) {
             $query->where('id', 5);
         })->firstOrFail();
         $this->vp = $vp;
+
+       // dd($vp->id);
 
         $this->borrower_id = $request->borrower_id;
         // Populate toolItems with the IDs of associated tools
@@ -123,6 +150,8 @@ class SecurityApprovalForm extends Component
                 $request->update(['status_id' => 10]);
                 //$toolKey->update(['status_id' => 6]);
             }
+
+
 
             $action = 'edit';
             $message = 'Request Approved';
@@ -229,6 +258,7 @@ class SecurityApprovalForm extends Component
                 if ($allApproved) {
                     $request->update(['status_id' => 10]);
                 }
+                $this->vpApprove = true;
                 $this->approvalStatus['vp'] = true;
                 $action = 'edit';
                 $message = 'Request Approved';
@@ -329,6 +359,8 @@ class SecurityApprovalForm extends Component
                 if ($allApproved) {
                     $request->update(['status_id' => 10]);
                 }
+
+                $this->pApprove = true;
                 $this->approvalStatus['president'] = true;
                 $action = 'edit';
                 $message = 'Request Approved';
@@ -392,13 +424,30 @@ class SecurityApprovalForm extends Component
 
     public function render()
     {
+        $approvalStatus = $this->approvalStatus['head_of_office'];
+        $requests = Request::with('borrower', 'tool_keys.rtts_keys')->where('id', $this->requestId)->get();
+        //dd($this->requestId);
 
-        $approvalStatus =  $this->approvalStatus['head_of_office'];
-        $requests = Request::with('borrower')->where('id', $this->requestId)->get();
+        //$showButton = false;
+        foreach ($requests as $request) {
+            $requestToolKeys = $request->tool_keys;
+            foreach ($requestToolKeys as $toolKey) {
+                $rttsKeys = $toolKey->rtts_keys;
+                foreach ($rttsKeys as $rttsKey) {
+                    if ($rttsKey->status_id == 10) {
+                        $this->showButton = true;
+                        break 2; // Break both loops once found
+                    }
+                }
+            }
+            //$request->showButton = $showButton;
+        }
+        //dd($showButton);
         return view('livewire.request.security-approval-form', [
             'approvalStatus' => $approvalStatus,
             'errorMessage' => $this->errorMessage,
             'requests' => $requests,
+            //'showButton' => $showButton,
         ]);
     }
 }
