@@ -49,9 +49,9 @@ use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 */
 
 Route::get('/', [WelcomeController::class, 'index']);
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
