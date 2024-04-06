@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('service_requests', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable()->after('id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('tool_status_id')->nullable()->after('status_id');
+            $table->foreign('tool_status_id')->references('id')->on('users');
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('service_requests', function (Blueprint $table) {
-            $table->dropColumn('user_id');
+            $table->dropColumn('tool_status_id');
         });
     }
 };

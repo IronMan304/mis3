@@ -71,7 +71,7 @@
 										{{ $service_request->tool->type->description ?? ''}}
 									</td>
 									<td>
-										{{ $service_request->tool->property_number ?? ''}}
+										{{ $service_request->tool->property_number ?? ''}}: {{ $service_request->ToolStatus->description ?? ''}}
 									</td>
 									<td>
 										{{ $service_request->operator->first_name ?? 'TBA'}}

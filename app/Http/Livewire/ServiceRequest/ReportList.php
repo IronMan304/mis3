@@ -5,6 +5,7 @@ namespace App\Http\Livewire\ServiceRequest;
 use Carbon\Carbon;
 use App\Models\Tool;
 use App\Models\Type;
+use App\Models\Source;
 use App\Models\Status;
 use App\Models\Request;
 use Livewire\Component;
@@ -27,7 +28,7 @@ class ReportList extends Component
     public $sdateFrom;
     public $sdateTo;
     public $sdate;
-    public $sborrower_id, $scategory_id, $stool_type_id, $stool_id, $soperator_id, $sstatus_id;
+    public $sborrower_id, $scategory_id, $stool_type_id, $stool_id, $soperator_id, $sstatus_id, $source_id;
 
     protected $listeners = [
         'refreshParentServiceRequest' => '$refresh',
@@ -51,7 +52,7 @@ class ReportList extends Component
     }
     public function resetFilters()
     {
-        $this->reset(['stool_type_id', 'sborrower_id', 'scategory_id', 'stype_id', 'stool_id', 'soperator_id', 'sstatus_id']);
+        $this->reset(['stool_type_id', 'sborrower_id', 'scategory_id', 'stype_id', 'stool_id', 'soperator_id', 'sstatus_id', 'source_id']);
         $this->sdateFrom = null;
         $this->sdate = null;
         $this->sdateTo = null;
@@ -101,7 +102,14 @@ class ReportList extends Component
         if (!empty($this->sstatus_id)) {
             $query->where('status_id', $this->sstatus_id);
         }
-
+        // if (!empty($this->source_id)) {
+        //     $query->whereHas('tool', function ($query) {
+        //         $query->where('source_id', $this->source_id);
+        //     });
+        // }
+        if (!empty($this->source_id)) {
+            $query->where('source_id', $this->source_id);
+        }
         if (!empty($this->scategory_id)) {
             $query->whereHas('tool', function ($query) {
                 $query->whereHas('type', function ($query) {
@@ -170,6 +178,7 @@ class ReportList extends Component
         $types = Type::all();
         $tools = Tool::all();
         $statuses = Status::all();
+        $sources = Source::all();
 
         // Render the Livewire component
         return view('livewire.service-request.report-list', [
@@ -180,6 +189,7 @@ class ReportList extends Component
             'types' => $types,
             'tools' => $tools,
             'statuses' => $statuses,
+            'sources' => $sources,
         ]);
     }
 }

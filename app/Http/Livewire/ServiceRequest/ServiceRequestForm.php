@@ -11,7 +11,7 @@ use App\Models\Source;
 
 class ServiceRequestForm extends Component
 {
-    public $serviceRequestId, $borrower_id, $service_id, $tool_id, $staff_user_id, $status_id, $errorMessage, $source_id;
+    public $serviceRequestId, $borrower_id, $service_id, $tool_id, $staff_user_id, $status_id, $errorMessage, $source_id, $tool_status_id;
     public $action = '';  //flash
     public $message = '';  //flash
 
@@ -43,6 +43,8 @@ class ServiceRequestForm extends Component
         $this->staff_user_id = $serviceRequest->staff_user_id;
         $this->status_id = $serviceRequest->status_id;
         $this->source_id = $serviceRequest->source_id;
+        $this->tool_status_id = $serviceRequest->tool_status_id;
+        
     }
 
     //store
@@ -55,9 +57,11 @@ class ServiceRequestForm extends Component
             'staff_user_id' => 'nullable',
             'status_id' => 'nullable',
             'source_id' => 'required',
+            'tool_status_id' => 'nullable',
         ]);
 
         $tool = Tool::findOrFail($this->tool_id);
+        $data['tool_status_id'] = 14; //In Request
         //dd($toolsWithStatusOne);
         if ($this->serviceRequestId) {
             ServiceRequest::whereId($this->serviceRequestId)->first()->update($data);

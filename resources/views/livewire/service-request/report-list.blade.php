@@ -165,6 +165,21 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="form-group local-forms">
+                                    <label>Source </label>
+                                    <select class="form-control" wire:model="source_id" wire:change="applyFilters" id="source_id">
+                                        <option value="" selected>All Sources</option>
+                                        @foreach ($sources as $source)
+                                        <option value="{{ $source->id }}">
+                                            {{ $source->description }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -210,7 +225,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ $service_request->tool->source->description ?? ''}}
+                                        {{ $service_request->source->description ?? ''}}
                                     </td>
 
                                     <td>
@@ -222,7 +237,7 @@
                                     </td>
 
                                     <td>
-                                    {{ $service_request->tool->type->category->description ?? ''}}: {{ $service_request->tool->type->description ?? ''}}
+                                        {{ $service_request->tool->type->category->description ?? ''}}: {{ $service_request->tool->type->description ?? ''}}
                                     </td>
                                     <td>
                                         {{ $service_request->tool->property_number ?? ''}}
@@ -275,8 +290,8 @@
                 @this.set('stool_type_id', data);
             });
 
-              // Tool Select2
-              $('#stool_id').select2({
+            // Tool Select2
+            $('#stool_id').select2({
                 dropdownParent: $('#list-content-service-request-report')
             });
 
@@ -297,8 +312,8 @@
                 @this.set('sborrower_id', data);
             });
 
-              // Operator Select2
-              $('#soperator_id').select2({
+            // Operator Select2
+            $('#soperator_id').select2({
                 dropdownParent: $('#list-content-service-request-report')
             });
 

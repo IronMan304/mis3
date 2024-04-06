@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Request as IlluminateRequest;
 
 class ReturnForm extends Component
 {
-    public $returnId, $borrower_id, $status_id, $selectedCondition, $description, $errorMessage, $tool_id;
+    public $returnId, $borrower_id, $status_id, $selectedCondition, $description, $errorMessage, $tool_id, $tool_status_id;
     public $action = '';  //flash
     public $message = '';  //flash
 
@@ -42,6 +42,7 @@ class ReturnForm extends Component
         $this->borrower_id = $return->borrower_id;
         $this->tool_id = $return->tool_id;
         $this->description = $return->description;
+        $this->tool_status_id = $return->tool_status_id;
 
         // Assuming there is a tools relationship in your Request model
         // $this->return_toolItems = $return->tool_keys->map(function ($tool) {
@@ -61,22 +62,33 @@ class ReturnForm extends Component
             'tool_id' => 'required',
             'selectedConditionStatus' => 'required',
             'description' => 'nullable',
+            'tool_status_id' => 'nullable',
         ]);
 
         if ($this->returnId) {
             $serviceRequest = ServiceRequest::whereId($this->returnId)->first();
-            if ($serviceRequest->status_id == 6 || $serviceRequest->status_id == 7 ) { // In progress
+            if ($serviceRequest->status_id == 6 || $serviceRequest->status_id == 12 ) { // In progress
  
             $serviceRequest->update(['status_id' => 12]); // Completed
             $serviceRequest->update(['description' => $this->description]); 
+            $serviceRequest->update(['tool_status_id' => $this->selectedConditionStatus]);
+                    
       
                 $tool = Tool::find($this->tool_id);
+                // if ($tool->status_id == 5 && $tool->source_id == 3 && $this->selectedConditionStatus == 1) { // cictso
+                //     $serviceRequest->tool_status_id = 23; // "To be checked"
+                //     $tool->status_id = $this->selectedConditionStatus;
+                // } elseif ($tool->status_id == 5 && $tool->source_id == 4 ) { // personal
+                //     $serviceRequest->tool_status_id = 21; // "To be Handed"
+                //     $tool->status_id = 21;
+                // } 
                 // $request = Request::find($this->returnId);
             
                 // $toolKey = $request->tool_keys->where('tool_id', $toolId)->where('status_id', 6)->first();
             
                 //if ($tool && $tool->status_id == 5) {  // if in repair pa ang tool 
                     $tool->update(['status_id' => $this->selectedConditionStatus]);
+                    
                 
                 $action = 'edit';
                 $message = 'Successfully Returned';

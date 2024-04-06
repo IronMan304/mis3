@@ -12,7 +12,7 @@ use App\Models\Service;
 
 class ServiceRequestStart extends Component
 {
-    public $serviceRequestId, $option_id, $errorMessage;
+    public $serviceRequestId, $option_id, $errorMessage, $tool_status_id;
     public $action = '';  //flash
     public $message = '';  //flash
     public $operator_id, $tool_id;
@@ -38,10 +38,8 @@ class ServiceRequestStart extends Component
         if (auth()->user()->hasRole('operator')) {
             // Fetch the user_id from the Borrower table using the authenticated user's id
             $this->operator_id = Operator::where('user_id', auth()->user()->id)->value('id');
-     
-        }
-        else {
-        $this->operator_id = $serviceRequest->operator_id;
+        } else {
+            $this->operator_id = $serviceRequest->operator_id;
         }
 
         // $this->operatorItems = $request->request_operator_keys->map(function ($operator) {
@@ -51,6 +49,7 @@ class ServiceRequestStart extends Component
         //     return $tool->tool_id;
         // })->toArray();
         $this->tool_id = $serviceRequest->tool_id;
+        $this->tool_status_id = $serviceRequest->tool_status_id;
     }
 
     //store
@@ -58,6 +57,7 @@ class ServiceRequestStart extends Component
     {
         $data = $this->validate([
             'operator_id' => auth()->user()->hasRole('operator') ? 'nullable' : 'required',
+            'tool_status_id' => 'nullable',
         ]);
 
         if ($this->serviceRequestId) {
@@ -84,9 +84,10 @@ class ServiceRequestStart extends Component
                 $tool = Tool::find($this->tool_id);
                 if ($tool && $tool->status_id == 21 || $tool->status_id == 23) { // to be handed || TO be checked
                     $tool->update(['status_id' => 5]); // if In progress sr, the tool in the inventory will be "In Repair"
+                    $serviceRequest->update(['tool_status_id' => 5]); // In Repair
                 }
-                
 
+                //$data['tool_status_id'] = 5; //In Repair
                 $action = 'edit';
                 $message = 'Successfully Updated';
                 $this->emit('flashAction', $action, $message);
