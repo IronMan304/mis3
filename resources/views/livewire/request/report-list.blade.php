@@ -320,7 +320,41 @@
     </div>
     <script>
         document.addEventListener('livewire:load', function() {
-            // Type Select2
+
+            //Category Select2
+            $('#category_id').select2({
+                dropdownParent: $('#list-content-tool-request-report')
+            });
+
+            $('#category_id').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('category_id', data);
+            });
+
+            // Tool Type Select2
+            $('#tool_type_id').select2({
+                dropdownParent: $('#list-content-tool-request-report')
+            });
+
+            $('#tool_type_id').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('tool_type_id', data);
+            });
+
+             // Tool Select2
+             $('#tool_id').select2({
+                dropdownParent: $('#list-content-tool-request-report')
+            });
+
+            $('#tool_id').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('tool_id', data);
+            });
+
+            // Borrower Select2
             $('#borrower_id').select2({
                 dropdownParent: $('#list-content-tool-request-report')
             });
@@ -331,11 +365,22 @@
                 @this.set('borrower_id', data);
             });
 
+             // Operator Select2
+             $('#operator_id').select2({
+                dropdownParent: $('#list-content-tool-request-report')
+            });
+
+            $('#operator_id').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('operator_id', data);
+            });
+
         });
 
         document.addEventListener('livewire:update', function() {
             // Refresh Select2 on Livewire update
-            $('#borrower_id').select2({
+            $('#category_id, #tool_type_id, #tool_id, #borrower_id, #operator_id').select2({
                 dropdownParent: $('#list-content-tool-request-report')
             });
         });

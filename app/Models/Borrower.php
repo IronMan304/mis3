@@ -66,4 +66,9 @@ class Borrower extends Model
         return $this->hasMany(Request::class);
     }
 
+    public function service_requests()
+    {
+        return $this->hasMany(ServiceRequest::class);
+    }
+
 }

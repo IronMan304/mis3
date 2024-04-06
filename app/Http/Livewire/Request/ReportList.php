@@ -44,9 +44,9 @@ class ReportList extends Component
         // $this->dateFrom = now()->toDateString();
         // $this->dateTo = now()->toDateString();
         // Set default date range to include all dates
-        $this->dateFrom = null;
-        $this->date = null;
-        $this->dateTo = null;
+        // $this->dateFrom = null;
+        // $this->date = null;
+        // $this->dateTo = null;
     }
     public function resetFilters()
     {
@@ -106,9 +106,12 @@ class ReportList extends Component
             });
         }
         if (!empty($this->category_id)) {
-            $query->whereHas('tool_keyss', function ($query) {
+            $query->whereHas('tool_keys', function ($query) {
                 $query->whereHas('tools', function ($query) {
-                    $query->where('category_id', $this->category_id);
+                    $query->whereHas('type', function ($query) {
+                        $query->where('category_id', $this->category_id);
+                    });
+                 
                 });
             });
            //$this->reset(['tool_type_id', 'tool_id']);
@@ -137,7 +140,7 @@ class ReportList extends Component
                 Carbon::parse($this->dateFrom)->startOfDay(),
                 Carbon::parse($this->dateTo)->endOfDay()
             ]);
-            $this->date = null;
+          
         } elseif ($this->date) {
             $query->whereDate('created_at', Carbon::parse($this->date)->toDateString());
             // $this->dateFrom = null;

@@ -12,6 +12,7 @@ use App\Models\Borrower;
 use App\Models\Category;
 use App\Models\Operator;
 use Livewire\WithPagination;
+use App\Models\ServiceRequest;
 
 class ReportList extends Component
 {
@@ -22,17 +23,17 @@ class ReportList extends Component
     public $message = '';  //flash
     public $perPage = 10;
     protected $paginationTheme = 'bootstrap';
-    public $type_id = '';
-    public $dateFrom;
-    public $dateTo;
-    public $date;
-    public $borrower_id, $category_id, $tool_type_id, $tool_id, $operator_id, $status_id;
+    public $stype_id = '';
+    public $sdateFrom;
+    public $sdateTo;
+    public $sdate;
+    public $sborrower_id, $scategory_id, $stool_type_id, $stool_id, $soperator_id, $sstatus_id;
 
     protected $listeners = [
-        'refreshParentRequest' => '$refresh',
-        'deleteRequest',
-        'editRequest',
-        'deleteConfirmRequest'
+        'refreshParentServiceRequest' => '$refresh',
+        'deleteServiceRequest',
+        'editServiceRequest',
+        'deleteConfirmServiceRequest'
     ];
 
     public function updatingSearch()
@@ -41,40 +42,40 @@ class ReportList extends Component
     }
     public function mount()
     {
-        // $this->dateFrom = now()->toDateString();
-        // $this->dateTo = now()->toDateString();
-        // Set default date range to include all dates
-        $this->dateFrom = null;
-        $this->date = null;
-        $this->dateTo = null;
+        // $this->sdateFrom = now()->tosDateString();
+        // $this->sdateTo = now()->tosDateString();
+        // Set default sdate range to include all sdates
+        // $this->sdateFrom = null;
+        // $this->sdate = null;
+        // $this->sdateTo = null;
     }
     public function resetFilters()
     {
-        $this->reset(['tool_type_id', 'borrower_id', 'category_id', 'type_id', 'tool_id', 'operator_id', 'status_id']);
-        $this->dateFrom = null;
-        $this->date = null;
-        $this->dateTo = null;
+        $this->reset(['stool_type_id', 'sborrower_id', 'scategory_id', 'stype_id', 'stool_id', 'soperator_id', 'sstatus_id']);
+        $this->sdateFrom = null;
+        $this->sdate = null;
+        $this->sdateTo = null;
         $this->search = ''; // Also reset search input
         $this->resetPage(); // Reset pagination
         $this->render(); // Render the component
     }
 
-    public function createRequest()
+    public function createServiceRequest()
     {
         $this->emit('resetInputFields');
-        $this->emit('openRequestModal');
+        $this->emit('openServiceRequestModal');
     }
 
-    public function editRequest($serviceRequestId)
+    public function editServiceRequest($serviceRequestId)
     {
         $this->serviceRequestId = $serviceRequestId;
         $this->emit('serviceRequestId', $this->serviceRequestId);
-        $this->emit('openRequestModal');
+        $this->emit('openServiceRequestModal');
     }
 
-    public function deleteRequest($serviceRequestId)
+    public function deleteServiceRequest($serviceRequestId)
     {
-        Request::destroy($serviceRequestId);
+        ServiceRequest::destroy($serviceRequestId);
 
         $action = 'error';
         $message = 'Successfully Deleted';
@@ -95,67 +96,59 @@ class ReportList extends Component
     public function render()
     {
         // Base query to get all requests
-        $query = Request::with('borrower.user');
+        $query = ServiceRequest::with('borrower.user');
 
-        if (!empty($this->borrower_id)) {
-            $query->where('borrower_id', $this->borrower_id);
-        }
-        if (!empty($this->operator_id)) {
-            $query->whereHas('request_operator_keys', function ($query) {
-                $query->where('operator_id', $this->operator_id);
-            });
-        }
-        if (!empty($this->category_id)) {
-            $query->whereHas('tool_keyss', function ($query) {
-                $query->whereHas('tools', function ($query) {
-                    $query->where('category_id', $this->category_id);
-                });
-            });
-           //$this->reset(['tool_type_id', 'tool_id']);
-        }
-        if (!empty($this->tool_type_id)) {
-            $query->whereHas('tool_keyss', function ($query) {
-                $query->whereHas('tools', function ($query) {
-                    $query->where('type_id', $this->tool_type_id);
-                });
-            });
-        }
-        if (!empty($this->tool_id)) {
-            $query
-                ->whereHas('tool_keyss', function ($query) {
-                    $query->where('tool_id', $this->tool_id);
-                });
-        }
-        if (!empty($this->status_id)) {
-            $query->where('status_id', $this->status_id);
+        if (!empty($this->sstatus_id)) {
+            $query->where('status_id', $this->sstatus_id);
         }
 
+        if (!empty($this->scategory_id)) {
+            $query->whereHas('tool', function ($query) {
+                $query->whereHas('type', function ($query) {
+                    $query->where('category_id', $this->scategory_id);
+                });
+               
+            });
+        }
 
-        // Filter requests based on date range if dates are selected
-        if ($this->dateFrom && $this->dateTo) {
+        if (!empty($this->stool_type_id)) {
+            $query->whereHas('tool', function ($query) {
+                $query->where('type_id', $this->stool_type_id);
+            });
+        }
+
+        if (!empty($this->stool_id)) {
+            $query->where('tool_id', $this->stool_id);
+        }
+
+        if (!empty($this->sborrower_id)) {
+            $query->where('borrower_id', $this->sborrower_id);
+        }
+
+        if (!empty($this->soperator_id)) {
+            $query->where('operator_id', $this->soperator_id);
+        }
+
+        // Filter requests based on sdate range if sdates are selected
+        if ($this->sdateFrom && $this->sdateTo) {
             $query->whereBetween('created_at', [
-                Carbon::parse($this->dateFrom)->startOfDay(),
-                Carbon::parse($this->dateTo)->endOfDay()
+                Carbon::parse($this->sdateFrom)->startOfDay(),
+                Carbon::parse($this->sdateTo)->endOfDay()
             ]);
-            $this->date = null;
-        } elseif ($this->date) {
-            $query->whereDate('created_at', Carbon::parse($this->date)->toDateString());
-            // $this->dateFrom = null;
-            // $this->dateTo = null;
+        } elseif ($this->sdate) {
+            $query->wheresDate('created_at', Carbon::parse($this->sdate)->tosDateString());
         }
 
         // Apply type filter if selected
-        if ($this->type_id === 'mobile') {
+        if ($this->stype_id === 'mobile') {
             $query->whereHas('borrower', function ($query) {
-                $query->whereColumn('user_id', 'requests.user_id');
+                $query->whereColumn('user_id', 'service_requests.staff_user_id');
             });
-        } elseif ($this->type_id === 'ftof') {
+        } elseif ($this->stype_id === 'ftof') {
             $query->whereHas('borrower', function ($query) {
-                $query->whereColumn('user_id', '!=', 'requests.user_id');
+                $query->whereColumn('user_id', '!=', 'service_requests.staff_user_id');
             });
         }
-
-
 
         // Filter requests based on search query
         if (!empty($this->search)) {
@@ -164,10 +157,8 @@ class ReportList extends Component
                     ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');
             })
-                ->orWhereHas('tool_keys', function ($query) {
-                    $query->whereHas('tools', function ($query) {
-                        $query->where('property_number', 'LIKE', '%' . $this->search . '%');
-                    });
+                ->orWhereHas('tool', function ($query) {
+                    $query->where('property_number', 'LIKE', '%' . $this->search . '%');
                 });
         }
 
