@@ -56,7 +56,7 @@
 										<div class="add-group">
 											<a wire:click="createTool" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt title="Add Equipment">
 											</a>
-											<a wire:click="createTool" class="btn btn-primary ms-2 bt-sty"  title="Import from Excel"><i class="fa-solid fa-file-import fs-6"></i>
+											<a wire:click="createTool" class="btn btn-primary ms-2 bt-sty" title="Import from Excel"><i class="fa-solid fa-file-import fs-6"></i>
 											</a>
 											<a wire:click="refreshPage" class="btn btn-primary doctor-refresh ms-2"><img src="assets/img/icons/re-fresh.svg" alt="" title="Refresh page"></a>
 										</div>
@@ -211,7 +211,7 @@
 								<th>Applicability</th>
 								<th>Security</th>
 								<th>Source</th>
-								<th>Date Updated</th>
+								<th>Date Created</th>
 								<!-- <th>Added By</th> -->
 								<th>Status</th>
 								<th>Action</th>
@@ -275,8 +275,10 @@
 								</td>
 
 								<td class="appoint-time">
-									<span>{{ $tool->updated_at->setTimezone('Asia/Manila')->format('m-d-Y') }} at </span>
-									{{ $tool->updated_at->setTimezone('Asia/Manila')->format('h:i A') }}
+									<span>{{ $tool->created_at->setTimezone('Asia/Manila')->format('m-d-Y') }} at </span>
+									{{ $tool->created_at->setTimezone('Asia/Manila')->format('h:i A') }}
+									<br>
+									{{ $tool->user->roles[0]->name ?? ''}}
 								</td>
 
 

@@ -53,6 +53,8 @@
 
 									<th>Date Needed</th>
 									<th>Return Date</th>
+									<th>Equipment Category: Type</th>
+									<th>Equipment</th>
 									<th>Operator</th>
 									<th>Status</th>
 									<th>Action</th>
@@ -121,6 +123,36 @@
 										{{ $request->estimated_return_date ?? ''}}
 									</td>
 
+									<!-- Equipment Category: Type -->
+									<td>
+										@if ($request->tool_keys)
+										@foreach ($request->tool_keys as $toolKey)
+										{{ $toolKey->tools->type->category->description }}: {{ $toolKey->tools->type->description }}
+										@if (!$loop->last)
+										<br>
+										@endif
+										@endforeach
+										@else
+										No Tools Assigned
+										@endif
+									</td>
+
+									<!-- Equipment -->
+									<td>
+										@if ($request->tool_keys)
+										@foreach ($request->tool_keys as $toolKey)
+										{{ $toolKey->tools->brand ?? '' }}: {{ $toolKey->status->description ?? '' }} {{ isset($toolKey->toolStatus->description) ? '(' . $toolKey->toolStatus->description . ')' : '' }}
+
+										@if (!$loop->last)
+										{{-- Add a Space or separator between department names --}}
+										<br>
+										@endif
+										@endforeach
+										@else
+										No Tools Assigned
+										@endif
+									</td>
+
 									<td>
 										@if ($request->request_operator_keys->isNotEmpty())
 										@foreach ($request->request_operator_keys as $request_operator_key)
@@ -156,7 +188,7 @@
 										@if (!in_array($rtts_key->security->description, $shownSecurityIds))
 										{{ $rtts_key->security->description }}: {{ $rtts_key->status->description ?? ''}}<br>
 
-								
+
 
 										@php
 										$shownSecurityIds[] = $rtts_key->security->description;
@@ -166,9 +198,9 @@
 										@endif
 										@endforeach
 
-								
+
 										@endforeach
-										
+
 										@endif
 									</td>
 

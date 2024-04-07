@@ -66,7 +66,7 @@ class RequestStartForm extends Component
                     $request->update(['status_id' => 6]); // In progress
                     foreach ($request->tool_keys as $toolKey) {
                         if ($toolKey->status_id == 10) {
-                            $toolKey->update(['status_id' => 6]);
+                            $toolKey->update(['status_id' => 2]);
                         }
                     }
                 }

@@ -194,7 +194,7 @@
                                         </div>
                                     </td>
                                     <td style="font-size: 10px;">
-                                        @if($toolKey->status_id != 15 || $request->status_id == 15)
+                                        @if($toolKey->status_id != 15 || $request->status_id != 15)
                                         @if ($toolKey->user)
                                         <div style="max-width: 100px;">
                                             <!-- Signature -->

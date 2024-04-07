@@ -14,7 +14,6 @@ use App\Models\ToolRequest;
 use App\Models\ToolPosition;
 use App\Models\ToolSecurity;
 use App\Models\RequestToolToolSecurityKey;
-use Illuminate\Support\Facades\Broadcast;
 
 class RequestForm extends Component
 {
@@ -201,7 +200,9 @@ class RequestForm extends Component
                 $this->emit('closeRequestModal');
                 $this->emit('refreshToolList');
                 $this->emit('refreshParentRequest');
+                $this->emit('refreshParentTool');
                 $this->emit('refreshTable');
+               // $this->emit('requestCreated', $request);
                 // After the request is created or updated, broadcast an event
                 // Broadcast::channel('tool-list-channel', 'ToolListUpdated', [
                 //     'message' => 'Tool list updated',

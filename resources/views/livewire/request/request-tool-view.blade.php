@@ -17,8 +17,8 @@
 					<thead>
 						<tr>
 
-							<th>Equipment Category: Type</th>
-							<th>Equipment</th>
+							<!-- <th>Equipment Category: Type</th>
+							<th>Equipment</th> -->
 							<th>Date Requested</th>
 							<th>Date Reviewed</th>
 							<th>Date Approved</th>

@@ -66,8 +66,9 @@ class ReturnForm extends Component
 
         if ($this->returnId) {
             $return = Request::find($this->returnId);
+
             foreach ($return->tool_keys as $toolKey) {
-                if ($toolKey->status_id == 6) {
+                if ($toolKey->status_id == 2) {
 
                     // Update the status_id and returned_at for the returned tools in the ToolRequest table
                     foreach ($this->return_toolItems as $toolId) {
@@ -78,11 +79,11 @@ class ReturnForm extends Component
                         if ($toolRequest->returned_at == null) {
                             $request = Request::find($this->returnId);
                             foreach ($request->tool_keys as $toolKey) {
-                                if ($toolRequest->status_id == 6) {
+                                if ($toolRequest->status_id == 2) {
 
                                     $statusId = ($this->selectedConditionStatus == 3) ? 9 : 7;
 
-                                 
+
                                     $toolRequest->update([
                                         'status_id' => $statusId,
                                         'user_id' => auth()->user()->id,
@@ -105,22 +106,31 @@ class ReturnForm extends Component
                     foreach ($this->return_toolItems as $toolId) {
                         $tool = Tool::find($toolId);
                         // $request = Request::find($this->returnId);
-                    
+
                         // $toolKey = $request->tool_keys->where('tool_id', $toolId)->where('status_id', 6)->first();
-                    
+
                         if ($tool && $tool->status_id == 2) {  // if in use pa ang tool 
                             $tool->update(['status_id' => $this->selectedConditionStatus]);
                         }
-                        
                     }
 
 
                     $request = Request::find($this->returnId);
                     if ($request) {
-                        $request->update(['status_id' => 12]); // Completed
-                        // foreach ($request->tool_keys as $toolKey) {
-                        //     $toolKey->update(['status_id' => 6]);
-                        // }
+
+                        $allToolsReturned = true;
+                        foreach ($request->tool_keys as $toolKey) {
+                            if ($toolKey->status_id != 7) { // If any tool is not returned or lost
+                                $allToolsReturned = false;
+                                break;
+                            }
+                        }
+                        if ($allToolsReturned) {
+                            $request->update(['status_id' => 12]); // Completed
+                        } else {
+                            $request->update(['status_id' => 13]); // Incomplete
+                        }
+                  
                     }
 
                     $action = 'edit';
@@ -131,7 +141,7 @@ class ReturnForm extends Component
                     $this->emit('refreshParentReturn');
                     $this->emit('refreshTable');
                 } else {
-                    $this->errorMessage = 'You can only return tools that are In progress';
+                    $this->errorMessage = 'You can only return tools that are In use';
                 }
             }
         }
