@@ -83,7 +83,6 @@ class ReturnForm extends Component
 
                                     $statusId = ($this->selectedConditionStatus == 3) ? 9 : 7;
 
-
                                     $toolRequest->update([
                                         'status_id' => $statusId,
                                         'user_id' => auth()->user()->id,
@@ -122,13 +121,17 @@ class ReturnForm extends Component
 
                         $allToolsReturned = true;
                         foreach ($request->tool_keys as $toolKey) {
-                            if ($toolKey->status_id != 7) { // If any tool is not returned or lost
+                            if ($toolKey->status_id != 7 || $toolKey->status_id == 15) { // If any tool is not returned or lost
                                 $allToolsReturned = false;
                                 break;
                             }
                         }
                         if ($allToolsReturned) {
                             $request->update(['status_id' => 12]); // Completed
+                            // $data['dt_returned_user_id'] = auth()->user()->id;
+                            // $data['dt_returned'] = Carbon::now()->setTimezone('Asia/Manila');
+                            $request->update(['dt_returned_user_id' => auth()->user()->id]);
+                            $request->update(['dt_returned' => Carbon::now()->setTimezone('Asia/Manila')]);
                         } else {
                             $request->update(['status_id' => 13]); // Incomplete
                         }

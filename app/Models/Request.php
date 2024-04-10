@@ -15,7 +15,7 @@ class Request extends Model
     
     protected $table = 'requests';
     protected $primaryKey = 'id';
-    protected $fillable = [ 'request_number','tool_id', 'user_id', 'borrower_id', 'status_id', 'option_id', 'estimated_return_date', 'purpose', 'date_needed', 'current_security_id', 'max_security_id' ];
+    protected $fillable = [ 'request_number','tool_id', 'user_id', 'borrower_id', 'status_id', 'option_id', 'estimated_return_date', 'purpose', 'date_needed', 'current_security_id', 'max_security_id', 'dt_requested', 'dt_reviewed', 'dt_approved', 'dt_started', 'dt_returned', 'dt_rejected', 'dt_cancelled', 'dt_requested_user_id', 'dt_reviewed_user_id', 'dt_approved_user_id', 'dt_started_user_id', 'dt_returned_user_id', 'dt_rejected_user_id', 'dt_cancelled_user_id' ];
     
     public function borrower(){
         return $this->belongsTo(Borrower::class, 'borrower_id', 'id');
@@ -63,7 +63,34 @@ class Request extends Model
     {
         return $this->belongsTo(Position::class, 'max_security_id', 'id');
     }
-
+    public function dt_requested_user()
+    {
+        return $this->belongsTo(User::class, 'dt_requested_user_id', 'id');
+    }
+    public function dt_reviewed_user()
+    {
+        return $this->belongsTo(User::class, 'dt_reviewed_user_id', 'id');
+    }
+    public function dt_approved_user()
+    {
+        return $this->belongsTo(User::class, 'dt_approved_user_id', 'id');
+    }
+    public function dt_started_user()
+    {
+        return $this->belongsTo(User::class, 'dt_started_user_id', 'id');
+    }
+    public function dt_returned_user()
+    {
+        return $this->belongsTo(User::class, 'dt_returned_user_id', 'id');
+    }
+    public function dt_rejected_user()
+    {
+        return $this->belongsTo(User::class, 'dt_rejected_user_id', 'id');
+    }
+    public function dt_cancelled_user()
+    {
+        return $this->belongsTo(User::class, 'dt_cancelled_user_id', 'id');
+    }
 
 
 }

@@ -81,7 +81,8 @@ class RequestStartForm extends Component
                     }
                 }
 
-
+                $request->update(['dt_started_user_id' => auth()->user()->id]);
+                $request->update(['dt_started' => Carbon::now()->setTimezone('Asia/Manila')]);
 
                 $action = 'edit';
                 $message = 'Successfully Updated';

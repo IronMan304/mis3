@@ -78,9 +78,13 @@ class ApprovalForm extends Component
             'approval_toolItems' => 'required|array',
             'selectedConditionStatus' => 'required',
             //'operatorItems' => $this->option_id == 1  && $this->request_status_id == 6 ? 'required|array' : 'nullable|array',
+            // 'dt_reviewed_user_id' => 'nullable',
+            // 'dt_reviewed' => 'nullable',
         ]);
         //$data['user_id'] = auth()->user()->id;
         //$data['status_id'] = 16; //for returning
+        // $data['dt_reviewed_user_id'] = auth()->user()->id;
+        // $data['dt_reviewed'] = Carbon::now()->setTimezone('Asia/Manila');
 
         if ($this->approvalId) {
             $request = Request::whereId($this->approvalId)->first();
@@ -112,6 +116,8 @@ class ApprovalForm extends Component
                                 'dt_approved_user_id' => auth()->user()->id,
                                 'dt_approved' => Carbon::now()->setTimezone('Asia/Manila'),
                             ]);
+                            $request->update(['dt_reviewed_user_id' => auth()->user()->id]);
+                            $request->update(['dt_reviewed' => Carbon::now()->setTimezone('Asia/Manila')]);
                         }
                         if ($statusId == 15) { //rejected
                             $tool = Tool::find($toolId);
@@ -120,6 +126,8 @@ class ApprovalForm extends Component
                                 'dt_rejected_user_id' => auth()->user()->id,
                                 'dt_rejected' => Carbon::now()->setTimezone('Asia/Manila'),
                             ]);
+                            $request->update(['dt_rejected_user_id' => auth()->user()->id]);
+                            $request->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]);
                         }
                     }
                 }
@@ -144,6 +152,8 @@ class ApprovalForm extends Component
                             $tool_request->update(['status_id' => 15]); //rejected
                             $tool_request->update(['dt_rejected_user_id' => auth()->user()->id]); //rejected
                             $tool_request->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]); //rejected
+                            $request->update(['dt_rejected_user_id' => auth()->user()->id]);
+                            $request->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]);
                             // foreach ($this->toolItems as $toolId) {
                             //     $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
                             //     // Update records in RequestToolToolSecurityKey where the tool_id matches
@@ -161,6 +171,8 @@ class ApprovalForm extends Component
                             $tool_request->update(['status_id' => 10]); //approved
                             $tool_request->update(['dt_approved_user_id' => auth()->user()->id]); //approved
                             $tool_request->update(['dt_approved' => Carbon::now()->setTimezone('Asia/Manila')]); //approved
+                            $request->update(['dt_reviewed_user_id' => auth()->user()->id]);
+                            $request->update(['dt_reviewed' => Carbon::now()->setTimezone('Asia/Manila')]);
 
                         }
                     }
@@ -190,7 +202,6 @@ class ApprovalForm extends Component
                     $return = Request::find($this->approvalId);
                     $return->update(['status_id' => 16]); // reviewed
                 }
-
 
                 $action = 'edit';
                 $message = 'Successfully Responsed';

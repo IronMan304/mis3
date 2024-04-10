@@ -97,6 +97,9 @@ class RequestForm extends Component
 
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
+        $data['dt_requested_user_id'] = auth()->user()->id;
+        $data['dt_requested'] = Carbon::now()->setTimezone('Asia/Manila');
+
         //$data['dt_requested_user_id'] = auth()->user()->id;
 
         // Check if the user has the "requester" role

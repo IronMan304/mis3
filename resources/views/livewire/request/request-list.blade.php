@@ -59,9 +59,11 @@
 									<th>Status</th>
 									<th>Action</th>
 									<th>Requested</th>
+									<th>Reviewed</th>
 									<th>Approved</th>
+
 									<th>Started</th>
-									<th>Returned</th>
+									<th>Completed</th>
 									<th>Rejected</th>
 									<th>Cancelled</th>
 								</tr>
@@ -340,6 +342,84 @@
 
 										</div>
 									</td>
+
+									<td>
+
+										{{ $request->dt_requested ?? ''}}<br>
+										{{ $request->dt_requested_user->first_name ?? ''}}<br>
+
+									</td>
+
+									<td>
+
+										{{ $request->dt_reviewed ?? ''}}<br>
+										{{ $request->dt_reviewed_user->first_name ?? ''}}<br>
+
+									</td>
+
+									<td>
+
+										{{ $request->dt_approved ?? ''}}<br>
+										{{ $request->dt_approved_user->first_name ?? ''}}<br>
+
+										@php
+										$latestUpdatedAtPerSecurityId = [];
+										$shownSecurityIds = [];
+										@endphp
+										@foreach($request->tool_keys as $tool_key)
+										@foreach($tool_key->rtts_keys as $rtts_key)
+										@if($rtts_key->status_id == 10 && !in_array($rtts_key->security_id, $shownSecurityIds))
+										@if(isset($latestUpdatedAtPerSecurityId[$rtts_key->security_id]))
+										@if($rtts_key->updated_at > $latestUpdatedAtPerSecurityId[$rtts_key->security_id])
+										{{ $rtts_key->updated_at ?? '' }}<br>
+										@php
+										$latestUpdatedAtPerSecurityId[$rtts_key->security_id] = $rtts_key->updated_at;
+										@endphp
+										@endif
+										@else
+										{{ $rtts_key->updated_at ?? '' }}<br>
+										@php
+										$latestUpdatedAtPerSecurityId[$rtts_key->security_id] = $rtts_key->updated_at;
+										@endphp
+										@endif
+										@php
+										$shownSecurityIds[] = $rtts_key->security_id;
+										@endphp
+										@endif
+										@endforeach
+										@endforeach
+
+									</td>
+
+									<td>
+
+										{{ $request->dt_started ?? ''}}<br>
+										{{ $request->dt_started_user->first_name ?? ''}}<br>
+
+									</td>
+
+									<td>
+
+										{{ $request->dt_returned ?? ''}}<br>
+										{{ $request->dt_returned_user->first_name ?? ''}}<br>
+
+									</td>
+
+									<td>
+
+										{{ $request->dt_rejected ?? ''}}<br>
+										{{ $request->dt_rejected_user->first_name ?? ''}}<br>
+
+									</td>
+
+									<td>
+
+										{{ $request->dt_cancelled ?? ''}}<br>
+										{{ $request->dt_cancelled_user->first_name ?? ''}}<br>
+
+									</td>
+
+									{{----}}
 
 									<td>
 										@foreach($request->tool_keys as $tool_key)

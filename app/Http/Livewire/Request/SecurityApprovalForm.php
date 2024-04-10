@@ -260,7 +260,10 @@ class SecurityApprovalForm extends Component
                 // If all rtts_keys are approved, update the Request status
                 if ($allApproved) {
                     $request->update(['status_id' => 10]);
+                    $request->update(['dt_approved_user_id' => auth()->user()->id]);
+                    $request->update(['dt_approved' => Carbon::now()->setTimezone('Asia/Manila')]);
                 }
+
                 $this->vpApprove = true;
                 $this->approvalStatus['vp'] = true;
                 $action = 'edit';
@@ -311,6 +314,9 @@ class SecurityApprovalForm extends Component
                         $toolKey->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]);
                     }
 
+                    $request->update(['dt_rejected_user_id' => auth()->user()->id]);
+                    $request->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]);
+
                     $action = 'cancel';
                     $message = 'Request Rejected';
                 }
@@ -353,6 +359,8 @@ class SecurityApprovalForm extends Component
                 // If all rtts_keys are approved, update the Request status
                 if ($allApproved) {
                     $request->update(['status_id' => 10]);
+                    $request->update(['dt_approved_user_id' => auth()->user()->id]);
+                    $request->update(['dt_approved' => Carbon::now()->setTimezone('Asia/Manila')]);
                 }
 
                 $this->pApprove = true;
@@ -405,6 +413,8 @@ class SecurityApprovalForm extends Component
                         $toolKey->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]);
                     }
 
+                    $request->update(['dt_rejected_user_id' => auth()->user()->id]);
+                    $request->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]);
 
                     $action = 'cancel';
                     $message = 'Request Rejected';
