@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Request;
 
+use Carbon\Carbon;
 use App\Models\Tool;
 use App\Models\Option;
 use App\Models\Request;
@@ -66,7 +67,9 @@ class RequestStartForm extends Component
                     $request->update(['status_id' => 6]); // In progress
                     foreach ($request->tool_keys as $toolKey) {
                         if ($toolKey->status_id == 10) {
-                            $toolKey->update(['status_id' => 2]);
+                            $toolKey->update(['status_id' => 2]);// In use
+                            $toolKey->update(['dt_started_user_id' => auth()->user()->id]);
+                            $toolKey->update(['dt_started' => Carbon::now()->setTimezone('Asia/Manila')]);
                         }
                     }
                 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Request;
 
+use Carbon\Carbon;
 use App\Models\Tool;
 use App\Models\User;
 use App\Models\Request;
@@ -79,7 +80,7 @@ class SecurityApprovalForm extends Component
         })->firstOrFail();
         $this->vp = $vp;
 
-       // dd($vp->id);
+        // dd($vp->id);
 
         $this->borrower_id = $request->borrower_id;
         // Populate toolItems with the IDs of associated tools
@@ -193,6 +194,8 @@ class SecurityApprovalForm extends Component
                     }
                 }
                 $toolKey->update(['status_id' => 15]);
+                $toolKey->update(['dt_rejected_user_id' => auth()->user()->id]);
+                $toolKey->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]);
             }
 
             $action = 'cancel';
@@ -293,16 +296,6 @@ class SecurityApprovalForm extends Component
                                 $rtts_key->update(['user_id' => auth()->user()->id]);
                                 $request->update(['status_id' => 15]);
 
-                                // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
-                                //Request::where('id', $this->requestId)->update(['status_id' => 8]);
-
-                                // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
-                                //Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
-
-
-                                // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
-                                //Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
-
                                 Tool::whereHas('status', function ($query) {
                                     $query->where('id', 17);
                                 })
@@ -312,9 +305,11 @@ class SecurityApprovalForm extends Component
                         }
                     }
 
-
-                    $toolKey->update(['status_id' => 15]);
-
+                    if ($toolKey->status_id != 15) {
+                        $toolKey->update(['status_id' => 15]);
+                        $toolKey->update(['dt_rejected_user_id' => auth()->user()->id]);
+                        $toolKey->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]);
+                    }
 
                     $action = 'cancel';
                     $message = 'Request Rejected';
@@ -404,8 +399,11 @@ class SecurityApprovalForm extends Component
                         }
                     }
 
-
-                    $toolKey->update(['status_id' => 15]);
+                    if ($toolKey->status_id != 15) {
+                        $toolKey->update(['status_id' => 15]);
+                        $toolKey->update(['dt_rejected_user_id' => auth()->user()->id]);
+                        $toolKey->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]);
+                    }
 
 
                     $action = 'cancel';

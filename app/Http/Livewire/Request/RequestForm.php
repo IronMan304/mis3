@@ -85,6 +85,7 @@ class RequestForm extends Component
     {
         $data = $this->validate([
             'user_id' => 'nullable',
+            //'dt_requested_user_id' => 'nullable',
             'borrower_id' => auth()->user()->hasRole('requester') ? 'nullable' : 'required',
             'option_id' => 'required',
             'estimated_return_date' => 'required|date',
@@ -96,6 +97,7 @@ class RequestForm extends Component
 
         // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
+        //$data['dt_requested_user_id'] = auth()->user()->id;
 
         // Check if the user has the "requester" role
         if (auth()->user()->hasRole('requester')) {
@@ -164,6 +166,8 @@ class RequestForm extends Component
                         $toolRequest = ToolRequest::create([
                             'request_id' => $request->id,
                             'tool_id' => $toolId,
+                            'dt_requested_user_id' => auth()->user()->id, 
+                            'dt_requested' => Carbon::now()->setTimezone('Asia/Manila'),
                             'status_id' => 14, // "In request" is the status of a tool_requests if non-admin makes the request
                         ]);
 

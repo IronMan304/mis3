@@ -32,36 +32,6 @@
 						@foreach ($requests as $request)
 						<tr>
 
-							<!-- Equipment Category: Type -->
-							<td>
-								@if ($request->tool_keys)
-								@foreach ($request->tool_keys as $toolKey)
-								{{ $toolKey->tools->type->category->description }}: {{ $toolKey->tools->type->description }}
-								@if (!$loop->last)
-								<br>
-								@endif
-								@endforeach
-								@else
-								No Tools Assigned
-								@endif
-							</td>
-
-							<!-- Equipment -->
-							<td>
-								@if ($request->tool_keys)
-								@foreach ($request->tool_keys as $toolKey)
-								{{ $toolKey->tools->brand ?? ''}}: {{ $toolKey->status->description ?? ''}} ({{ $toolKey->toolStatus->description ?? ''}})
-
-								@if (!$loop->last)
-								{{-- Add a Space or separator between department names --}}
-								<br>
-								@endif
-								@endforeach
-								@else
-								No Tools Assigned
-								@endif
-							</td>
-
 							{{--<td>
 								{{ $request->created_at->format('m-d-Y H:i A')}}
 							</td>--}}

@@ -58,6 +58,12 @@
 									<th>Operator</th>
 									<th>Status</th>
 									<th>Action</th>
+									<th>Requested</th>
+									<th>Approved</th>
+									<th>Started</th>
+									<th>Returned</th>
+									<th>Rejected</th>
+									<th>Cancelled</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -217,6 +223,9 @@
 									foreach ($this->toolItems as $toolId) {
 
 									// Assuming you have fetched the current user and the tool
+									//$user = auth()->user();
+									//$role = $user->roles->first();
+									//$roleId = $role->id;
 									$userPositionId = auth()->user()->position_id;
 									$toolSecurityIds = \App\Models\ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
 									// Check if the tool is approved
@@ -227,7 +236,7 @@
 									$approvedTool = false;
 
 									foreach ($toolSecurityIds as $securityId) {
-									if ($userPositionId == $securityId && $toolKey && $toolKey->status_id == 10 ) {
+									if ($userPositionId == $securityId ) {
 									// If position_id matches any of the security_id, set securityButton to true
 									$securityButton = true;
 									break;
@@ -299,7 +308,7 @@
 											@endforeach
 											@endif -->
 
-											@if($securityButton || auth()->user()->hasRole('admin'))
+											@if($securityButton || auth()->user()->hasRole('admin') )
 											<button type="button" class="btn btn-warning btn-sm mx-1" wire:click="securityApprovalForm({{ $request->id }})" title="Letter">
 												<i class="fa-solid fa-envelope"></i>
 											</button>
@@ -330,6 +339,48 @@
 
 
 										</div>
+									</td>
+
+									<td>
+										@foreach($request->tool_keys as $tool_key)
+										{{ $tool_key->dt_requested ?? ''}}<br>
+										{{ $tool_key->dt_requested_user->first_name ?? ''}}<br>
+										@endforeach
+									</td>
+
+									<td>
+										@foreach($request->tool_keys as $tool_key)
+										{{ $tool_key->dt_approved ?? ''}}<br>
+										{{ $tool_key->dt_approved_user->first_name ?? ''}}<br>
+										@endforeach
+									</td>
+
+									<td>
+										@foreach($request->tool_keys as $tool_key)
+										{{ $tool_key->dt_started ?? ''}}<br>
+										{{ $tool_key->dt_started_user->first_name ?? ''}}<br>
+										@endforeach
+									</td>
+
+									<td>
+										@foreach($request->tool_keys as $tool_key)
+										{{ $tool_key->dt_returned ?? ''}}<br>
+										{{ $tool_key->dt_returned_user->first_name ?? ''}}<br>
+										@endforeach
+									</td>
+
+									<td>
+										@foreach($request->tool_keys as $tool_key)
+										{{ $tool_key->dt_rejected ?? ''}}<br>
+										{{ $tool_key->dt_rejected_user->first_name ?? ''}}<br>
+										@endforeach
+									</td>
+
+									<td>
+										@foreach($request->tool_keys as $tool_key)
+										{{ $tool_key->dt_cancelled ?? ''}}<br>
+										{{ $tool_key->dt_cancelled_user->first_name ?? ''}}<br>
+										@endforeach
 									</td>
 
 								</tr>

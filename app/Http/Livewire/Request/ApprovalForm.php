@@ -97,20 +97,29 @@ class ApprovalForm extends Component
                         $toolRequest->update([
                             'status_id' => $statusId, //to know whether it is approved or rejected
                             'user_id' => auth()->user()->id, //rejected by
+                            // 'dt_rejected_user_id' => auth()->user()->id, 
+                            // 'dt_rejected' => Carbon::now()->setTimezone('Asia/Manila'),
                             //'returner_id' => $this->borrower_id,
                             //'tool_status_id' => $this->selectedConditionStatus,
                             'description' => $this->description,
                             'approval_at' => Carbon::now()->setTimezone('Asia/Manila'),
                         ]);
 
-                        if ($statusId == 10) {
+                        if ($statusId == 10) { //approved
                             $tool = Tool::find($toolId);
                             $tool->update(['status_id' => 17]); // if approved, the tool in the inventory will be "On hold"
+                            $toolRequest->update([
+                                'dt_approved_user_id' => auth()->user()->id,
+                                'dt_approved' => Carbon::now()->setTimezone('Asia/Manila'),
+                            ]);
                         }
-                        if ($statusId == 15) {
+                        if ($statusId == 15) { //rejected
                             $tool = Tool::find($toolId);
                             $tool->update(['status_id' => 1]); // if rejected, the tool in the inventory will be "In stock"
-
+                            $toolRequest->update([
+                                'dt_rejected_user_id' => auth()->user()->id,
+                                'dt_rejected' => Carbon::now()->setTimezone('Asia/Manila'),
+                            ]);
                         }
                     }
                 }
@@ -131,8 +140,10 @@ class ApprovalForm extends Component
                     foreach ($tool_requests as $tool_request) {
                         if ($this->selectedConditionStatus == 10) {
                             // If status is approved and tool is not in approval_toolItems, set tool in the inventory to "In stock"
-                            $tool->update(['status_id' => 1]);
+                            $tool->update(['status_id' => 1]); //In stock
                             $tool_request->update(['status_id' => 15]); //rejected
+                            $tool_request->update(['dt_rejected_user_id' => auth()->user()->id]); //rejected
+                            $tool_request->update(['dt_rejected' => Carbon::now()->setTimezone('Asia/Manila')]); //rejected
                             // foreach ($this->toolItems as $toolId) {
                             //     $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
                             //     // Update records in RequestToolToolSecurityKey where the tool_id matches
@@ -143,11 +154,14 @@ class ApprovalForm extends Component
                             // RequestToolToolSecurityKey::where('request_tools_id', $tool_request->id)
                             //     ->update(['status_id' => 15]);
                             RequestToolToolSecurityKey::where('request_tools_id', $tool_request->id)
-                            ->delete();
+                                ->delete();
                         } elseif ($this->selectedConditionStatus == 15) {
                             // If status is rejected and tool is not in approval_toolItems, set tool in the inventory to "On hold"
-                            $tool->update(['status_id' => 17]);
+                            $tool->update(['status_id' => 17]); //On hold
                             $tool_request->update(['status_id' => 10]); //approved
+                            $tool_request->update(['dt_approved_user_id' => auth()->user()->id]); //approved
+                            $tool_request->update(['dt_approved' => Carbon::now()->setTimezone('Asia/Manila')]); //approved
+
                         }
                     }
                 }
@@ -164,6 +178,8 @@ class ApprovalForm extends Component
                         $allRejected = false;
                         break;
                     }
+
+
                 }
 
                 if ($allRejected) {

@@ -49,7 +49,7 @@ use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 |
 */
 
-Route::get('/', [WelcomeController::class, 'index']);
+//Route::get('/', [WelcomeController::class, 'index']);
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -99,7 +99,7 @@ Route::group(['middleware' => ['role:admin|staff|head of office|operator']], fun
     Route::get('securities', SecurityList::class);
 });
 
-Route::group(['middleware' => ['role:admin|requester|staff|head of office|operator']], function () {
+Route::group(['middleware' => ['role:admin|requester|staff|head of office|operator|president']], function () {
     Route::get('requests', RequestList::class);
     //Route::get('requests', RequestList::class);
     Route::get('service_requests', ServiceRequestList::class);

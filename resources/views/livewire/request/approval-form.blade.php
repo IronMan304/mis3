@@ -98,7 +98,7 @@
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Tools</label>
-                        <select class="form-control select" id="approval_toolItems" wire:model="approval_toolItems"  multiple {{-- @if ($approval_toolItems == null) disabled @endif --}}>
+                        <select class="form-control select" id="approval_toolItems" wire:model="approval_toolItems"  multiple @if ($selectedConditionStatus == 15) disabled @endif >
                             <option value="" selected>Select Tools</option>
                             @foreach($tool_requests as $tool_request)
                             @if($tool_request->request_id == $approvalId && $tool_request->status_id == 14) {{-- In Request --}}

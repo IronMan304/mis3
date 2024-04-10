@@ -61,7 +61,7 @@ class ReturnForm extends Component
             'selectedConditionStatus' => 'required',
         ]);
 
-        $data['user_id'] = auth()->user()->id;
+        //$data['user_id'] = auth()->user()->id;
         $data['status_id'] = 7; //for returning
 
         if ($this->returnId) {
@@ -87,6 +87,8 @@ class ReturnForm extends Component
                                     $toolRequest->update([
                                         'status_id' => $statusId,
                                         'user_id' => auth()->user()->id,
+                                        'dt_returned_user_id' => auth()->user()->id,
+                                        'dt_returned' => Carbon::now()->setTimezone('Asia/Manila'),
                                         'returner_id' => $this->borrower_id,
                                         'tool_status_id' => $this->selectedConditionStatus,
                                         'description' => $this->description,
