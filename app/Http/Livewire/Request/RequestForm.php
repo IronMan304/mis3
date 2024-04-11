@@ -14,10 +14,11 @@ use App\Models\ToolRequest;
 use App\Models\ToolPosition;
 use App\Models\ToolSecurity;
 use App\Models\RequestToolToolSecurityKey;
+use Illuminate\Support\Facades\DB;
 
 class RequestForm extends Component
 {
-    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id, $first_name, $option_id, $estimated_return_date, $purpose, $date_needed, $errorMessage, $borrowerId;
+    public $requestId, $tool_id, $user_id, $borrower_id, $status_id, $position_id, $first_name, $option_id, $estimated_return_date, $purpose, $date_needed, $errorMessage, $borrowerId, $request;
 
     public $toolItems = [];
     public $action = '';  //flash
@@ -38,7 +39,7 @@ class RequestForm extends Component
     public function setBorrowerId($borrowerId)
     {
         $this->borrowerId = $borrowerId;
-        
+
         // Update the borrower_id field with the received borrowerId
         $this->borrower_id = $borrowerId;
     }
@@ -62,6 +63,7 @@ class RequestForm extends Component
         $this->requestId = $requestId;
         $request = Request::with('tool_keys.tools')->findOrFail($requestId);
         //$this->borrowerId = $this->borrowerId;
+        $this->request = $request; 
         $this->tool_id = $request->tool_id;
         $this->borrower_id = $request->borrower_id;
         $this->option_id = $request->option_id;
@@ -99,6 +101,34 @@ class RequestForm extends Component
         $data['user_id'] = auth()->user()->id;
         $data['dt_requested_user_id'] = auth()->user()->id;
         $data['dt_requested'] = Carbon::now()->setTimezone('Asia/Manila');
+
+        $borrower = Borrower::findOrFail($this->borrower_id);
+        // Get the current year
+        $currentYear = date('Y');
+
+        $position = $borrower->position->description;
+        $prefix = strtoupper(substr($position, 0, 1)); // Capitalize the first letter of the position
+
+        // Get the last request number for the current year
+        $lastRequestNumber = DB::table('requests')
+            ->where('request_number', 'like', $currentYear . '%')
+            ->max('request_number');
+
+        // Extract the number part and increment it
+        if ($lastRequestNumber) {
+            $lastNumber = (int)substr($lastRequestNumber, 4); // Assuming the year is 4 characters
+            $newNumber = $lastNumber + 1;
+        } else {
+            // If no previous request number exists, start with 1
+            $newNumber = 1;
+        }
+
+        // Pad the number with leading zeros if necessary
+        $newNumberPadded = str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+
+        // Generate the new request number
+        $data['request_number'] = $prefix . 'ER' . $currentYear . $newNumberPadded;
+
 
         //$data['dt_requested_user_id'] = auth()->user()->id;
 
@@ -169,7 +199,7 @@ class RequestForm extends Component
                         $toolRequest = ToolRequest::create([
                             'request_id' => $request->id,
                             'tool_id' => $toolId,
-                            'dt_requested_user_id' => auth()->user()->id, 
+                            'dt_requested_user_id' => auth()->user()->id,
                             'dt_requested' => Carbon::now()->setTimezone('Asia/Manila'),
                             'status_id' => 14, // "In request" is the status of a tool_requests if non-admin makes the request
                         ]);
@@ -209,7 +239,7 @@ class RequestForm extends Component
                 $this->emit('refreshParentRequest');
                 $this->emit('refreshParentTool');
                 $this->emit('refreshTable');
-               // $this->emit('requestCreated', $request);
+                // $this->emit('requestCreated', $request);
                 // After the request is created or updated, broadcast an event
                 // Broadcast::channel('tool-list-channel', 'ToolListUpdated', [
                 //     'message' => 'Tool list updated',

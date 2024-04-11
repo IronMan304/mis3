@@ -45,6 +45,7 @@
 							<thead>
 								<tr>
 									<th>ID</th>
+									<th>Request Number</th>
 									<th>Requester</th>
 									{{--<th>Category:Type</th>
 									<th>Tool</th>--}}
@@ -72,6 +73,7 @@
 								@foreach ($requests as $request)
 								<tr>
 									<td>{{ $request->id }}</td>
+									<td>{{ $request->request_number ?? ''}}</td>
 									<td>
 										{{ $request->borrower->first_name ?? '' }}
 									</td>
