@@ -201,7 +201,8 @@
                                             <img src="{{ asset('/storage/' . $toolKey->user->security->esignature) }}" alt="e_signature" style="max-width: 50%; height: 50;">
                                         </div>
                                         @else
-                                        {{ $toolKey->status->description ?? ''}}
+                                        {{--{{ $toolKey->status->description ?? ''}}--}}
+                                        {{ '' }}
                                         @endif
                                         @endif
                                     </td>
