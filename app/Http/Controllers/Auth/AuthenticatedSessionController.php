@@ -29,12 +29,24 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if(auth()->user()->hasRole('admin')){
-            return redirect()->intended(RouteServiceProvider::HOME);
-        } else {
-            return redirect()->intended(RouteServiceProvider::REQUEST);
+        $user = auth()->user();
+
+        if ($user) {
+            // Log the authentication activity
+            activity()
+                ->performedOn($user)
+                ->withProperties([
+                    'position' => $user->position->description,
+                ])
+                ->event('Login')
+                ->log('User authenticated');
+
+            if (auth()->user()->hasRole('admin')) {
+                return redirect()->intended(RouteServiceProvider::HOME);
+            } else {
+                return redirect()->intended(RouteServiceProvider::REQUEST);
+            }
         }
-       
     }
 
     /**
@@ -42,6 +54,19 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = auth()->user();
+
+        if ($user) {
+            // Log the logout activity
+            activity()
+                ->performedOn($user)
+                ->withProperties([
+                    'position' => $user->position->description,
+                ])
+                ->event('Logout')
+                ->log('User logged out');
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
