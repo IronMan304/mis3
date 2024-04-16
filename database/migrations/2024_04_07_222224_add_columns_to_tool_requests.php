@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tool_requests', function (Blueprint $table) {
-            $table->dateTime('dt_requested')->nullable();
+           $table->dateTime('dt_requested')->nullable();
             $table->dateTime('dt_approved')->nullable();
             $table->dateTime('dt_started')->nullable();
             $table->dateTime('dt_returned')->nullable();
@@ -45,7 +45,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tool_requests', function (Blueprint $table) {
-            $table->dropColumn('dt_requested');
+            //$table->dropColumn('dt_requested');
             $table->dropColumn('dt_started');
             $table->dropColumn('dt_approved');
             $table->dropColumn('dt_returned');
@@ -60,3 +60,4 @@ return new class extends Migration
         });
     }
 };
+

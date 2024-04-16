@@ -38,22 +38,44 @@ class SexForm extends Component
             'description' => 'required',
         ]);
 
+        $sex = null;
+        $formerDescription = null;
         if ($this->sexId) {
-            Sex::whereId($this->sexId)->first()->update($data);
-            $action = 'edit';
-            $message = 'Successfully Updated';
+            $sex = Sex::findOrFail($this->sexId);
+            $formerDescription = $sex->description; // Capture the former description
+            $sex->update($data);
+            $this->action = 'edit';
+            $this->message = 'Successfully Updated';
         } else {
-            Sex::create($data);
-            $action = 'store';
-            $message = 'Successfully Created';
+            $sex = Sex::create($data);
+            $this->action = 'store';
+            $this->message = 'Successfully Created';
         }
 
-        $this->emit('flashAction', $action, $message);
+        // Log the activity
+        $activityLog =
+            activity()
+            ->performedOn($sex)
+            ->withProperties([
+                // 'action' => $this->action,
+                'new_name' => $data['description'], // Always include the new description
+            ])
+            ->event($this->action);
+        if ($this->action === 'edit') {
+            $activityLog->withProperty('old_name', $formerDescription); // Include old name only for edit action
+            $activityLog->log(auth()->user()->first_name . ' ' . $this->action . 'ed ' . $formerDescription . ' to ' . $data['description']);
+        } else {
+            $activityLog->log(auth()->user()->first_name . ' ' . $this->action . 'd ' . $data['description']);
+        }
+
+
+        $this->emit('flashAction', $this->action, $this->message);
         $this->resetInputFields();
         $this->emit('closeSexModal');
         $this->emit('refreshParentSex');
         $this->emit('refreshTable');
     }
+
 
     public function render()
     {

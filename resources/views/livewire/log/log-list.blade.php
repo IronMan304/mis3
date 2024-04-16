@@ -5,7 +5,7 @@
 				<ul class="breadcrumb">
 					<li class="breadcrumb-item"><a href="/">Dashboard</a></li>
 					<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-					<li class="breadcrumb-item active">Sex List</li>
+					<li class="breadcrumb-item active">Log List</li>
 				</ul>
 			</div>
 		</div>
@@ -20,11 +20,11 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<div class="doctor-table-blk">
-									<h3>Sex List</h3>
+									<h3>Log List</h3>
 									<div class="doctor-search-blk">
 										<div class="add-group">
-											<a wire:click="createSex" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
-											</a>
+											{{--<a wire:click="createLog" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
+											</a>--}}
 										</div>
 									</div>
 								</div>
@@ -44,27 +44,41 @@
 						<table class="table border-0 custom-table comman-table datatable mb-0">
 							<thead>
 								<tr>
-									<td>Sex</td>
-									<td>Action</td>
+									<td>User</td>
+									<th>Type</th>
+									<th>Event</th>
+									<th>Properties</th>
+									<!-- <th>Description</th> -->
+									<th>Date</th>
 								</tr>
 							</thead>
 							<tbody>
-								@foreach ($sexes as $sex)
+								@foreach ($activity_logs as $activity)
 								<tr>
 									<td>
-										{{ $sex->description }}
+										{{ $activity->causer->first_name ?? ''}} {{ $activity->causer->middle_name ?? ''}} {{ $activity->causer->last_name ?? ''}} ({{ $activity->causer->position->description ?? ''}})
 									</td>
 
-									<td class="text-center">
-										<div class="btn-group" role="group">
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editSex({{ $sex->id }})" title="Edit">
-												<i class='fa fa-pen-to-square'></i>
-											</button>
-											<a class="btn btn-danger btn-sm mx-1" wire:click="deleteSex({{ $sex->id }})" title="Delete">
-												<i class="fa fa-trash"></i>
-											</a>
-										</div>
+
+									{{--<td>
+										{{ $activity->subject->description ?? '' }}
+									</td>--}}
+									<td>{{ class_basename($activity->subject_type) }}</td> <!-- Display only the model name -->
+
+									<td>{{ $activity->event ?? ''}}</td>
+
+
+									<td>
+										@foreach($activity->properties as $key => $value)
+										<li>{{ $key }}: {{ $value }}</li>
+										@endforeach
 									</td>
+
+									{{--<td>
+										{{ $activity->description }}
+									</td>--}}
+
+									<td>{{ $activity->created_at }}</td>
 
 								</tr>
 								@endforeach
@@ -76,7 +90,7 @@
 		</div>
 	</div>
 </div>
-{{-- Modal --}}
+{{-- Modal 
 
 <div wire.ignore.self class="modal fade" id="sexModal" tabindex="-1" role="dialog" aria-labelledby="sexModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-dialog-centered">
@@ -86,3 +100,4 @@
 @section('custom_script')
 @include('layouts.scripts.sex-scripts')
 @endsection
+--}}

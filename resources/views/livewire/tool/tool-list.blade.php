@@ -211,7 +211,7 @@
 								<th>Applicability</th>
 								<th>Security</th>
 								<th>Source</th>
-								<th>Date Created</th>
+								<!-- <th>Date Created</th> -->
 								<!-- <th>Added By</th> -->
 								<th>Status</th>
 								<th>Action</th>
@@ -274,12 +274,12 @@
 									({{ $tool->owner->first_name ?? ''}} {{ $tool->owner->middle_name ?? ''}} {{ $tool->owner->last_name ?? ''}})
 								</td>
 
-								<td class="appoint-time">
+								{{--<td class="appoint-time">
 									<span>{{ $tool->created_at->setTimezone('Asia/Manila')->format('m-d-Y') }} at </span>
 									{{ $tool->created_at->setTimezone('Asia/Manila')->format('h:i A') }}
 									<br>
 									{{ $tool->user->roles[0]->name ?? ''}}
-								</td>
+								</td>--}}
 
 
 

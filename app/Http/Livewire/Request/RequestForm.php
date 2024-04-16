@@ -63,7 +63,7 @@ class RequestForm extends Component
         $this->requestId = $requestId;
         $request = Request::with('tool_keys.tools')->findOrFail($requestId);
         //$this->borrowerId = $this->borrowerId;
-        $this->request = $request; 
+        $this->request = $request;
         $this->tool_id = $request->tool_id;
         $this->borrower_id = $request->borrower_id;
         $this->option_id = $request->option_id;
@@ -239,6 +239,15 @@ class RequestForm extends Component
                 $this->emit('refreshParentRequest');
                 $this->emit('refreshParentTool');
                 $this->emit('refreshTable');
+
+                // Log the activity
+                activity()
+                    //->causedBy(auth()->user()) // Assuming you have a User model and user is logged in | If you're not using causedBy() the package will automatically use the logged in user.
+                    ->performedOn($sex)
+                    ->withProperties(['action' => $action, 'description' => $data['description']]) // Additional properties
+                    ->log($action);
+
+
                 // $this->emit('requestCreated', $request);
                 // After the request is created or updated, broadcast an event
                 // Broadcast::channel('tool-list-channel', 'ToolListUpdated', [

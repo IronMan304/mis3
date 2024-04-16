@@ -2,21 +2,23 @@
 
 
 use App\Models\Request;
+use App\Http\Livewire\Log\LogList;
 use App\Http\Livewire\Sex\SexList;
 use App\Http\Livewire\Tool\ToolList;
 use App\Http\Livewire\Type\TypeList;
 use App\Http\Livewire\User\UserList;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Livewire\Trial\TrialList;
 
+
 use App\Http\Livewire\Venue\VenueList;
-
-
 use App\Http\Livewire\Course\CourseList;
 use App\Http\Livewire\Option\OptionList;
-use App\Http\Livewire\Source\SourceList;
 
+use App\Http\Livewire\Source\SourceList;
 use App\Http\Livewire\Status\StatusList;
+use App\Http\Livewire\Request\ReportList;
 use App\Http\Livewire\College\CollegeList;
 use App\Http\Livewire\Request\RequestList;
 use App\Http\Livewire\Service\ServiceList;
@@ -27,16 +29,15 @@ use App\Http\Livewire\Borrower\BorrowerList;
 use App\Http\Livewire\Category\CategoryList;
 use App\Http\Livewire\Operator\OperatorList;
 use App\Http\Livewire\Position\PositionList;
+use App\Http\Livewire\Security\SecurityList;
 use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
 use App\Http\Controllers\Request\PrintController;
 use App\Http\Controllers\RequesterProfileController;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
-use App\Http\Livewire\Request\ReportList;
-use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
-use App\Http\Livewire\Security\SecurityList;
 use App\Http\Livewire\ServiceRequest\ServiceRequestList;
+use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,6 +105,8 @@ Route::group(['middleware' => ['role:admin|requester|staff|head of office|operat
     //Route::get('requests', RequestList::class);
     Route::get('service_requests', ServiceRequestList::class);
     Route::get('/print/request_letter/{id}', [PrintController::class, 'print_request_letter'])->name('print.request');
+
+    Route::get('logs', LogList::class);
 });
 
 require __DIR__ . '/auth.php';

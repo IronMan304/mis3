@@ -96,10 +96,10 @@
 					</ul>
 				</li>
 
-				<!-- <li>
+				<li>
 					<a href="/logs"><span class="menu-side"> <i class="fa-solid fa-book"></i></span>
 						<span>Logs</span></a>
-				</li> -->
+				</li>
 
 				@if(auth()->user()->hasRole('admin'))
 				<li class="menu-title">Setup</li>

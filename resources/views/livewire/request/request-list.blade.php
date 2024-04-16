@@ -267,7 +267,7 @@
 											@endif--}}
 
 											<button type="button" class="btn btn-info btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="View Tool">
-												<i class="fa-solid fa-toolbox"></i>
+											<i class="fa-solid fa-list"></i>
 											</button>
 
 											@if(auth()->user()->hasRole('staff') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('head of office'))
