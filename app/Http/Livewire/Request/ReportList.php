@@ -162,7 +162,8 @@ class ReportList extends Component
 
         // Filter requests based on search query
         if (!empty($this->search)) {
-            $query->whereHas('borrower', function ($query) {
+            $query->where('request_number', 'LIKE', '%' . $this->search . '%')
+            ->orWhereHas('borrower', function ($query) {
                 $query->where('first_name', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');

@@ -60,4 +60,9 @@ class Tool extends Model
         return $this->belongsTo(Borrower::class, 'owner_id', 'id');
     }
 
+    public function requests()
+    {
+        return $this->hasMany(Request::class);
+    }
+
 }

@@ -276,9 +276,9 @@
 
 								{{--<td class="appoint-time">
 									<span>{{ $tool->created_at->setTimezone('Asia/Manila')->format('m-d-Y') }} at </span>
-									{{ $tool->created_at->setTimezone('Asia/Manila')->format('h:i A') }}
-									<br>
-									{{ $tool->user->roles[0]->name ?? ''}}
+								{{ $tool->created_at->setTimezone('Asia/Manila')->format('h:i A') }}
+								<br>
+								{{ $tool->user->roles[0]->name ?? ''}}
 								</td>--}}
 
 
@@ -299,6 +299,11 @@
 
 								<td class="text-center">
 									<div class="btn-group" role="group">
+
+										<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="toolLog({{ $tool->id }})" title="Log">
+											<i class="fa-solid fa-list"></i>
+										</button>
+
 										<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editTool({{ $tool->id }})" title="Edit">
 											<i class='fa fa-pen-to-square'></i>
 										</button>
@@ -312,17 +317,25 @@
 							@endforeach
 						</tbody>
 					</table>
+
 				</div>
 			</div>
 		</div>
 	</div>
 	{{ $tools->links() }}
+
 </div>
 {{-- Modal --}}
 
 <div wire.ignore.self class="modal fade" id="toolModal" tabindex="-1" role="dialog" aria-labelledby="toolModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-dialog-centered modal-lg">
 		<livewire:tool.tool-form />
+	</div>
+</div>
+
+<div wire.ignore.self class="modal fade" id="toolLogModal" tabindex="-1" role="dialog" aria-labelledby="toolLogModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<livewire:tool.tool-log />
 	</div>
 </div>
 
@@ -408,6 +421,7 @@
 		});
 	});
 </script>
+ 
 </div>
 
 @section('custom_script')

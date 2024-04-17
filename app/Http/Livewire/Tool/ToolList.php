@@ -9,6 +9,7 @@ use App\Models\Status;
 use Livewire\Component;
 use App\Models\Borrower;
 use App\Models\Position;
+use App\Models\ToolRequest;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -29,6 +30,8 @@ class ToolList extends Component
     public $applicability_id = '0';
     public $security_id = '0';
     public $owner_id = '0';
+    public $requests = [];
+    public $paginationReset = false;
 
 
     protected $listeners = [
@@ -38,7 +41,12 @@ class ToolList extends Component
         'deleteConfirmTool',
         'refreshTable',
         'refreshPage' => 'refreshPageHandler',
+        //'logClose' => '$refresh'
     ];
+    public function resetPagination()
+    {
+        $this->emit('refreshParentTool');
+    }
 
     public function refreshTable()
     {
@@ -49,9 +57,9 @@ class ToolList extends Component
         // No action needed here as we are refreshing the page using JavaScript
     }
     public function refreshPage()
-{
-    $this->emit('refreshPage');
-}
+    {
+        $this->emit('refreshPage');
+    }
 
 
     public function applyFilters()
@@ -73,6 +81,13 @@ class ToolList extends Component
         $this->toolId = $toolId;
         $this->emit('toolId', $this->toolId);
         $this->emit('openToolViewModal');
+    }
+
+    public function toolLog($toolId)
+    {
+        $this->toolId = $toolId;
+        $this->emit('toolId', $this->toolId);
+        $this->emit('openToolLogModal');
     }
 
     public function createTool()
@@ -111,7 +126,7 @@ class ToolList extends Component
                     $query->where('first_name', 'LIKE', '%' . $this->search . '%');
                 });
         }
-        
+
         if (!empty($this->owner_id)) {
             $query->where('owner_id', $this->owner_id);
         }
@@ -128,19 +143,19 @@ class ToolList extends Component
         if (!empty($this->source_id)) {
             $query->where('source_id', $this->source_id);
         }
-        
+
         if (!empty($this->applicability_id)) {
             $query
-            ->whereHas('position_keys', function ($query) {
-                $query->where('position_id', 'LIKE', '%' . $this->applicability_id . '%');
-            });
+                ->whereHas('position_keys', function ($query) {
+                    $query->where('position_id', 'LIKE', '%' . $this->applicability_id . '%');
+                });
         }
 
         if (!empty($this->security_id)) {
             $query
-            ->whereHas('security_keys', function ($query) {
-                $query->where('security_id', 'LIKE', '%' . $this->security_id . '%');
-            });
+                ->whereHas('security_keys', function ($query) {
+                    $query->where('security_id', 'LIKE', '%' . $this->security_id . '%');
+                });
         }
 
         $tools = $query->paginate($this->perPage);
@@ -150,22 +165,24 @@ class ToolList extends Component
         $applicabilities = Position::all();
         $borrowers = Borrower::all();
 
-        return view('livewire.Tool.Tool-list', [
+        return view('livewire.tool.tool-list', [
             'tools' => $tools,
             'sources' => $sources,
             'types' => $types,
             'statuses' => $statuses,
             'applicabilities' => $applicabilities,
             'borrowers' => $borrowers,
+            'paginationReset' => $this->paginationReset,
+
         ]);
     }
 
     public function exportToPdf()
     {
         $this->exporting = true;
-    
+
         $toolsQuery = Tool::query();
-    
+
         // Apply filters based on the selected options
         if (!empty($this->search)) {
             $toolsQuery->where('brand', 'LIKE', '%' . $this->search . '%')
@@ -177,46 +194,46 @@ class ToolList extends Component
                     $query->where('first_name', 'LIKE', '%' . $this->search . '%');
                 });
         }
-    
+
         if (!empty($this->owner_id)) {
             $toolsQuery->where('owner_id', $this->owner_id);
         }
-    
+
         if (!empty($this->type_id)) {
             $toolsQuery->where('type_id', $this->type_id);
         }
-    
+
         if (!empty($this->status_id)) {
             $toolsQuery->where('status_id', $this->status_id);
         }
-    
+
         if (!empty($this->source_id)) {
             $toolsQuery->where('source_id', $this->source_id);
         }
-    
+
         if (!empty($this->applicability_id)) {
             $toolsQuery->whereHas('position_keys', function ($query) {
                 $query->where('position_id', 'LIKE', '%' . $this->applicability_id . '%');
             });
         }
-    
+
         if (!empty($this->security_id)) {
             $toolsQuery->whereHas('security_keys', function ($query) {
                 $query->where('security_id', 'LIKE', '%' . $this->security_id . '%');
             });
         }
-    
+
         $tools = $toolsQuery->get();
-    
+
         // Load the view and generate the PDF
         $pdf = pdf::loadView('livewire.tool.export-pdf', [
             'tools' => $tools,
         ]);
-    
+
         // Set the filename
         $filename = 'tool-list.pdf';
         $this->exporting = false;
-    
+
         // Stream or download the PDF
         //return $pdf->download($filename);
         return response()->streamDownload(
@@ -224,5 +241,4 @@ class ToolList extends Component
             $filename
         );
     }
-    
 }

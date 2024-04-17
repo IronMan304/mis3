@@ -14,7 +14,15 @@
             $('#toolModal').modal('show');
         });
 
-        // $('#toolModal').on('shown.bs.modal', function() {
+        window.livewire.on('closeToolLogModal', () => {
+            $('#toolLogModal').modal('hide');
+        });
+
+        window.livewire.on('openToolLogModal', () => {
+            $('#toolLogModal').modal('show');
+        });
+
+        // $('#toolLog').on('shown.bs.modal', function() {
         //     if (!$.fn.DataTable.isDataTable('.datatable')) {
         //         table = $('.datatable').DataTable({
         //             searching: false,
@@ -29,10 +37,10 @@
         //         $('.datatable').DataTable().destroy();
         //     }
 
-        //     $('.datatable').DataTable({
-        //         searching: false
-        //         // Add other DataTable options here if needed
-        //     });
+        //     //     $('.datatable').DataTable({
+        //     //         searching: false
+        //     //         // Add other DataTable options here if needed
+        //     //     });
         // });
     });
 </script>

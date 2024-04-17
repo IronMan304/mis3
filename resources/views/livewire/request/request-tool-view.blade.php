@@ -190,7 +190,7 @@
 
 												{{ $toolKey->dt_requested ?? ''}}<br>
 												{{ $toolKey->dt_requested_user->first_name ?? ''}}
-												{{ isset($request->dt_requested_user->position->description) ? '(' . $request->dt_requested_user->position->description . ')' : '' }}<br>
+												{{ isset($toolKey->dt_requested_user->position->description) ? '(' . $toolKey->dt_requested_user->position->description . ')' : '' }}<br>
 
 											</td>
 
@@ -198,7 +198,7 @@
 
 												{{ $toolKey->dt_approved ?? ''}}<br>
 												{{ $toolKey->dt_approved_user->first_name ?? ''}}
-												{{ isset($request->dt_approved_user->position->description) ? '(' . $request->dt_approved_user->position->description . ')' : '' }}<br>
+												{{ isset($toolKey->dt_approved_user->position->description) ? '(' . $toolKey->dt_approved_user->position->description . ')' : '' }}<br>
 
 											</td>
 
@@ -206,7 +206,7 @@
 
 												{{ $toolKey->dt_started ?? ''}}<br>
 												{{ $toolKey->dt_started_user->first_name ?? ''}}
-												{{ isset($request->dt_started_user->position->description) ? '(' . $request->dt_started_user->position->description . ')' : '' }}<br>
+												{{ isset($toolKey->dt_started_user->position->description) ? '(' . $toolKey->dt_started_user->position->description . ')' : '' }}<br>
 
 											</td>
 
@@ -214,7 +214,7 @@
 
 												{{ $toolKey->dt_returned ?? ''}}<br>
 												{{ $toolKey->dt_returned_user->first_name ?? ''}}
-												{{ isset($request->dt_returned_user->position->description) ? '(' . $request->dt_returned_user->position->description . ')' : '' }}<br>
+												{{ isset($toolKey->dt_returned_user->position->description) ? '(' . $toolKey->dt_returned_user->position->description . ')' : '' }}<br>
 
 											</td>
 
@@ -222,7 +222,7 @@
 
 												{{ $toolKey->dt_rejected ?? ''}}<br>
 												{{ $toolKey->dt_rejected_user->first_name ?? ''}}
-												{{ isset($request->dt_rejected_user->position->description) ? '(' . $request->dt_rejected_user->position->description . ')' : '' }}<br>
+												{{ isset($toolKey->dt_rejected_user->position->description) ? '(' . $toolKey->dt_rejected_user->position->description . ')' : '' }}<br>
 
 											</td>
 
@@ -230,7 +230,7 @@
 
 												{{ $toolKey->dt_cancelled ?? ''}}<br>
 												{{ $toolKey->dt_cancelled_user->first_name ?? ''}}
-												{{ isset($request->dt_cancelled_user->position->description) ? '(' . $request->dt_cancelled_user->position->description . ')' : '' }}<br>
+												{{ isset($toolKey->dt_cancelled_user->position->description) ? '(' . $toolKey->dt_cancelled_user->position->description . ')' : '' }}<br>
 
 											</td>
 										</tr>
