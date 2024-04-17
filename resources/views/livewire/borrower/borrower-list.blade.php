@@ -84,7 +84,11 @@
 									<td class="text-center">
 										<div class="btn-group" role="group">
 
-										<a class="btn btn-primary btn mx-1" href="{{ route('rp.index', $borrower->id) }}" target="_blank"
+										{{--<a class="btn btn-primary btn mx-1" href="{{ route('rp.index', $borrower->id) }}" target="_blank"
+													title="Requester Profile">
+											
+												</a>--}}
+												<a class="btn btn-primary btn mx-1"wire:click="borrowerProfile({{ $borrower->id }})"  target="_blank"
 													title="Requester Profile">
 													<i class="fa-solid fa-clipboard-list"></i>
 												</a>
@@ -135,6 +139,11 @@
 			<div wire.ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 				<div class="modal-dialog modal-dialog-centered">
 					<livewire:request.request-form />
+				</div>
+			</div>
+			<div wire.ignore.self class="modal fade" id="borrowerProfile" tabindex="-1" role="dialog" aria-labelledby="borrowerProfile" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+				<div class="modal-dialog modal-dialog-centered modal-lg">
+					<livewire:borrower.borrower-profile />
 				</div>
 			</div>
 			@section('custom_script')

@@ -30,4 +30,12 @@
     window.livewire.on('openRequestModal', () => {
       $('#requestModal').modal('show');
     });
+
+    window.livewire.on('closeBorrowerProfile', () => {
+      $('#borrowerProfile').modal('hide');
+    });
+
+    window.livewire.on('openBorrowerProfile', () => {
+      $('#borrowerProfile').modal('show');
+    });
 </script>

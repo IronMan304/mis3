@@ -44,6 +44,13 @@ class BorrowerList extends Component
         $this->emit('openBorrowerAccountModal');
     }
 
+    public function borrowerProfile($borrowerId)
+    {
+        $this->borrowerId = $borrowerId;
+        //$this->emit('resetInputFields');
+        $this->emit('borrowerId', $this->borrowerId);
+        $this->emit('openBorrowerProfile');
+    }
     public function createBorrower()
     {
         // $borrower = Borrower::with([
