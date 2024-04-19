@@ -42,6 +42,7 @@ class ToolList extends Component
         'refreshTable',
         'refreshPage' => 'refreshPageHandler',
         //'logClose' => '$refresh'
+        'parentSwitchToolLogModal' => '$refresh',
     ];
     public function resetPagination()
     {

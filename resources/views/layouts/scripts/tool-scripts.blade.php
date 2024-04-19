@@ -15,12 +15,16 @@
         });
 
         window.livewire.on('closeToolLogModal', () => {
-            $('#toolLogModal').modal('hide');
+            // $('#toolLogModal').modal('hide');
         });
 
         window.livewire.on('openToolLogModal', () => {
             $('#toolLogModal').modal('show');
         });
+
+
+
+        
 
         // $('#toolLog').on('shown.bs.modal', function() {
         //     if (!$.fn.DataTable.isDataTable('.datatable')) {

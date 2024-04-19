@@ -48,12 +48,12 @@ class AssignSROperator extends Component
             'set_date' => 'required',
             'tool_status_id' => 'nullable',
         ]);
-    
+
         if ($this->serviceRequestId) {
             $serviceRequest = ServiceRequest::whereId($this->serviceRequestId)->first();
             $serviceRequest->status_id = 10; // Approved
             $serviceRequest->set_date = $data['set_date'];
-    
+
             $tool = Tool::find($this->tool_id);
             if ($tool->status_id == 14 && $tool->source_id == 3) { // cictso
                 $serviceRequest->tool_status_id = 23; // "To be checked"
@@ -61,14 +61,14 @@ class AssignSROperator extends Component
             } elseif ($tool->status_id == 14 && $tool->source_id == 4) { // personal
                 $serviceRequest->tool_status_id = 21; // "To be Handed"
                 $tool->status_id = 21;
-            } 
+            }
             // else {
             //     $serviceRequest->tool_status_id = $data['tool_status_id'];
             // }
-    
+
             $serviceRequest->save();
             $tool->save();
-    
+
             $action = 'edit';
             $message = 'Successfully Updated';
             $this->emit('flashAction', $action, $message);
@@ -78,6 +78,25 @@ class AssignSROperator extends Component
             $this->emit('refreshTable');
         }
     }
+
+    public function rejectServiceRequest($serviceRequestId)
+    {
+        $serviceRequest = ServiceRequest::findOrFail($serviceRequestId);
+        $serviceRequest->status_id = 15; // Set status to Rejected
+        $serviceRequest->tool_status_id = 15;
+        $serviceRequest->save();
+
+        Tool::where('id', $this->tool_id)->update(['status_id' => 1]); // In stock
+
+        $action = 'edit';
+        $message = 'Service Request Rejected';
+        $this->emit('flashAction', $action, $message);
+        $this->resetInputFields();
+        $this->emit('closeAssignSROperatorModal');
+        $this->emit('refreshParentASRO');
+        $this->emit('refreshTable');
+    }
+
 
     public function render()
     {

@@ -6,6 +6,7 @@ use App\Models\Tool;
 use Livewire\Component;
 use App\Models\ToolRequest;
 use Livewire\WithPagination;
+use App\Models\ServiceRequest;
 
 class ToolLog extends Component
 {
@@ -15,11 +16,17 @@ class ToolLog extends Component
     public $toolId;
     public $action = '';  //flash
     public $message = '';  //flash
+    // Separate pagination state variables for toolRequests and serviceRequests
+    public $tab = true;
 
     protected $listeners = [
         'toolId',
-        'resetInputFields'
+        'resetInputFields',
     ];
+     public function updatingSearch()
+    {
+        $this->emit('refreshTable');
+    }
     public function closeModal()
     {
         $this->emit('modalClosed');
@@ -28,6 +35,16 @@ class ToolLog extends Component
     {
         $this->emit('resetInputFields');
         $this->emit('closeToolLogModal');
+    }
+
+    public function eToolLog()
+    {
+      
+    }
+
+    public function sToolLog()
+    {
+   
     }
 
     public function resetInputFields()
@@ -47,9 +64,11 @@ class ToolLog extends Component
 
     public function render()
     {
-        $toolRequests = ToolRequest::where('tool_id', $this->toolId)->paginate($this->perPage);
+        $toolRequests = ToolRequest::where('tool_id', $this->toolId)->paginate($this->perPage, ['*'], 'toolPage');
+        $serviceRequests = ServiceRequest::where('tool_id', $this->toolId)->paginate($this->perPage);
         return view('livewire.tool.tool-log', [
             'toolRequests' => $toolRequests,
+            'serviceRequests' => $serviceRequests,
         ]);
     }
 }
