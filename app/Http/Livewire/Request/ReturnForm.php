@@ -121,7 +121,7 @@ class ReturnForm extends Component
 
                         $allToolsReturned = true;
                         foreach ($request->tool_keys as $toolKey) {
-                            if ($toolKey->status_id != 7 || $toolKey->status_id == 15) { // If any tool is not returned or lost
+                            if ($toolKey->status_id == 2) { // If any tool is not returned or lost
                                 $allToolsReturned = false;
                                 break;
                             }

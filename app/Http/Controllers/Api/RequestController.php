@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Tool;
 use App\Models\Option;
+use App\Models\Status;
 use App\Models\Request;
 use App\Models\Borrower;
 use App\Models\Operator;
@@ -26,13 +27,14 @@ class RequestController extends Controller
     public function index()
     {
         $borrower = Borrower::where('user_id', auth()->user()->id)
-        ->with('requests.tool_keys.tools','requests.tool_keys.status','requests.tool_keys.toolStatus', 'course')
-        ->first();
-    
+            ->with('requests.tool_keys.tools', 'requests.tool_keys.status', 'requests.tool_keys.toolStatus', 'course', 'requests.status', 'service_requests.service', 'service_requests.borrower', 'service_requests.user', 'service_requests.tool.source', 'service_requests.status', 'service_requests.source', 'service_requests.operator','service_requests.ToolStatus')
+            ->first();
+
 
         $tools = Tool::with(['category', 'type', 'status', 'security_keys', 'position_keys'])->get();
         $options = Option::all();
-    
+        $status = Status::all();
+
         // Combine tools and operators into a single array
         $data = [
             'borrower' => [
@@ -40,11 +42,14 @@ class RequestController extends Controller
                 'middle_name' => $borrower->middle_name,
                 'last_name' => $borrower->last_name,
                 'position_id' => $borrower->position_id,
+                
+                'service_requests' => $borrower->service_requests,
                 'requests' => $borrower->requests,
                 //'request_tools' => $requestToolKeys,
             ],
             'tools' => $tools,
             'options' => $options,
+            'status' => $status
         ];
 
         return response()->json($data);

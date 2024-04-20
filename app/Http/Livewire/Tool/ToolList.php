@@ -119,13 +119,7 @@ class ToolList extends Component
 
         if (!empty($this->search)) {
             $query->where('brand', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('property_number', 'LIKE', '%' . $this->search . '%')
-                ->orWhereHas('type', function ($query) {
-                    $query->where('description', 'LIKE', '%' . $this->search . '%');
-                })
-                ->orWhereHas('owner', function ($query) {
-                    $query->where('first_name', 'LIKE', '%' . $this->search . '%');
-                });
+                ->orWhere('property_number', 'LIKE', '%' . $this->search . '%');
         }
 
         if (!empty($this->owner_id)) {

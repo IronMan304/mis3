@@ -73,7 +73,7 @@
 						@can('view-operators')
 						<li><a href="/operators">Operator</a></li>
 						@endcan
-						@can('view-securitites')
+						@can('view-securities')
 						<li><a href="/securities">Security</a></li>
 						@endcan
 					</ul>

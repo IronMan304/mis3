@@ -109,9 +109,11 @@
 											<!-- <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editServiceRequest({{ $service_request->id }})" title="Edit">
 												<i class='fa fa-pen-to-square'></i>
 											</button> -->
-											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteService({{ $service_request->id }})" title="Delete">
+											@can('view-service-requests-delete')
+											<a class="btn btn-danger btn-sm mx-1" wire:click="deleteServiceRequest({{ $service_request->id }})" title="Delete">
 											<i class="fa fa-trash"></i>
-											</a>--}}
+											</a>
+											@endcan
 										</div>
 									</td>
 
