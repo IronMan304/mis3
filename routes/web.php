@@ -59,8 +59,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::group(['middleware' => ['role:admin|operator']], function () {
+Route::group(['middleware' => ['role:admin']], function () {
     Route::get('users', UserList::class);
+    Route::get('securities', SecurityList::class);
+
     Route::get('role', RoleList::class);
     Route::get('permission', PermissionList::class);
 
@@ -74,10 +76,21 @@ Route::group(['middleware' => ['role:admin|operator']], function () {
     Route::get('positions', PositionList::class);
     Route::get('options', OptionList::class);
 
+    Route::get('categories', CategoryList::class);
+    Route::get('types', TypeList::class);
+    Route::get('venues', VenueList::class);
+
     Route::get('trials', TrialList::class);
+     //Route::get('requests1', RequestList1::class);
 });
 
-Route::group(['middleware' => ['role:admin|staff|head of office|operator']], function () {
+Route::group(['middleware' => ['role:admin|president']], function () {
+});
+
+Route::group(['middleware' => ['role:admin|vice-president']], function () {
+});
+
+Route::group(['middleware' => ['role:admin|head of office|staff']], function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -86,27 +99,21 @@ Route::group(['middleware' => ['role:admin|staff|head of office|operator']], fun
     Route::get('borrowers', BorrowerList::class);
     Route::get('operators', OperatorList::class);
 
-    Route::get('categories', CategoryList::class);
-    Route::get('types', TypeList::class);
     Route::get('tools', ToolList::class);
-    Route::get('venues', VenueList::class);
-
-    //Route::get('requests', RequestList::class);
-    //Route::get('requests1', RequestList1::class);
 
     Route::get('/requesters/{requesterId}/profile', [RequesterProfileController::class, 'index'])->name('rp.index');
     Route::get('tool_reports', ReportList::class);
     Route::get('service_reports', ServiceRequestReportList::class);
-    Route::get('securities', SecurityList::class);
-});
 
-Route::group(['middleware' => ['role:admin|requester|staff|head of office|operator|president']], function () {
-    Route::get('requests', RequestList::class);
-    //Route::get('requests', RequestList::class);
     Route::get('service_requests', ServiceRequestList::class);
-    Route::get('/print/request_letter/{id}', [PrintController::class, 'print_request_letter'])->name('print.request');
 
     Route::get('logs', LogList::class);
+});
+
+Route::group(['middleware' => ['role:admin|president|vice-president|head of office|staff']], function () {
+    Route::get('requests', RequestList::class);
+
+    Route::get('/print/request_letter/{id}', [PrintController::class, 'print_request_letter'])->name('print.request');
 });
 
 require __DIR__ . '/auth.php';

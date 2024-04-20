@@ -290,11 +290,13 @@
 
 								@if($tool->source_id == 4)
 								<td>
-								<div class="btn-group" role="group">
-									<button type="button" wire:click="toolLog({{ $tool->id }})" @if($tool->status_id == 1) class="custom-badge status-light-green" @elseif ($tool->status_id == 2) class="custom-badge status-blue" @elseif($tool->status_id == 3) class="custom-badge status-gray" @elseif($tool->status_id == 4) class="custom-badge status-red" @elseif($tool->status_id == 17) class="custom-badge status-gray" @elseif($tool->status_id == 14) class="custom-badge status-orange" @elseif($tool->status_id == 5) class="custom-badge status-pink" @elseif($tool->status_id == 21) class="custom-badge status-purple" @elseif($tool->status_id == 23) class="custom-badge status-green" @elseif($tool->status_id == 22) class="custom-badge status-dark-purple" @endif>
-										{{ $tool->status->description ?? ''}}
-									</button>
-								</div>
+									<div class="btn-group" role="group">
+
+										<button type="button" wire:click="toolLog({{ $tool->id }})" @if($tool->status_id == 1) class="custom-badge status-light-green" @elseif ($tool->status_id == 2) class="custom-badge status-blue" @elseif($tool->status_id == 3) class="custom-badge status-gray" @elseif($tool->status_id == 4) class="custom-badge status-red" @elseif($tool->status_id == 17) class="custom-badge status-gray" @elseif($tool->status_id == 14) class="custom-badge status-orange" @elseif($tool->status_id == 5) class="custom-badge status-pink" @elseif($tool->status_id == 21) class="custom-badge status-purple" @elseif($tool->status_id == 23) class="custom-badge status-green" @elseif($tool->status_id == 22) class="custom-badge status-dark-purple" @endif>
+											{{ $tool->status->description ?? ''}}
+										</button>
+
+									</div>
 								</td>
 								@else
 								<td>
@@ -309,13 +311,17 @@
 								<td class="text-center">
 									<div class="btn-group" role="group">
 
+										@can('view-tools-history')
 										<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="toolLog({{ $tool->id }})" title="Log">
 											<i class="fa-solid fa-list"></i>
 										</button>
+										@endcan
 
+										@can('view-tools-edit')
 										<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editTool({{ $tool->id }})" title="Edit">
 											<i class='fa fa-pen-to-square'></i>
 										</button>
+										@endcan
 										<!-- <a class="btn btn-danger btn-sm mx-1" wire:click="deleteTool({{ $tool->id }})" title="Delete">
 													<i class="fa fa-trash"></i>
 												</a> -->

@@ -50,7 +50,7 @@
 					</div>
 
 					<div class="table-responsive">
-						<table class="table border-0 custom-table comman-table datatable mb-0">
+						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
 									<th style="width: 30%">Name</th>
@@ -82,15 +82,17 @@
 									</td>
 									<td class="text-center">
 										<div class="btn-group" role="group">
+											@can('view-users-edit')
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editUser({{ $user->id }})" title="Edit">
 												<i class='fa fa-pen-to-square'></i>
 											</button>
+											@endcan
 
-
-											{{-- <a class="btn btn-danger btn-sm mx-1"
-                                                    wire:click="deleteUser({{ $user->id }})" title="Delete">
-											<i class="fa fa-trash"></i>
-											</a> --}}
+											@can('view-users-delete')
+											<a class="btn btn-danger btn-sm mx-1" wire:click="deleteUser({{ $user->id }})" title="Delete">
+												<i class="fa fa-trash"></i>
+											</a>
+											@endcan
 										</div>
 									</td>
 								</tr>
@@ -99,6 +101,8 @@
 						</table>
 					</div>
 				</div>
+				<!-- Pagination links -->
+				{{ $users->links() }}
 			</div>
 		</div>
 		{{-- Modal --}}

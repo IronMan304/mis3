@@ -5,7 +5,7 @@
 				<ul class="breadcrumb">
 					<li class="breadcrumb-item"><a href="/">Dashboard</a></li>
 					<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-					<li class="breadcrumb-item active">Sex List</li>
+					<li class="breadcrumb-item active">Gender List</li>
 				</ul>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<div class="doctor-table-blk">
-									<h3>Sex List</h3>
+									<h3>Gender List</h3>
 									<div class="doctor-search-blk">
 										<div class="add-group">
 											<a wire:click="createSex" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>

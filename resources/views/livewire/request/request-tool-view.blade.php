@@ -73,10 +73,11 @@
 
 											<td>
 
-												{{ $request->dt_approved ?? ''}}<br>
+												{{--{{ $request->dt_approved ?? ''}}<br>
 												{{ $request->dt_approved_user->first_name ?? ''}} {{ $request->dt_approved_user->middle_name ?? ''}} {{ $request->dt_approved_user->last_name ?? ''}}
-												{{ isset($request->dt_approved_user->position->description) ? '(' . $request->dt_approved_user->position->description . ')' : '' }}<br>
+												{{ isset($request->dt_approved_user->position->description) ? '(' . $request->dt_approved_user->position->description . ')' : '' }}<br>--}}
 
+												{{--I got these sa rtts keyt didto man mahibal an if ni approved naba each security using updated at--}}
 												@php
 												$latestUpdatedAtPerSecurityId = [];
 												$shownSecurityIds = [];

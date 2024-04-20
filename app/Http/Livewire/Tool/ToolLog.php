@@ -33,7 +33,7 @@ class ToolLog extends Component
     }
     public function closeToolLog()
     {
-        $this->emit('resetInputFields');
+        //$this->emit('resetInputFields');
         $this->emit('closeToolLogModal');
     }
 

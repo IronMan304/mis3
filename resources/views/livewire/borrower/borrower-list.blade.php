@@ -84,36 +84,47 @@
 									<td class="text-center">
 										<div class="btn-group" role="group">
 
-										{{--<a class="btn btn-primary btn mx-1" href="{{ route('rp.index', $borrower->id) }}" target="_blank"
-													title="Requester Profile">
-											
-												</a>--}}
-												<a class="btn btn-primary btn mx-1"wire:click="borrowerProfile({{ $borrower->id }})"  target="_blank"
-													title="Requester Profile">
-													<i class="fa-solid fa-clipboard-list"></i>
-												</a>
-											@if(auth()->user()->hasRole('admin'))
+											{{--<a class="btn btn-primary btn mx-1" href="{{ route('rp.index', $borrower->id) }}" target="_blank"
+											title="Requester Profile">
+
+											</a>--}}
+
+											@can('view-borrowers-history')
+											<a class="btn btn-primary btn mx-1" wire:click="borrowerProfile({{ $borrower->id }})" title="Requester Profile">
+												<i class="fa-solid fa-clipboard-list"></i>
+											</a>
+											@endcan
+
+											@can('view-borrowers-user-account')
 											@if ($borrower->user_id == null)
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createBorrowerAccount({{ $borrower->id }})" title="Add">
 												<i class="fa-solid fa-user-plus"></i>
 											</button>
 											@endif
+
 											@if($borrower->user_id != null)
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createBorrowerAccount({{ $borrower->id }})" title="Add" disabled>
 												<i class="fa-solid fa-user-check"></i>
 											</button>
 											@endif
-											@endif
+											@endcan
+
+											@can('view-borrowers-edit')
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editBorrower({{ $borrower->id }})" title="Edit">
 												<i class='fa fa-pen-to-square'></i>
 											</button>
+											@endcan
+
 											{{--<a class="btn btn-danger btn-sm mx-1" wire:click="deleteBorrower({{ $borrower->id }})" title="Delete">
 											<i class="fa fa-trash"></i>
 											</a>--}}
 											<!-- Add Request button here -->
+											{{--@can('view-borrowers-create-request')
 											<button type="button" class="btn btn-success btn-sm mx-1" wire:click="createRequest({{ $borrower->id }})" title="Make Request">
 												<i class="fa fa-plus"></i>
 											</button>
+											@endcan--}}
+											
 										</div>
 									</td>
 

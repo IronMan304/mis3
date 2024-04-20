@@ -4,9 +4,13 @@ namespace App\Http\Livewire\User;
 
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class UserList extends Component
 {
+    use withPagination;
+    protected $paginationTheme = 'bootstrap';
+    public $perPage = 10;
     public $userId;
     public $search = '';
     public $action = '';  //flash
@@ -56,12 +60,12 @@ class UserList extends Component
             $users->where(function ($query) {
                 $query->where('first_name', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('last_name', 'LIKE', '%' . $this->search . '%')
-                    ->orWhere('position', 'LIKE', '%' . $this->search . '%')
+                    //->orWhere('position', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('email', 'LIKE', '%' . $this->search . '%');
             });
         }
 
-        $users = $users->with('roles')->get();
+        $users = $users->with('roles')->paginate($this->perPage);
 
         return view('livewire.user.user-list', [
             'users' => $users

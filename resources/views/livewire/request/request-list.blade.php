@@ -259,25 +259,23 @@
 											<i class='fa fa-pen-to-square'></i>
 											</button>--}}
 											@if ($request->tool_keys)
-
 											{{--@if($request->status_id == 11)
 												<button class="btn btn-success btn-sm mx-1" type="button" wire:click="approveRequest({{ $request->id }})">
 											<i class="fa-solid fa-thumbs-up"></i>
 											</button>
 											@endif--}}
-
+											@can('view-equipment-requests-logs')
 											<button type="button" class="btn btn-info btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="View Tool">
 											<i class="fa-solid fa-list"></i>
 											</button>
+											@endcan
 
-											@if(auth()->user()->hasRole('staff') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('head of office'))
-
+											@can('view-equipment-requests-equipment-approval')
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
 												<i class="fas fa-toggle-on"></i>
 
 											</button>
-
-											@endif
+											@endcan
 
 											@endif
 											<!-- 
@@ -305,19 +303,19 @@
 											@endforeach
 											@endif -->
 
-											@if($securityButton || auth()->user()->hasRole('admin') )
+											@if($securityButton || auth()->user()->hasRole('admin') || auth()->user()->can('view-equipment-requests-request-approval'))
 											<button type="button" class="btn btn-warning btn-sm mx-1" wire:click="securityApprovalForm({{ $request->id }})" title="Letter">
 												<i class="fa-solid fa-envelope"></i>
 											</button>
-
 											@endif
 
-
-
+											@can('view-equipment-requests-start')
 											<button type="button" class="btn btn-success btn-sm mx-1" wire:click="requestStartForm({{ $request->id }})" title="Start" {{--@if ($request->status_id != 10) disabled @endif--}}>
 												<i class="fa-solid fa-play"></i>
 											</button>
+											@endcan
 
+											@can('view-equipment-requests-return')
 											@if ($request->tool_keys)
 											@php $returnButtonShown = false; @endphp
 											@foreach ($request->tool_keys as $toolKey)
@@ -329,23 +327,12 @@
 											@endif
 											@endforeach
 											@endif
-
-
-
-
-
+											@endcan
 
 										</div>
 									</td>
 
-					
-
-
-
 									{{----}}
-
-							
-
 								</tr>
 								@endforeach
 							</tbody>

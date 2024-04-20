@@ -10,11 +10,12 @@ class BorrowerList extends Component
 {
     use withPagination;
     protected $paginationTheme = 'bootstrap';
+    public $perPage = 10;
     public $borrowerId;
     public $search = '';
     public $action = '';  //flash
     public $message = '';  //flash
-    public $perPage = 10;
+ 
 
     protected $listeners = [
         'refreshParentBorrower' => '$refresh',

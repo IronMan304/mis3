@@ -85,17 +85,24 @@
 
 									<td class="text-center">
 										<div class="btn-group" role="group">
+
+											@can('view-service-requests-review')
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createAssignSROperator({{ $service_request->id }})" title="Assign">
 												<i class="fa-solid fa-calendar"></i>
 											</button>
+											@endcan
 
+											@can('view-service-requests-start')
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="serviceRequestStart({{ $service_request->id }})" title="Start" {{--@if ($request->status_id != 10) disabled @endif--}}>
 												<i class="fa-solid fa-play"></i>
 											</button>
+											@endcan
 
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnSRequest({{ $service_request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);" >
+											@can('view-service-requests-return')
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnSRequest({{ $service_request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);">
 												<i class="fa-solid fa-arrow-right-arrow-left"></i>
 											</button>
+											@endcan
 
 											<!-- <a wire:click="createAssignSROperator" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
 											</a> -->

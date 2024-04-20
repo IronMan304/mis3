@@ -263,12 +263,14 @@
                 @if($rtts_key->status_id == 11 && ($rtts_key->security_id == 3 || $rtts_key->security_id == 5 || $rtts_key->security_id == 6))
 
                 @if($rtts_key->status_id == 11 && $rtts_key->security_id == 3 && $request->current_security_id == 3)
+                @can('hoo-letter-approval')
                 <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="hOOAprroval({{ $request->id }})" title="Approval">
                     <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
                 </button>
                 <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="hOOReject({{ $request->id }})" title="Reject">
                     <i class="fa-solid fa-thumbs-down"></i>{{ $rtts_key->security->description ?? ''}}
                 </button>
+                @endcan
                 @endif
 
                 @php
@@ -300,12 +302,14 @@
                 @if($rtts_key->status_id == 11 && ($rtts_key->security_id == 3 || $rtts_key->security_id == 5 || $rtts_key->security_id == 6))
 
                 @if($rtts_key->status_id == 11 && $rtts_key->security_id == 5 && $request->current_security_id == 5)
+                @can('vp-letter-approval')
                 <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="vPAprroval({{ $request->id }})" title="Approval">
                     <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
                 </button>
                 <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="vPReject({{ $request->id }})" title="Reject">
                     <i class="fa-solid fa-thumbs-down"></i>{{ $rtts_key->security->description ?? ''}}
                 </button>
+                @endcan
                 @endif
 
                 @php
@@ -339,12 +343,14 @@
 
 
                 @if($rtts_key->status_id == 11 && $rtts_key->security_id == 6 && $request->current_security_id == 6)
+                @can('president-letter-approval')
                 <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="pApproval({{ $request->id }})" title="Approval">
                     <i class="fa-solid fa-thumbs-up"></i>{{ $rtts_key->security->description ?? ''}}
                 </button>
                 <button type="button" class="btn btn-primary btn-sm mx-1" wire:click="pReject({{ $request->id }})" title="Reject">
                     <i class="fa-solid fa-thumbs-down"></i>{{ $rtts_key->security->description ?? ''}}
                 </button>
+                @endcan
                 @endif
 
 

@@ -79,7 +79,8 @@
                                         <div class="form-group">
                                             <x-input-label for="password" :value="__('Password')" />
 
-                                            <x-text-input id="password" class="form-control" type="password" name="password" required autocomplete="current-password" />
+                                            <x-text-input id="password" class="form-control pass-input" type="password" name="password" required autocomplete="current-password" />
+                                            <span class="profile-views feather-eye-off toggle-password"></span>
 
                                             <x-input-error :messages="$errors->get('password')" class="login-danger" />
                                         </div>
