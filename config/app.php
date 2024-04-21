@@ -171,6 +171,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        //Symfony\Component\VarDumper\VarDumperServiceProvider::class,
 
     ])->toArray(),
 
@@ -189,6 +190,7 @@ return [
         // 'Example' => App\Facades\Example::class,
         //'PDF' => Barryvdh\DomPDF\Facade::class,
         //'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Dumper' => Symfony\Component\VarDumper\Dumper\HtmlDumper::class,
     ])->toArray(),
 
 

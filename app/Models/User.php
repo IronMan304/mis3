@@ -37,6 +37,11 @@ class User extends Authenticatable
         return $this->hasOne(Security::class, 'user_id');
     }
 
+    public function borrower()
+    {
+        return $this->hasOne(Borrower::class, 'user_id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

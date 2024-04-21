@@ -55,9 +55,11 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('myapptoken')->plainTextToken;
+        $borrower = $user->borrower; // Assuming there's a relationship between User and Borrower
 
         $response = [
             'user' => $user,
+            'borrower' => $borrower,
             'token' => $token,
         ];
 

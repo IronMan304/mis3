@@ -19,7 +19,7 @@ class ServiceRequestController extends Controller
     public function index()
     {
 
-        $tools = Tool::with(['source', 'category', 'type', 'status', 'security_keys', 'position_keys'])->get();
+        $tools = Tool::with(['source', 'category', 'type', 'status', 'security_keys', 'position_keys', 'owner'])->get();
 
         $sources = Source::all();
         //$equipments = Tool::all();
@@ -75,6 +75,7 @@ class ServiceRequestController extends Controller
             $data['tool_status_id'] = 14; // In Request
 
             $serviceRequest = ServiceRequest::create($data);
+   
             return response()->json(['message' => 'Successfully Created', 'data' => $serviceRequest], Response::HTTP_CREATED);
         } else {
             return response()->json(['error' => 'You can only request equipment that are In stock'], Response::HTTP_BAD_REQUEST);
