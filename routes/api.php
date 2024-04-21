@@ -28,12 +28,18 @@ Route::group(['middleware'=> ['auth:sanctum']], function () {
 
     Route::get('/requests', [RequestController::class, 'index']);
     Route::post('/requests', [RequestController::class, 'store']);
-    Route::post('/service_requests', [ServiceRequestController::class, 'store']);
+    //Route::post('/service_requests', [ServiceRequestController::class, 'store']);
     
     Route::get('/requests/{id}', [RequestController::class, 'show']);
     Route::put('/requests/{id}', [RequestController::class, 'update']);
     Route::delete('/requests/{id}', [RequestController::class, 'destroy']);
     Route::get('/requests/search/{request_number}', [RequestController::class, 'search']);
 
-    Route::post('requestss', [RequestForm::class, 'store']);
+    //Route::post('requestss', [RequestForm::class, 'store']);
+
+    Route::prefix('service_requests')->group(function () {
+        Route::get('/', [ServiceRequestController::class, 'index']); // Assuming you have an index method in your controller
+        Route::get('/{id}', [ServiceRequestController::class, 'id']);
+        Route::post('/', [ServiceRequestController::class, 'store']);
+    });
 });

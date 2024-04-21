@@ -3,17 +3,37 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Tool;
+use App\Models\Source;
+use App\Models\Service;
 use App\Models\Borrower;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Models\ServiceRequest;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Response;
 
 class ServiceRequestController extends Controller
 {
     private $id, $borrower_id, $service_id, $tool_id, $staff_user_id, $status_id, $errorMessage, $source_id, $tool_status_id;
 
+    public function index()
+    {
+
+        $tools = Tool::with(['source', 'category', 'type', 'status', 'security_keys', 'position_keys'])->get();
+
+        $sources = Source::all();
+        //$equipments = Tool::all();
+        $services = Service::all();
+
+        // Combine tools and operators into a single array
+        $data = [
+            'tools' => $tools,
+            'sources' => $sources,
+            'services' => $services
+        ];
+
+        return response()->json($data);
+    }
     public function id($id)
     {
         $this->id = $id;
@@ -48,7 +68,7 @@ class ServiceRequestController extends Controller
             if (auth()->user()->hasRole('requester')) {
                 $data['borrower_id'] = Borrower::where('user_id', auth()->user()->id)->value('id');
             }
-            
+
             Tool::where('id', $data['tool_id'])->update(['status_id' => 14]);
             $data['staff_user_id'] = auth()->user()->id;
             $data['status_id'] = 11; // Pending
