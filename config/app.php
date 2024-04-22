@@ -190,7 +190,7 @@ return [
         // 'Example' => App\Facades\Example::class,
         //'PDF' => Barryvdh\DomPDF\Facade::class,
         //'PDF' => Barryvdh\DomPDF\Facade::class,
-        'Dumper' => Symfony\Component\VarDumper\Dumper\HtmlDumper::class,
+        //'Dumper' => Symfony\Component\VarDumper\Dumper\HtmlDumper::class,
     ])->toArray(),
 
 
