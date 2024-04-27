@@ -40,7 +40,38 @@
 		<i class="fa-solid fa-arrow-up"></i> <!-- Use the appropriate icon class here -->
 	</a>
 
+
 	<ul class="nav user-menu float-end">
+		<li class="nav-item dropdown d-none d-md-block">
+			<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown"><img src="assets/img/icons/note-icon-02.svg" alt=""><span class="pulse status-pink">
+					<livewire:broadcasting />
+				</span> </a>
+			<div class="dropdown-menu notifications">
+				<div class="topnav-dropdown-header">
+					<span>Notifications</span>
+				</div>
+				<div class="drop-scroll">
+					<ul class="notification-list">
+
+						@if($count)
+						@foreach($requestNumbers as $rn)
+						<li class="notification-message">
+		
+					
+									<input type="text" class="form-control" value="{{$rn}}" readonly="readonly">
+								
+			
+						</li>
+						@endforeach
+						@endif
+
+					</ul>
+				</div>
+				<!-- <div class="topnav-dropdown-footer">
+					<a href="activities.html">View all Notifications</a>
+				</div> -->
+			</div>
+		</li>
 		<li class="nav-item dropdown has-arrow user-profile-list">
 			<a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
 				<div class="user-names">

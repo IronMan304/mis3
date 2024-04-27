@@ -12,6 +12,7 @@ use App\Models\ToolRequest;
 use App\Models\ToolSecurity;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use App\Models\RequestToolToolSecurityKey;
 use Illuminate\Http\Request as HttpRequest;;
 
@@ -154,6 +155,7 @@ class RequestController extends Controller
         }
 
         return response()->json($request, 201);
+       
     }
 
 

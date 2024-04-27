@@ -11,7 +11,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/ncictso.png">
     <!-- <title>NCICTSO | @yield('title')</title> -->
     <!-- <title>NCICTSO | {{ ucwords(str_replace('.', ' ', Route::currentRouteName())) }}</title> -->
-     <title>NCICTSO</title>
+    <title>NCICTSO</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -71,11 +71,11 @@
 
 
 
-
+    
     @livewireScripts
     @yield('custom_script')
 
     @stack('script')
 </body>
 
-</html>
+</html> 
