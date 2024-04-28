@@ -23,8 +23,9 @@
                                     <h3>Equipment Request Report</h3>
                                     <div class="doctor-search-blk">
                                         <div class="top-nav-search table-search-blk">
+                                            <p>{{ $rn }}</p>
                                             <form>
-                                                <input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
+                                                <input type="text" id="searchBox" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
                                                 <a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
                                             </form>
                                         </div>
@@ -321,6 +322,31 @@
         {{ $requests->links() }}
     </div>
     <script>
+    // Function to get the value of a query parameter from the URL
+    function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    // Function to set the value of the search input field
+    function populateSearchBox() {
+        // Get the search input field
+        var searchBox = document.getElementById('searchBox');
+        
+        // Get the value of the 'rn' parameter from the URL
+        var rnValue = getQueryParam('rn');
+        
+        // Set the value of the search input field to the value of 'rn' from the URL
+        if (rnValue !== null) {
+            searchBox.value = rnValue;
+        }
+    }
+
+    // Call the populateSearchBox function when the page loads
+    window.onload = populateSearchBox;
+</script>
+
+    <script>
         document.addEventListener('livewire:load', function() {
 
             //Category Select2
@@ -345,8 +371,8 @@
                 @this.set('tool_type_id', data);
             });
 
-             // Tool Select2
-             $('#tool_id').select2({
+            // Tool Select2
+            $('#tool_id').select2({
                 dropdownParent: $('#list-content-tool-request-report')
             });
 
@@ -367,8 +393,8 @@
                 @this.set('borrower_id', data);
             });
 
-             // Operator Select2
-             $('#operator_id').select2({
+            // Operator Select2
+            $('#operator_id').select2({
                 dropdownParent: $('#list-content-tool-request-report')
             });
 

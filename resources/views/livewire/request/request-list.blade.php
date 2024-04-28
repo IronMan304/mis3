@@ -32,7 +32,7 @@
 							<div class="col-auto text-end float-end ms-auto download-grp">
 								<div class="top-nav-search table-search-blk">
 									<form>
-										<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
+										<input type="text" id="searchBox" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
 										<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
 									</form>
 								</div>
@@ -383,6 +383,14 @@
 	</div>
 
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the value of $rn from your server-side code
+        var rn = "{{ $rn ?? ''}}";
+        // Set the value of the search box
+        document.getElementById('searchBox').value = rn;
+    });
+</script>
 
 @section('custom_script')
 @include('layouts.scripts.request-scripts')

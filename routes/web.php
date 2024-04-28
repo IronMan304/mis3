@@ -102,7 +102,7 @@ Route::group(['middleware' => ['role:admin|head of office|staff']], function () 
     Route::get('tools', ToolList::class);
 
     Route::get('/requesters/{requesterId}/profile', [RequesterProfileController::class, 'index'])->name('rp.index');
-    Route::get('tool_reports', ReportList::class);
+    Route::get('tool_reports', ReportList::class)->name('tool_reports');
     Route::get('service_reports', ServiceRequestReportList::class);
 
     Route::get('service_requests', ServiceRequestList::class);
@@ -111,7 +111,8 @@ Route::group(['middleware' => ['role:admin|head of office|staff']], function () 
 });
 
 Route::group(['middleware' => ['role:admin|president|vice-president|head of office|staff']], function () {
-    Route::get('requests', RequestList::class);
+    Route::get('requests', RequestList::class)->name('requests');
+
 
     Route::get('/print/request_letter/{id}', [PrintController::class, 'print_request_letter'])->name('print.request');
 });

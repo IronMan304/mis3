@@ -1,6 +1,7 @@
 
 @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))
 <x-app-layout>
+<livewire:broadcasting />
 
     <div class="content">
 

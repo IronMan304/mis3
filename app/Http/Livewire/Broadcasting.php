@@ -22,8 +22,8 @@ class Broadcasting extends Component
     {
         return <<<'blade'
             <div wire:poll.1s>
-                {{-- Display the count of requests with status_id 11 --}}
-                <p>{{ $count }}</p>
+                {{-- Display the count of requests with status_id 11
+                <p>{{ $count }}</p> --}}
             </div>
         blade;
     }
@@ -31,13 +31,18 @@ class Broadcasting extends Component
     private function updateCounts()
     {
         // Retrieve requests with status_id equal to 11
-        $requests = Request::where('status_id', 11)->get();
+        $requests = Request::all();
+        // $requests = Request::where('status_id', 11)->get();
+        // $requests = Request::where('status_id', 11)->get();
+        // $requests = Request::where('status_id', 11)->get();
+        // $requests = Request::where('status_id', 11)->get();
+        // $requests = Request::where('status_id', 11)->get();
 
         // Count the number of requests with status_id equal to 11
         $this->count = $requests->count();
 
         // Store request numbers in an array
-        $this->requestNumbers = $requests->sortByDesc('id')->pluck('request_number')->toArray();
+        $this->requestNumbers = $requests->sortByDesc('id');
 
 
         // Share the count with all views

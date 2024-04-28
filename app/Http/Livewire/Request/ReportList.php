@@ -27,6 +27,7 @@ class ReportList extends Component
     public $dateTo;
     public $date;
     public $borrower_id, $category_id, $tool_type_id, $tool_id, $operator_id, $status_id;
+    public $rn;
 
     protected $listeners = [
         'refreshParentRequest' => '$refresh',
@@ -183,6 +184,7 @@ class ReportList extends Component
         $types = Type::all();
         $tools = Tool::all();
         $statuses = Status::all();
+        
 
         // Render the Livewire component
         return view('livewire.request.report-list', [
