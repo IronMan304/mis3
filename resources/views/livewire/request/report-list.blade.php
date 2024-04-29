@@ -321,30 +321,6 @@
         <!-- Pagination links -->
         {{ $requests->links() }}
     </div>
-    <script>
-    // Function to get the value of a query parameter from the URL
-    function getQueryParam(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-    }
-
-    // Function to set the value of the search input field
-    function populateSearchBox() {
-        // Get the search input field
-        var searchBox = document.getElementById('searchBox');
-        
-        // Get the value of the 'rn' parameter from the URL
-        var rnValue = getQueryParam('rn');
-        
-        // Set the value of the search input field to the value of 'rn' from the URL
-        if (rnValue !== null) {
-            searchBox.value = rnValue;
-        }
-    }
-
-    // Call the populateSearchBox function when the page loads
-    window.onload = populateSearchBox;
-</script>
 
     <script>
         document.addEventListener('livewire:load', function() {

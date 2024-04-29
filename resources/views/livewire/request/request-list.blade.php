@@ -22,14 +22,7 @@
 								<div class="doctor-table-blk">
 									<h3>Request List</h3>
 									<div class="doctor-search-blk">
-										<div class="add-group">
-											<a wire:click="createRequest" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-auto text-end float-end ms-auto download-grp">
+									<div class="col-auto text-end float-end ms-auto download-grp">
 								<div class="top-nav-search table-search-blk">
 									<form>
 										<input type="text" id="searchBox" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
@@ -37,6 +30,14 @@
 									</form>
 								</div>
 							</div>
+										<div class="add-group">
+											<a wire:click="createRequest" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							
 						</div>
 					</div>
 
@@ -266,7 +267,7 @@
 											@endif--}}
 											@can('view-equipment-requests-logs')
 											<button type="button" class="btn btn-info btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="View Tool">
-											<i class="fa-solid fa-list"></i>
+												<i class="fa-solid fa-list"></i>
 											</button>
 											@endcan
 
@@ -383,14 +384,30 @@
 	</div>
 
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the value of $rn from your server-side code
-        var rn = "{{ $rn ?? ''}}";
-        // Set the value of the search box
-        document.getElementById('searchBox').value = rn;
-    });
-</script>
+{{--<script>
+	// Function to get the value of a query parameter from the URL
+	function getQueryParam(name) {
+		const urlParams = new URLSearchParams(window.location.search);
+		return urlParams.get(name);
+	}
+
+	// Function to set the value of the search input field
+	function populateSearchBox() {
+		// Get the search input field
+		var searchBox = document.getElementById('searchBox');
+
+		// Get the value of the 'rn' parameter from the URL
+		var rnValue = getQueryParam('rn');
+
+		// Set the value of the search input field to the value of 'rn' from the URL
+		if (rnValue !== null) {
+			searchBox.value = rnValue;
+		}
+	}
+
+	// Call the populateSearchBox function when the page loads
+	window.onload = populateSearchBox;
+</script>--}}
 
 @section('custom_script')
 @include('layouts.scripts.request-scripts')

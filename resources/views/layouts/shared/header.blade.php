@@ -42,15 +42,13 @@
 
 
 	<ul class="nav user-menu float-end">
-		<li class="nav-item dropdown d-none d-md-block">
+	{{--	<li class="nav-item dropdown d-none d-md-block">
 			<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><img src="assets/img/icons/note-icon-01.svg" alt=""><span class=" status-pink">{{$count}}</span> </a>
 		</li>
 		<div class="notification-box">
 			<div class="msg-sidebar notifications msg-noti">
 				<div class="topnav-dropdown-header">
-					<span>Equipment Requests</span>
-				
-					<spa>100</span>
+					<span>All Equipment Requests</span>
 			
 				</div>
 				<div class="drop-scroll msg-list-scroll" id="msg_list">
@@ -64,7 +62,7 @@
 									<!-- <span class="avatar">R</span> -->
 								</div>
 								<div class="list-body">
-									<a href="{{route('tool_reports', ['rn' => $rn->request_number])}}"><span class="message-author">{{$rn->request_number}} </span> </a>
+									<a href="{{route('requests', ['rn' => $rn->request_number])}}"><span class="message-author">{{$rn->request_number}} </span> </a>
 									<span class="message-time">{{$rn->created_at}}</span>
 									<div class="clearfix"></div>
 									<span class="message-content">Status: {{$rn->status->description ?? ''}} </span>
@@ -83,6 +81,10 @@
 				</div>
 			</div>
 		</div>
+--}}
+
+
+
 
 		{{--<li class="nav-item dropdown d-none d-md-block">
 			<a href="requests" class="dropdown-toggle nav-link" data-bs-toggle="dropdown"><img src="assets/img/icons/note-icon-02.svg" alt="Pending"><span class="status-pink @if($count)pulse @endif">
