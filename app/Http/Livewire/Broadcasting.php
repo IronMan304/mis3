@@ -31,7 +31,7 @@ class Broadcasting extends Component
     public function render()
     {
         return <<<'blade'
-            <div wire:poll.1s>
+            <div >
                 {{-- Display the count of requests with status_id 11
                 <p>{{ $count }}</p> --}}
             </div>
@@ -67,21 +67,21 @@ class Broadcasting extends Component
         $this->requestsCompleted = $requestsCompleted->sortByDesc('id');
 
         // Share the count with all views
-        // View::share('count', $this->count);
+        View::share('count', $this->count);
 
-        // View::share('countPending', $this->countPending);
-        // View::share('countReviewed', $this->countReviewed);
-        // View::share('countApproved', $this->countApproved);
-        // View::share('countStarted', $this->countStarted);
-        // View::share('countCompleted', $this->countCompleted);
+        View::share('countPending', $this->countPending);
+        View::share('countReviewed', $this->countReviewed);
+        View::share('countApproved', $this->countApproved);
+        View::share('countStarted', $this->countStarted);
+        View::share('countCompleted', $this->countCompleted);
 
-        // View::share('requestNumbers', $this->requestNumbers);
+        View::share('requestNumbers', $this->requestNumbers);
 
-        // View::share('requestsPending', $this->requestsPending);
-        // View::share('requestsReviewed', $this->requestsReviewed);
-        // View::share('requestsApproved', $this->requestsApproved);
-        // View::share('requestsStarted', $this->requestsStarted);
-        // View::share('requestsCompleted', $this->requestsCompleted);
+        View::share('requestsPending', $this->requestsPending);
+        View::share('requestsReviewed', $this->requestsReviewed);
+        View::share('requestsApproved', $this->requestsApproved);
+        View::share('requestsStarted', $this->requestsStarted);
+        View::share('requestsCompleted', $this->requestsCompleted);
     }
     
 

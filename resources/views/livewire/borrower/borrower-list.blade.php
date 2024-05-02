@@ -103,7 +103,7 @@
 											@endif
 
 											@if($borrower->user_id != null)
-											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="createBorrowerAccount({{ $borrower->id }})" title="Add" disabled>
+											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="editBorrowerAccount({{ $borrower->user_id }})" title="Edit Borrower Account" >
 												<i class="fa-solid fa-user-check"></i>
 											</button>
 											@endif
@@ -157,6 +157,11 @@
 					<livewire:borrower.borrower-profile />
 				</div>
 			</div>
+			<div wire.ignore.self class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<livewire:user.user-form />
+			</div>
+		</div>
 			@section('custom_script')
 			@include('layouts.scripts.borrower-scripts')
 			@endsection

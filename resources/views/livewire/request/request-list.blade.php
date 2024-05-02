@@ -50,9 +50,6 @@
 									<th>Requester</th>
 									{{--<th>Category:Type</th>
 									<th>Tool</th>--}}
-
-
-
 									<th>Date Needed</th>
 									<th>Return Date</th>
 									<th>Equipment Category: Type</th>
@@ -342,8 +339,10 @@
 				</div>
 			</div>
 		</div>
+		{{--@if (!empty($this->search)) 
 		<!-- Pagination links -->
 		{{ $requests->links() }}
+		@endif--}}
 	</div>
 	{{-- Modal --}}
 

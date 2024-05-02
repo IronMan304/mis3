@@ -12,6 +12,7 @@ class BorrowerList extends Component
     protected $paginationTheme = 'bootstrap';
     public $perPage = 10;
     public $borrowerId;
+    public $userId;
     public $search = '';
     public $action = '';  //flash
     public $message = '';  //flash
@@ -36,6 +37,21 @@ class BorrowerList extends Component
         $this->emit('borrowerId', $this->borrowerId);
         $this->emit('openRequestModal');
     }
+
+    public function createAccount($borrowerId)
+    {
+        $this->borrowerId = $borrowerId;
+        $this->emit('resetInputFields');
+        $this->emit('borrowerId', $this->borrowerId);
+        $this->emit('openUserModal');
+    }
+    public function editBorrowerAccount($userId)
+    {
+        $this->userId = $userId;
+        $this->emit('userId', $this->userId);
+        $this->emit('openUserModal');
+    }
+
 
     public function createBorrowerAccount($borrowerId)
     {

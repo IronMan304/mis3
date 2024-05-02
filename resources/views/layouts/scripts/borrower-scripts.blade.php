@@ -38,4 +38,12 @@
     window.livewire.on('openBorrowerProfile', () => {
       $('#borrowerProfile').modal('show');
     });
+
+    window.livewire.on('closeUserModal', () => {
+      $('#userModal').modal('hide');
+    });
+
+    window.livewire.on('openUserModal', () => {
+      $('#userModal').modal('show');
+    });
 </script>

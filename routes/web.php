@@ -55,9 +55,9 @@ use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
 //     return view('welcome');
 // });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('users', UserList::class);

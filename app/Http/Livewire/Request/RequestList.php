@@ -301,17 +301,20 @@ class RequestList extends Component
              ->orWhereHas('borrower', function ($query) {
                  $query->where('first_name', 'LIKE', '%' . $this->search . '%')
                      ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
-                     ->orWhere('last_name', 'LIKE', '%' . $this->search . '%');
+                     ->orWhere('last_name', 'LIKE', '%' . $this->search . '%')
+                     ->orWhere('id_number', 'LIKE', '%' . $this->search . '%');
              })
                  ->orWhereHas('tool_keys', function ($query) {
                      $query->whereHas('tools', function ($query) {
                          $query->where('property_number', 'LIKE', '%' . $this->search . '%');
                      });
                  });
-         }
- 
-         // Paginate the filtered requests
+                    // Paginate the filtered requests
          $requests = $query->paginate($this->perPage);
+         }else {
+            $requests = [];
+        }
+ 
          $borrowers = Borrower::all();
          $operators = Operator::all();
          $categories = Category::all();
