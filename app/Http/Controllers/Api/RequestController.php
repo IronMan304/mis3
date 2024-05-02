@@ -211,8 +211,59 @@ class RequestController extends Controller
 
     public function count()
     {
-        $count = Request::count(); // Get the count using your model
-        return response()->json(['count' => $count]);
+        //$count = Request::count(); // Get the count using your model
+
+
+          // Retrieve requests with status_id equal to 11
+          $requests = Request::all();
+
+          $requestsPending = Request::with(['status' => function ($query) {
+            $query->select('id', 'description');
+        }, 'borrower' => function ($query) {
+            $query->select('id', 'first_name');
+        }])
+        ->where('status_id', 11)
+        ->get();
+    
+
+      
+          $requestsReviewed = Request::where('status_id', 16)->get();
+          $requestsApproved = Request::where('status_id', 10)->get();
+          $requestsStarted = Request::where('status_id', 6)->get();
+          $requestsCompleted = Request::where('status_id', 12)->get();
+  
+          // Count the number of requests with status_id equal to 11
+          $countRequests = $requests->count();
+  
+          $countPending = $requestsPending->count();
+          $countReviewed = $requestsReviewed->count();
+          $countApproved = $requestsApproved->count();
+          $countStarted = $requestsStarted->count();
+          $countCompleted = $requestsCompleted->count();
+  
+          // Store request numbers in an array
+          $requestNumbers = $requests->sortByDesc('id');
+  
+          $requestsPending = $requestsPending->sortByDesc('id');
+          $requestsReviewed = $requestsReviewed->sortByDesc('id');
+          $requestsApproved = $requestsApproved->sortByDesc('id');
+          $requestsStarted = $requestsStarted->sortByDesc('id');
+          $requestsCompleted = $requestsCompleted->sortByDesc('id');
+
+          return response()->json([
+            'countRequests' => $countRequests,
+            'countPending' => $countPending,
+            'countReviewed' => $countReviewed,
+            'countApproved' => $countApproved,
+            'countStarted' => $countStarted,
+            'countCompleted' => $countCompleted,
+            'requestNumbers' => $requestNumbers,
+            'requestsPending' => $requestsPending,
+            'requestsReviewed' => $requestsReviewed,
+            'requestsApproved' => $requestsApproved,
+            'requestsStarted' => $requestsStarted,
+            'requestsCompleted' => $requestsCompleted,
+        ]);
     }
 
     // public function tools()
