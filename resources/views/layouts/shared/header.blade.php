@@ -273,7 +273,7 @@
 								'<div class="list-item">' +
 								'<div class="list-left"></div>' +
 								'<div class="list-body">' +
-								'<div ><span class="message-author">' + requestService.id + requestService.request_number + '</span></div>' +
+								'<div ><span class="message-author">' + requestService.request_number + '</span></div>' +
 								'<span class="message-time">' + formattedDateTime + '</span>' +
 
 								'<div class="clearfix"></div>' +
