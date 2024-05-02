@@ -38,7 +38,7 @@ use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
 use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
-
+use App\Http\Controllers\Api\RequestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -58,6 +58,8 @@ use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/get-realtime-count', [RequestController::class, 'count']);
 
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('users', UserList::class);

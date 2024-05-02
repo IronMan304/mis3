@@ -6,6 +6,8 @@
 					<li class="breadcrumb-item"><a href="/">Dashboard</a></li>
 					<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 					<li class="breadcrumb-item active">Request List</li>
+	
+
 				</ul>
 			</div>
 		</div>
@@ -22,14 +24,14 @@
 								<div class="doctor-table-blk">
 									<h3>Request List</h3>
 									<div class="doctor-search-blk">
-									<div class="col-auto text-end float-end ms-auto download-grp">
-								<div class="top-nav-search table-search-blk">
-									<form>
-										<input type="text" id="searchBox" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
-										<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
-									</form>
-								</div>
-							</div>
+										<div class="col-auto text-end float-end ms-auto download-grp">
+											<div class="top-nav-search table-search-blk">
+												<form>
+													<input type="text" id="searchBox" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
+													<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
+												</form>
+											</div>
+										</div>
 										<div class="add-group">
 											<a wire:click="createRequest" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
 											</a>
@@ -37,7 +39,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 						</div>
 					</div>
 

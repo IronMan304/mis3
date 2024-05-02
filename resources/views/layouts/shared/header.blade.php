@@ -42,8 +42,8 @@
 
 
 	<ul class="nav user-menu float-end">
-	{{--	<li class="nav-item dropdown d-none d-md-block">
-			<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><img src="assets/img/icons/note-icon-01.svg" alt=""><span class=" status-pink">{{$count}}</span> </a>
+<li class="nav-item dropdown d-none d-md-block">
+			<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><img src="assets/img/icons/note-icon-01.svg" alt=""><span id="realtime-count" class=" status-pink"></span> </a>
 		</li>
 		<div class="notification-box">
 			<div class="msg-sidebar notifications msg-noti">
@@ -53,8 +53,7 @@
 				</div>
 				<div class="drop-scroll msg-list-scroll" id="msg_list">
 					<ul class="list-box">
-						@if($count)
-						@foreach($requestNumbers as $rn)
+
 						<li>
 
 							<div class="list-item">
@@ -62,17 +61,16 @@
 									<!-- <span class="avatar">R</span> -->
 								</div>
 								<div class="list-body">
-									<a href="{{route('requests', ['rn' => $rn->request_number])}}"><span class="message-author">{{$rn->request_number}} </span> </a>
-									<span class="message-time">{{$rn->created_at}}</span>
+									<a href="{{route('requests')}}"><span class="message-author"> </span> </a>
+									<span class="message-time"></span>
 									<div class="clearfix"></div>
-									<span class="message-content">Status: {{$rn->status->description ?? ''}} </span>
+									<span class="message-content">Status:  </span>
 									<span class="message-content">Requester: Jerecho Rey Inatilleza</span>
 								</div>
 							</div>
 
 						</li>
-						@endforeach
-						@endif
+
 
 					</ul>
 				</div>
@@ -81,7 +79,7 @@
 				</div>
 			</div>
 		</div>
---}}
+
 
 
 
@@ -209,3 +207,28 @@
 	</div>
 </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	
+	// Assuming you're using jQuery for AJAX
+	$(document).ready(function() {
+		function updateRealtimeCount() {
+			$.ajax({
+				url: '/get-realtime-count',
+				type: 'GET',
+				success: function(response) {
+					$('#realtime-count').text(response.count); // Update the count in your HTML
+				},
+				error: function(xhr, status, error) {
+					console.error(error);
+				}
+			});
+		}
+
+		// Call the function initially
+		updateRealtimeCount();
+
+		// Update the count every n seconds (e.g., every 5 seconds)
+		setInterval(updateRealtimeCount, 5000); // Adjust the interval as needed
+	});
+</script>
