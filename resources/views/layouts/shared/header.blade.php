@@ -60,43 +60,41 @@
 
 					</ul>
 				</div>
-				<div class="topnav-dropdown-footer">
-					<a href="chat.html">See all messages</a>
-				</div>
+
 			</div>
 		</div>
 
 
-<li class="nav-item dropdown has-arrow user-profile-list">
-	<a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
-		<div class="user-names">
-			<h5>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h5>
-			<span class="text-capitalize">{{ auth()->user()->roles[0]->name }}</span>
-		</div>
-		<!-- <span class="user-img">
+		<li class="nav-item dropdown has-arrow user-profile-list">
+			<a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
+				<div class="user-names">
+					<h5>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h5>
+					<span class="text-capitalize">{{ auth()->user()->roles[0]->name }}</span>
+				</div>
+				<!-- <span class="user-img">
 					<img src="{{ asset('assets/img/user-06.jpg') }}" alt="Admin">
 				</span> -->
-	</a>
-	<div class="dropdown-menu">
-		<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-			Logout
-			<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-				@csrf
-			</form>
-		</a>
-	</div>
-</li>
+			</a>
+			<div class="dropdown-menu">
+				<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+					Logout
+					<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+						@csrf
+					</form>
+				</a>
+			</div>
+		</li>
 
-<!-- <span class="mx-auto d-block m-auto p-4 text-center">
+		<!-- <span class="mx-auto d-block m-auto p-4 text-center">
 			<a class="nav-item btn-sm" href="{{ route('logout') }}"
 				onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i
 					class="fa-solid fa-right-from-bracket"></i> Logout</a>
 		</span> -->
 
-</ul>
+	</ul>
 
 
-<!-- <div class="dropdown mobile-user-menu float-end">
+	<!-- <div class="dropdown mobile-user-menu float-end">
 		<span>
 			<a class="btn btn-sm btn-primary" href="{{ route('logout') }}"
 				onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -104,18 +102,18 @@
 			</a>
 		</span>
 	</div> -->
-<div class="dropdown mobile-user-menu float-end">
-	<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></a>
-	<div class="dropdown-menu dropdown-menu-end">
-		<!-- <a class="dropdown-item" href="/profile">My Profile</a> -->
-		<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-			Logout
-			<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-				@csrf
-			</form>
-		</a>
+	<div class="dropdown mobile-user-menu float-end">
+		<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></a>
+		<div class="dropdown-menu dropdown-menu-end">
+			<!-- <a class="dropdown-item" href="/profile">My Profile</a> -->
+			<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+				Logout
+				<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+					@csrf
+				</form>
+			</a>
+		</div>
 	</div>
-</div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -135,15 +133,53 @@
 					// Update pending requests list
 					$('#pending-requests-list').empty(); // Clear previous list
 					$.each(response.requestsPending, function(index, request) {
+						// Get the message creation time from request.created_at (assuming it's in UTC)
+						var messageTime = new Date(request.created_at);
+
+						// Convert the message time to Philippine time (UTC+8)
+						messageTime.setHours(messageTime.getHours() + 8);
+
+						// Format date
+						var formattedDate = messageTime.toLocaleDateString('en-US', {
+							year: 'numeric',
+							month: 'short',
+							day: 'numeric'
+						});
+
+						// Format time
+						var formattedTime = messageTime.toLocaleTimeString('en-US', {
+							hour: 'numeric',
+							minute: 'numeric',
+							hour12: true
+						});
+
+						// Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+						var dayOfWeek = messageTime.getDay();
+
+						// Define an array to map the day of the week to its name
+						var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+						// Get the day name
+						var dayName = daysOfWeek[dayOfWeek];
+
+						// Check if the message was sent today
+						var today = new Date();
+						var isToday = today.toDateString() === messageTime.toDateString();
+
+						// Format the time string
+						var formattedDateTime = formattedDate + ', ' + formattedTime + " " + (isToday ? 'today' : dayName);
 						$('#pending-requests-list').append(
 							'<li>' +
 							'<div class="list-item">' +
 							'<div class="list-left"></div>' +
 							'<div class="list-body">' +
 							'<div href="{{ route("requests") }}"><span class="message-author">' + request.request_number + '</span></div>' +
-							'<span class="message-time">' + request.created_at + '</span>' +
+							'<span class="message-time">' + formattedDateTime  + '</span>' +
+
 							'<div class="clearfix"></div>' +
-							
+							'<div class="message-content status-pink">' + 'Status: ' + request.status.description + '</div>' +
+							'<div class="message-content">' + 'Requester: ' + request.borrower.first_name + ' ' + request.borrower.middle_name + ' ' + request.borrower.last_name + '</div>' +
+
 							'</div>' +
 							'</div>' +
 							'</li>'

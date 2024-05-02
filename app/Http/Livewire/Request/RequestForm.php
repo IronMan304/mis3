@@ -30,7 +30,7 @@ class RequestForm extends Component
 
     public function mount()
     {
-        if (auth()->user()->hasRole('requester')) {
+        if (auth()->user()->hasRole('requester') || auth()->user()->hasRole('student') || auth()->user()->hasRole('faculty') || auth()->user()->hasRole('guest')) {
             $this->borrower_id = Borrower::where('user_id', auth()->user()->id)->value('id');
             $this->first_name = Borrower::where('user_id', auth()->user()->id)->value('first_name');
             $this->position_id = Borrower::where('user_id', auth()->user()->id)->value('position_id');
@@ -88,7 +88,7 @@ class RequestForm extends Component
         $data = $this->validate([
             'user_id' => 'nullable',
             //'dt_requested_user_id' => 'nullable',
-            'borrower_id' => auth()->user()->hasRole('requester') ? 'nullable' : 'required',
+            'borrower_id' => auth()->user()->hasRole('requester') || auth()->user()->hasRole('student') || auth()->user()->hasRole('faculty') || auth()->user()->hasRole('guest') ? 'nullable' : 'required',
             'option_id' => 'required',
             'estimated_return_date' => 'required|date',
             'purpose' => 'nullable',
@@ -105,27 +105,27 @@ class RequestForm extends Component
         $borrower = Borrower::findOrFail($this->borrower_id);
         // Get the current year
         $currentYear = date('Y');
-
+        
         $position = $borrower->position->description;
         $prefix = strtoupper(substr($position, 0, 1)); // Capitalize the first letter of the position
-
+        
         // Get the last request number for the current year
         $lastRequestNumber = DB::table('requests')
-            ->where('request_number', 'like', $currentYear . '%')
+            ->where('request_number', 'like', $prefix . 'ER' . $currentYear . '%')
             ->max('request_number');
-
+        
         // Extract the number part and increment it
         if ($lastRequestNumber) {
-            $lastNumber = (int)substr($lastRequestNumber, 4); // Assuming the year is 4 characters
+            $lastNumber = (int)substr($lastRequestNumber, -4); // Extract the last 4 digits
             $newNumber = $lastNumber + 1;
         } else {
             // If no previous request number exists, start with 1
             $newNumber = 1;
         }
-
+        
         // Pad the number with leading zeros if necessary
         $newNumberPadded = str_pad($newNumber, 4, '0', STR_PAD_LEFT);
-
+        
         // Generate the new request number
         $data['request_number'] = $prefix . 'ER' . $currentYear . $newNumberPadded;
 
@@ -133,7 +133,7 @@ class RequestForm extends Component
         //$data['dt_requested_user_id'] = auth()->user()->id;
 
         // Check if the user has the "requester" role
-        if (auth()->user()->hasRole('requester')) {
+        if (auth()->user()->hasRole('requester') || auth()->user()->hasRole('student') || auth()->user()->hasRole('faculty') || auth()->user()->hasRole('guest')) {
             // Fetch the user_id from the Borrower table using the authenticated user's id
             $data['borrower_id'] = Borrower::where('user_id', auth()->user()->id)->value('id');
         }

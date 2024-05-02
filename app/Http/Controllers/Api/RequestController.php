@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Models\RequestToolToolSecurityKey;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class RequestController extends Controller
@@ -95,10 +97,43 @@ class RequestController extends Controller
             'date_needed' => 'nullable|date',
         ]);
 
+        $data['dt_requested_user_id'] = auth()->user()->id;
+        $data['dt_requested'] = Carbon::now()->setTimezone('Asia/Manila');
+
         // Assign authenticated user's id to borrower_id if the user has the "requester" role
-        if (auth()->user()->hasRole('requester')) {
+        if (auth()->user()->hasRole('requester') || auth()->user()->hasRole('student') || auth()->user()->hasRole('faculty') || auth()->user()->hasRole('guest')) {
             $data['borrower_id'] = Borrower::where('user_id', auth()->user()->id)->value('id');
         }
+
+        $borrower = Borrower::findOrFail($data['borrower_id']);
+        // Get the current year
+        $currentYear = date('Y');
+        
+        $position = $borrower->position->description;
+        $prefix = strtoupper(substr($position, 0, 1)); // Capitalize the first letter of the position
+        
+        // Get the last request number for the current year
+        $lastRequestNumber = DB::table('requests')
+            ->where('request_number', 'like', $prefix . 'ER' . $currentYear . '%')
+            ->max('request_number');
+        
+        // Extract the number part and increment it
+        if ($lastRequestNumber) {
+            $lastNumber = (int)substr($lastRequestNumber, -4); // Extract the last 4 digits
+            $newNumber = $lastNumber + 1;
+        } else {
+            // If no previous request number exists, start with 1
+            $newNumber = 1;
+        }
+        
+        // Pad the number with leading zeros if necessary
+        $newNumberPadded = str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+        
+        // Generate the new request number
+        $data['request_number'] = $prefix . 'ER' . $currentYear . $newNumberPadded;
+        
+
+        
 
         // Set the default status_id for non-admin requests
         $data['status_id'] = 11; // Pending
@@ -130,6 +165,8 @@ class RequestController extends Controller
                     'request_id' => $request->id,
                     'tool_id' => $toolId,
                     'status_id' => 14, // "In request"
+                    'dt_requested_user_id' => auth()->user()->id,
+                    'dt_requested' => Carbon::now()->setTimezone('Asia/Manila'),
                 ]);
 
                 // Fetch all security_ids for the current tool
@@ -220,9 +257,10 @@ class RequestController extends Controller
           $requestsPending = Request::with(['status' => function ($query) {
             $query->select('id', 'description');
         }, 'borrower' => function ($query) {
-            $query->select('id', 'first_name');
+            $query->select('id', 'first_name', 'middle_name', 'last_name');
         }])
         ->where('status_id', 11)
+        ->orderBy('id', 'desc')
         ->get();
     
 

@@ -65,7 +65,7 @@ class ServiceRequestController extends Controller
         $tool = Tool::findOrFail($data['tool_id']);
         if ($tool->status_id == 1) {
             // Assign authenticated user's id to borrower_id if the user has the "requester" role
-            if (auth()->user()->hasRole('requester')) {
+            if (auth()->user()->hasRole('requester') || auth()->user()->hasRole('student') || auth()->user()->hasRole('faculty') || auth()->user()->hasRole('guest')) {
                 $data['borrower_id'] = Borrower::where('user_id', auth()->user()->id)->value('id');
             }
 
