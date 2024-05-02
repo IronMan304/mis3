@@ -42,27 +42,41 @@
 
 
 	<ul class="nav user-menu float-end">
-		<li class="nav-item dropdown d-none d-md-block">
-			<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><img src="assets/img/icons/note-icon-01.svg" alt=""><span id="count-pending" class=" status-pink"></span> </a>
-		</li>
-		<div class="notification-box">
-			<div class="msg-sidebar notifications msg-noti">
-				<div class="topnav-dropdown-header">
-					<span>All Equipment Requests</span>
+	<li class="nav-item dropdown d-none d-md-block">
+    <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link">
+        <img src="assets/img/icons/note-icon-01.svg" alt="">
+        <span id="count-pending" class="status-pink"></span>
+    </a>
+</li>
 
-				</div>
+<div class="notification-box">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs nav-tabs-solid">
+            <li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab">Equipment</a></li>
+            <li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Service</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane show active" id="solid-tab1">
+                <div class="msg-sidebar notifications msg-noti">
+                    <div class="topnav-dropdown-header">
+                        <span>All Equipment Requests</span>
+                    </div>
+                    <div id="msg_list">
+                        <ul class="list-box" id="pending-requests-list">
+                            <!-- Content for pending requests goes here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="solid-tab2">
+                <!-- Content for tab 2 goes here -->
+                Tab content 2
+            </div>
+        </div>
+    </div>
+</div>
 
-				<div class="drop-scroll msg-list-scroll" id="msg_list">
-					<ul class="list-box" id="pending-requests-list">
 
-
-
-
-					</ul>
-				</div>
-
-			</div>
-		</div>
 
 
 		<li class="nav-item dropdown has-arrow user-profile-list">
@@ -125,10 +139,10 @@
 				success: function(response) {
 					$('#count-requests').text(response.countRequests);
 					$('#count-pending').text(response.countPending);
-					$('#count-reviewed').text(response.countReviewed);
-					$('#count-approved').text(response.countApproved);
-					$('#count-started').text(response.countStarted);
-					$('#count-completed').text(response.countCompleted);
+					// $('#count-reviewed').text(response.countReviewed);
+					// $('#count-approved').text(response.countApproved);
+					// $('#count-started').text(response.countStarted);
+					// $('#count-completed').text(response.countCompleted);
 
 					// Update pending requests list
 					$('#pending-requests-list').empty(); // Clear previous list
@@ -173,8 +187,8 @@
 							'<div class="list-item">' +
 							'<div class="list-left"></div>' +
 							'<div class="list-body">' +
-							'<div href="{{ route("requests") }}"><span class="message-author">' + request.request_number + '</span></div>' +
-							'<span class="message-time">' + formattedDateTime  + '</span>' +
+							'<div ><span class="message-author">' + request.id + request.request_number + '</span></div>' +
+							'<span class="message-time">' + formattedDateTime + '</span>' +
 
 							'<div class="clearfix"></div>' +
 							'<div class="message-content status-pink">' + 'Status: ' + request.status.description + '</div>' +

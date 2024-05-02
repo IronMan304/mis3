@@ -3,11 +3,12 @@
 namespace App\Http\Livewire\ServiceRequest;
 
 use App\Models\Tool;
+use App\Models\Source;
 use App\Models\Service;
 use Livewire\Component;
 use App\Models\Borrower;
 use App\Models\ServiceRequest;
-use App\Models\Source;
+use Illuminate\Support\Facades\DB;
 
 class ServiceRequestForm extends Component
 {
@@ -59,6 +60,33 @@ class ServiceRequestForm extends Component
             'source_id' => 'required',
             'tool_status_id' => 'nullable',
         ]);
+
+        $borrower = Borrower::findOrFail($this->borrower_id);
+        // Get the current year
+        $currentYear = date('Y');
+        
+        $position = $borrower->position->description;
+        $prefix = strtoupper(substr($position, 0, 1)); // Capitalize the first letter of the position
+        
+        // Get the last request number for the current year
+        $lastRequestNumber = DB::table('service_requests')
+            ->where('request_number', 'like', $prefix . 'SR' . $currentYear . '%')
+            ->max('request_number');
+        
+        // Extract the number part and increment it
+        if ($lastRequestNumber) {
+            $lastNumber = (int)substr($lastRequestNumber, -4); // Extract the last 4 digits
+            $newNumber = $lastNumber + 1;
+        } else {
+            // If no previous request number exists, start with 1
+            $newNumber = 1;
+        }
+        
+        // Pad the number with leading zeros if necessary
+        $newNumberPadded = str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+        
+        // Generate the new request number
+        $data['request_number'] = $prefix . 'SR' . $currentYear . $newNumberPadded;
 
         $tool = Tool::findOrFail($this->tool_id);
         $data['tool_status_id'] = 14; //In Request

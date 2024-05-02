@@ -60,6 +60,7 @@ use App\Http\Controllers\Api\RequestController;
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/get-realtime-count', [RequestController::class, 'count']);
+Route::get('/get-realtime-count-service', [RequestController::class, 'countService']);
 
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('users', UserList::class);

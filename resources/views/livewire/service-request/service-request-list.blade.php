@@ -44,6 +44,7 @@
 						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
+									<th>Request Number</th>
 									<td>Requester</td>
 									<th>Source</th>
 									<th>Service</th>
@@ -58,6 +59,9 @@
 							<tbody>
 								@foreach ($service_requests as $service_request)
 								<tr>
+									<td>
+									{{ $service_request->request_number ?? ''}}
+									</td>
 									<td>
 										{{ $service_request->borrower->first_name ?? ''}}
 									</td>
