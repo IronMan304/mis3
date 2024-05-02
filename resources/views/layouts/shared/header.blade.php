@@ -42,39 +42,47 @@
 
 
 	<ul class="nav user-menu float-end">
-	<li class="nav-item dropdown d-none d-md-block">
-    <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link">
-        <img src="assets/img/icons/note-icon-01.svg" alt="">
-        <span id="count-pending" class="status-pink"></span>
-    </a>
-</li>
+		<li class="nav-item dropdown d-none d-md-block">
+			<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link">
+				<img src="assets/img/icons/note-icon-01.svg" alt="">
+				<span id="count-pending" class="status-pink"></span>
+			</a>
+		</li>
 
-<div class="notification-box">
-    <div class="col-md-12">
-        <ul class="nav nav-tabs nav-tabs-solid">
-            <li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab">Equipment</a></li>
-            <li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Service</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane show active" id="solid-tab1">
-                <div class="msg-sidebar notifications msg-noti">
-                    <div class="topnav-dropdown-header">
-                        <span>All Equipment Requests</span>
-                    </div>
-                    <div id="msg_list">
-                        <ul class="list-box" id="pending-requests-list">
-                            <!-- Content for pending requests goes here -->
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane" id="solid-tab2">
-                <!-- Content for tab 2 goes here -->
-                Tab content 2
-            </div>
-        </div>
-    </div>
-</div>
+		<div class="notification-box">
+			<div class="col-md-12">
+				<ul class="nav nav-tabs nav-tabs-solid">
+					<li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab">Equipment</a></li>
+					<li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Service</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane show active" id="solid-tab1">
+						<div class="msg-sidebar notifications msg-noti">
+							<div class="topnav-dropdown-header">
+								<span>All Pending Equipment Requests</span>
+							</div>
+							<div id="msg_list">
+								<ul class="list-box" id="pending-requests-list">
+									<!-- Content for pending requests goes here -->
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="solid-tab2">
+						<div class="msg-sidebar notifications msg-noti">
+							<div class="topnav-dropdown-header">
+								<span id="count-pending-service"><span>All Pending Service Requests</span>
+							</div>
+							<div id="msg_list1">
+								<ul class="list-box" id="pending-requests-list-service">
+									<!-- Content for pending requests goes here -->
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
 
@@ -187,7 +195,7 @@
 							'<div class="list-item">' +
 							'<div class="list-left"></div>' +
 							'<div class="list-body">' +
-							'<div ><span class="message-author">' + request.id + request.request_number + '</span></div>' +
+							'<div ><span class="message-author">' + request.request_number + '</span></div>' +
 							'<span class="message-time">' + formattedDateTime + '</span>' +
 
 							'<div class="clearfix"></div>' +
@@ -206,10 +214,95 @@
 			});
 		}
 
+		function updateRealtimeCountService() {
+			$.ajax({
+				url: '/get-realtime-count-service', // Update with the correct URL
+				type: 'GET',
+				success: function(response) {
+					// Check if countPendingService is not null before updating the UI
+					if (response.countPendingService !== null) {
+						$('#count-pending-service').text(response.countPendingService);
+					} else {
+						// Handle null value, for example, display a message or set a default value
+						$('#count-pending-service').text('N/A');
+					}
+
+					// Update pending requests list
+					$('#pending-requests-list-service').empty(); // Clear previous list
+					if (response.requestsPendingService !== null) {
+						$.each(response.requestsPendingService, function(index, requestService) {
+							// Get the message creation time from requestService.created_at (assuming it's in UTC)
+							var messageTime = new Date(requestService.created_at);
+
+							// Convert the message time to Philippine time (UTC+8)
+							messageTime.setHours(messageTime.getHours() + 8);
+
+							// Format date
+							var formattedDate = messageTime.toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric'
+							});
+
+							// Format time
+							var formattedTime = messageTime.toLocaleTimeString('en-US', {
+								hour: 'numeric',
+								minute: 'numeric',
+								hour12: true
+							});
+
+							// Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+							var dayOfWeek = messageTime.getDay();
+
+							// Define an array to map the day of the week to its name
+							var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+							// Get the day name
+							var dayName = daysOfWeek[dayOfWeek];
+
+							// Check if the message was sent today
+							var today = new Date();
+							var isToday = today.toDateString() === messageTime.toDateString();
+
+							// Format the time string
+							var formattedDateTime = formattedDate + ', ' + formattedTime + " " + (isToday ? 'today' : dayName);
+							$('#pending-requests-list-service').append(
+								'<li>' +
+								'<div class="list-item">' +
+								'<div class="list-left"></div>' +
+								'<div class="list-body">' +
+								'<div ><span class="message-author">' + requestService.request_number + '</span></div>' +
+								'<span class="message-time">' + formattedDateTime + '</span>' +
+
+								'<div class="clearfix"></div>' +
+								'<div class="message-content status-pink">' + 'Status: ' + requestService.status.description + '</div>' +
+								'<div class="message-content">' + 'Requester: ' + requestService.borrower.first_name + ' ' + requestService.borrower.middle_name + ' ' + requestService.borrower.last_name + '</div>' +
+
+								'</div>' +
+								'</div>' +
+								'</li>'
+							);
+						});
+					} else {
+						// Handle null value, for example, display a message or show a placeholder
+						$('#pending-requests-list-service').append('<li>No pending service requests</li>');
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error(error);
+				}
+			});
+		}
+
+
 		// Call the function initially
 		updateRealtimeCount();
-
-		// Update the count every n seconds (e.g., every 5 seconds)
-		setInterval(updateRealtimeCount, 5000); // Adjust the interval as needed
+		// Call the function initially
+		updateRealtimeCountService();
+ // Update the counts every 5 seconds
+ setInterval(function() {
+            updateRealtimeCount();
+            updateRealtimeCountService();
+        }, 5000);
 	});
 </script>

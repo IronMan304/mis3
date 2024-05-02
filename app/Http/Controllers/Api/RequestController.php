@@ -311,9 +311,9 @@ class RequestController extends Controller
 
 
         // Retrieve requests with status_id equal to 11
-        $requests = ServiceRequest::all();
+        $serviceRequests = ServiceRequest::all();
 
-        $requestsPending = ServiceRequest::with(['status' => function ($query) {
+        $requestsPendingService = ServiceRequest::with(['status' => function ($query) {
             $query->select('id', 'description');
         }, 'borrower' => function ($query) {
             $query->select('id', 'first_name', 'middle_name', 'last_name');
@@ -324,42 +324,42 @@ class RequestController extends Controller
 
 
 
-        $requestsReviewed = ServiceRequest::where('status_id', 16)->get();
-        $requestsApproved = ServiceRequest::where('status_id', 10)->get();
-        $requestsStarted = ServiceRequest::where('status_id', 6)->get();
-        $requestsCompleted = ServiceRequest::where('status_id', 12)->get();
+        // $requestsReviewed = ServiceRequest::where('status_id', 16)->get();
+        // $requestsApproved = ServiceRequest::where('status_id', 10)->get();
+        // $requestsStarted = ServiceRequest::where('status_id', 6)->get();
+        // $requestsCompleted = ServiceRequest::where('status_id', 12)->get();
 
         // Count the number of requests with status_id equal to 11
-        $countRequests = $requests->count();
+        // $countRequests = $requests->count();
 
-        $countPending = $requestsPending->count();
-        $countReviewed = $requestsReviewed->count();
-        $countApproved = $requestsApproved->count();
-        $countStarted = $requestsStarted->count();
-        $countCompleted = $requestsCompleted->count();
+        $countPendingService = $requestsPendingService->count();
+        // $countReviewed = $requestsReviewed->count();
+        // $countApproved = $requestsApproved->count();
+        // $countStarted = $requestsStarted->count();
+        // $countCompleted = $requestsCompleted->count();
 
-        // Store request numbers in an array
-        $requestNumbers = $requests->sortByDesc('id');
+        // // Store request numbers in an array
+        // $requestNumbers = $requests->sortByDesc('id');
 
-        $requestsPending = $requestsPending->sortByDesc('id');
-        $requestsReviewed = $requestsReviewed->sortByDesc('id');
-        $requestsApproved = $requestsApproved->sortByDesc('id');
-        $requestsStarted = $requestsStarted->sortByDesc('id');
-        $requestsCompleted = $requestsCompleted->sortByDesc('id');
+        // $requestsPending = $requestsPending->sortByDesc('id');
+        // $requestsReviewed = $requestsReviewed->sortByDesc('id');
+        // $requestsApproved = $requestsApproved->sortByDesc('id');
+        // $requestsStarted = $requestsStarted->sortByDesc('id');
+        // $requestsCompleted = $requestsCompleted->sortByDesc('id');
 
         return response()->json([
-            'countRequests' => $countRequests,
-            'countPending' => $countPending,
-            'countReviewed' => $countReviewed,
-            'countApproved' => $countApproved,
-            'countStarted' => $countStarted,
-            'countCompleted' => $countCompleted,
-            'requestNumbers' => $requestNumbers,
-            'requestsPending' => $requestsPending,
-            'requestsReviewed' => $requestsReviewed,
-            'requestsApproved' => $requestsApproved,
-            'requestsStarted' => $requestsStarted,
-            'requestsCompleted' => $requestsCompleted,
+            // 'countRequests' => $countRequests,
+            'countPendingService' => $countPendingService,
+            // 'countReviewed' => $countReviewed,
+            // 'countApproved' => $countApproved,
+            // 'countStarted' => $countStarted,
+            // 'countCompleted' => $countCompleted,
+            // 'requestNumbers' => $requestNumbers,
+            'requestsPendingService' => $requestsPendingService,
+            // 'requestsReviewed' => $requestsReviewed,
+            // 'requestsApproved' => $requestsApproved,
+            // 'requestsStarted' => $requestsStarted,
+            // 'requestsCompleted' => $requestsCompleted,
         ]);
     }
 
