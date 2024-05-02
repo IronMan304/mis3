@@ -46,16 +46,18 @@
 			<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link">
 				<img src="assets/img/icons/note-icon-01.svg" alt="">
 				<span id="count-pending" class="status-pink"></span>
+				<span id="count-pending-service" class="status-pink"></span>
 			</a>
 		</li>
 
 		<div class="notification-box">
 			<div class="col-md-12">
+				
+				<div class="tab-content">
 				<ul class="nav nav-tabs nav-tabs-solid">
 					<li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab">Equipment</a></li>
 					<li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Service</a></li>
 				</ul>
-				<div class="tab-content">
 					<div class="tab-pane show active" id="solid-tab1">
 						<div class="msg-sidebar notifications msg-noti">
 							<div class="topnav-dropdown-header">
@@ -71,7 +73,7 @@
 					<div class="tab-pane" id="solid-tab2">
 						<div class="msg-sidebar notifications msg-noti">
 							<div class="topnav-dropdown-header">
-								<span id="count-pending-service"><span>All Pending Service Requests</span>
+								<span ><span>All Pending Service Requests</span>
 							</div>
 							<div id="msg_list1">
 								<ul class="list-box" id="pending-requests-list-service">
@@ -271,7 +273,7 @@
 								'<div class="list-item">' +
 								'<div class="list-left"></div>' +
 								'<div class="list-body">' +
-								'<div ><span class="message-author">' + requestService.request_number + '</span></div>' +
+								'<div ><span class="message-author">' + requestService.id + requestService.request_number + '</span></div>' +
 								'<span class="message-time">' + formattedDateTime + '</span>' +
 
 								'<div class="clearfix"></div>' +
