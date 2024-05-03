@@ -6,7 +6,7 @@
 					<li class="breadcrumb-item"><a href="/">Dashboard</a></li>
 					<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 					<li class="breadcrumb-item active">Request List</li>
-	
+
 
 				</ul>
 			</div>
@@ -157,9 +157,9 @@
 									</td>
 
 									<td>
-										@if ($request->request_operator_keys->isNotEmpty())
-										@foreach ($request->request_operator_keys as $request_operator_key)
-										{{ $request_operator_key->operators->first_name ?? 'n'}} {{ $request_operator_key->operators->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
+										@if ($request->RequestOperatorKey->isNotEmpty())
+										@foreach ($request->RequestOperatorKey as $request_operator_key)
+										{{ $request_operator_key->operator->first_name ?? 'n'}} {{ $request_operator_key->operator->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
 
 										@if (!$loop->last)
 										{{-- Add a Space or separator between department names --}}

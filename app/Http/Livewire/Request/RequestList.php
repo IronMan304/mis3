@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Request;
 use Carbon\Carbon;
 use App\Models\Tool;
 use App\Models\Type;
+use App\Models\User;
 use App\Models\Status;
 use App\Models\Request;
 use Livewire\Component;
@@ -32,7 +33,7 @@ class RequestList extends Component
     public $dateFrom;
     public $dateTo;
     public $date;
-    public $borrower_id, $category_id, $tool_type_id, $tool_id, $operator_id, $status_id;
+    public $borrower_id, $category_id, $tool_type_id, $tool_id, $operator_id, $status_id, $operator1_id;
 
     protected $listeners = [
         'refreshParentRequest' => '$refresh',
@@ -240,6 +241,12 @@ class RequestList extends Component
                  $query->where('operator_id', $this->operator_id);
              });
          }
+
+         if (!empty($this->operator1_id)) {
+            $query->whereHas('RequestOperatorKey', function ($query) {
+                $query->where('operator1_id', $this->operator1_id);
+            });
+        }
          if (!empty($this->category_id)) {
              $query->whereHas('tool_keys', function ($query) {
                  $query->whereHas('tools', function ($query) {
@@ -316,7 +323,8 @@ class RequestList extends Component
         }
  
          $borrowers = Borrower::all();
-         $operators = Operator::all();
+         //$operators = Operator::all();
+         $operators = User::role('operator')->get();
          $categories = Category::all();
          $types = Type::all();
          $tools = Tool::all();

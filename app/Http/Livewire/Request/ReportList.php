@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Request;
 use Carbon\Carbon;
 use App\Models\Tool;
 use App\Models\Type;
+use App\Models\User;
 use App\Models\Status;
 use App\Models\Request;
 use Livewire\Component;
@@ -26,7 +27,7 @@ class ReportList extends Component
     public $dateFrom;
     public $dateTo;
     public $date;
-    public $borrower_id, $category_id, $tool_type_id, $tool_id, $operator_id, $status_id;
+    public $borrower_id, $category_id, $tool_type_id, $tool_id, $operator_id, $status_id, $operator1_id;
     public $rn;
 
     protected $listeners = [
@@ -51,7 +52,7 @@ class ReportList extends Component
     }
     public function resetFilters()
     {
-        $this->reset(['tool_type_id', 'borrower_id', 'category_id', 'type_id', 'tool_id', 'operator_id', 'status_id']);
+        $this->reset(['tool_type_id', 'borrower_id', 'category_id', 'type_id', 'tool_id', 'operator_id', 'status_id', 'operator1_id']);
         $this->dateFrom = null;
         $this->date = null;
         $this->dateTo = null;
@@ -101,9 +102,15 @@ class ReportList extends Component
         if (!empty($this->borrower_id)) {
             $query->where('borrower_id', $this->borrower_id);
         }
-        if (!empty($this->operator_id)) {
-            $query->whereHas('request_operator_keys', function ($query) {
-                $query->where('operator_id', $this->operator_id);
+        // if (!empty($this->operator_id)) {
+        //     $query->whereHas('request_operator_keys', function ($query) {
+        //         $query->where('operator_id', $this->operator_id);
+        //     });
+        // }
+
+        if (!empty($this->operator1_id)) {
+            $query->whereHas('RequestOperatorKey', function ($query) {
+                $query->where('operator1_id', $this->operator1_id);
             });
         }
         if (!empty($this->category_id)) {
@@ -179,7 +186,8 @@ class ReportList extends Component
         // Paginate the filtered requests
         $requests = $query->paginate($this->perPage);
         $borrowers = Borrower::all();
-        $operators = Operator::all();
+        //$operators = Operator::all();
+        $operators = User::role('operator')->get();
         $categories = Category::all();
         $types = Type::all();
         $tools = Tool::all();

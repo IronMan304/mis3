@@ -126,9 +126,9 @@
                             </td>
 
                            {} <td>
-                              @if ($request->request_operator_keys->isNotEmpty())
-                              @foreach ($request->request_operator_keys as $request_operator_key)
-                              {{ $request_operator_key->operators->first_name ?? 'n'}} {{ $request_operator_key->operators->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
+                              @if ($request->RequestOperatorKey->isNotEmpty())
+                              @foreach ($request->RequestOperatorKey as $request_operator_key)
+                              {{ $request_operator_key->operator->first_name ?? 'n'}} {{ $request_operator_key->operator->last_name ?? ''}} {{ $RequestOperatorKey->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
 
                               @if (!$loop->last)
                               {{-- Add a Space or separator between department names --}}

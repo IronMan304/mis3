@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Request;
 
 use Carbon\Carbon;
 use App\Models\Tool;
+use App\Models\User;
 use App\Models\Option;
 use App\Models\Request;
 use Livewire\Component;
@@ -36,8 +37,8 @@ class RequestStartForm extends Component
         $this->requestId = $requestId;
         $request = Request::whereId($requestId)->first();
         $this->option_id = $request->option_id;
-        $this->operatorItems = $request->request_operator_keys->map(function ($operator) {
-            return $operator->operator_id;
+        $this->operatorItems = $request->RequestOperatorKey->map(function ($operator) {
+            return $operator->operator1_id;
         })->toArray();
         $this->approval_toolItems = $request->tool_keys->map(function ($tool) {
             return $tool->tool_id;
@@ -57,7 +58,7 @@ class RequestStartForm extends Component
                 foreach ($this->operatorItems as $operatorId) {
                     RequestOperatorKey::create([
                         'request_id' => $this->requestId,
-                        'operator_id' => $operatorId,
+                        'operator1_id' => $operatorId,
                     ]);
                 }
                 $request = Request::find($this->requestId);
@@ -100,7 +101,8 @@ class RequestStartForm extends Component
     public function render()
     {
         $options = Option::all();
-        $operators = Operator::all();
+        // $operators = Operator::all();
+        $operators = User::role('operator')->get();
         return view('livewire.request.request-start-form', [
             'options' => $options,
             'operators' => $operators,

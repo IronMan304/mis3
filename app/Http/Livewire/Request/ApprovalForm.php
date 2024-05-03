@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Request;
 
 use Carbon\Carbon;
 use App\Models\Tool;
+use App\Models\User;
 use App\Models\Option;
 use App\Models\Status;
 use App\Models\Request;
@@ -62,8 +63,12 @@ class ApprovalForm extends Component
             return $tool->tools;
         })->flatten();
 
-        $this->operatorItems = $return->request_operator_keys->map(function ($operator) {
-            return $operator->operator_id;
+        // $this->operatorItems = $return->request_operator_keys->map(function ($operator) {
+        //     return $operator->operator_id;
+        // })->toArray();
+
+        $this->operatorItems = $return->RequestOperatorKey->map(function ($operator) {
+            return $operator->operator1_id;
         })->toArray();
 
         // Populate toolItems with the IDs of associated tools
@@ -135,7 +140,7 @@ class ApprovalForm extends Component
                 foreach ($this->operatorItems as $operatorId) {
                     RequestOperatorKey::create([
                         'request_id' => $this->approvalId,
-                        'operator_id' => $operatorId,
+                        'operator1_id' => $operatorId,
                     ]);
                 }
 
@@ -221,7 +226,8 @@ class ApprovalForm extends Component
         $borrowers = Borrower::all();
         $tools = Tool::all();
         $tool_requests = ToolRequest::all();
-        $operators = Operator::all();
+       // $operators = Operator::all();
+        $operators = User::role('operator')->get();
 
         $requests  = Request::with('tool_keys.tools.type')->get();
 
