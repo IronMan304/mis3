@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        {{--<div class="col-md-6">
                             <div class="form-group local-forms">
                                 <label>Position
                                 </label>
@@ -62,7 +62,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div>--}}
                         <div class="col-md-6">
                             <div class="form-group local-forms">
                                 <label>Honorific
