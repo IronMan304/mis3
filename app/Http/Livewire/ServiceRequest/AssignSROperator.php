@@ -3,16 +3,17 @@
 namespace App\Http\Livewire\ServiceRequest;
 
 use App\Models\Tool;
+use App\Models\User;
+use App\Models\Source;
 use App\Models\Service;
 use Livewire\Component;
 use App\Models\Borrower;
 use App\Models\Operator;
 use App\Models\ServiceRequest;
-use App\Models\Source;
 
 class AssignSROperator extends Component
 {
-    public $serviceRequestId, $status_id, $errorMessage, $operator_id, $set_date, $tool_id, $tool_status_id;
+    public $serviceRequestId, $status_id, $errorMessage, $operator_id, $set_date, $tool_id, $tool_status_id, $technician_id;
     public $action = '';  //flash
     public $message = '';  //flash
 
@@ -105,6 +106,12 @@ class AssignSROperator extends Component
         $tools = Tool::all();
         $sources = Source::all();
         $operators = Operator::all();
+        $technicians = User::role('technician')->get();
+
+        // $technicians = User::whereHas('roles', function ($query) {
+        //     $query->where('role_id', 12); // Assuming 12 is the role ID for "technician"
+        // })->get();
+        
 
         return view('livewire.service-request.assign-s-r-operator', [
             'borrowers' => $borrowers,
@@ -112,6 +119,7 @@ class AssignSROperator extends Component
             'tools' => $tools,
             'errorMessage' => $this->errorMessage,
             'sources' => $sources,
+            'technicians' => $technicians,
             'operators' => $operators,
         ]);
     }

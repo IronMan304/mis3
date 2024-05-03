@@ -22,21 +22,25 @@
 								<div class="doctor-table-blk">
 									<h3>Service Request List</h3>
 									<div class="doctor-search-blk">
+
+										<div class="col-auto text-end float-end ms-auto download-grp">
+											<div class="top-nav-search table-search-blk">
+												<form>
+													<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
+													<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
+												</form>
+											</div>
+										</div>
+
 										<div class="add-group">
 											<a wire:click="createServiceRequest" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
 											</a>
 										</div>
+
 									</div>
 								</div>
 							</div>
-							<div class="col-auto text-end float-end ms-auto download-grp">
-								<div class="top-nav-search table-search-blk">
-									<form>
-										<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
-										<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
-									</form>
-								</div>
-							</div>
+
 						</div>
 					</div>
 
@@ -60,7 +64,7 @@
 								@foreach ($service_requests as $service_request)
 								<tr>
 									<td>
-									{{ $service_request->request_number ?? ''}}
+										{{ $service_request->request_number ?? ''}}
 									</td>
 									<td>
 										{{ $service_request->borrower->first_name ?? ''}}
@@ -77,8 +81,11 @@
 									<td>
 										{{ $service_request->tool->property_number ?? ''}}: {{ $service_request->ToolStatus->description ?? ''}}
 									</td>
-									<td>
+									{{--<td>
 										{{ $service_request->operator->first_name ?? 'TBA'}}
+									</td>--}}
+									<td>
+										{{ $service_request->Technician->first_name ?? 'TBA'}} {{ $service_request->Technician->middle_name ?? ''}} {{ $service_request->Technician->last_name ?? ''}}
 									</td>
 									<td>
 										{{ $service_request->set_date ?? ''}}
@@ -115,7 +122,7 @@
 											</button> -->
 											@can('view-service-requests-delete')
 											<a class="btn btn-danger btn-sm mx-1" wire:click="deleteServiceRequest({{ $service_request->id }})" title="Delete">
-											<i class="fa fa-trash"></i>
+												<i class="fa fa-trash"></i>
 											</a>
 											@endcan
 										</div>
@@ -129,8 +136,9 @@
 				</div>
 			</div>
 		</div>
-		<!-- Pagination links -->
+		{{--<!-- Pagination links -->
 		{{ $service_requests->links() }}
+		--}}
 	</div>
 	<div wire.ignore.self class="modal fade" id="serviceRequestModal" tabindex="-1" role="dialog" aria-labelledby="serviceRequestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 		<div class="modal-dialog modal-dialog-centered">

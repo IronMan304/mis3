@@ -124,7 +124,8 @@
                             <td>
                               {{ $request->estimated_return_date ?? ''}}
                             </td>
-                            <td>
+
+                           {} <td>
                               @if ($request->request_operator_keys->isNotEmpty())
                               @foreach ($request->request_operator_keys as $request_operator_key)
                               {{ $request_operator_key->operators->first_name ?? 'n'}} {{ $request_operator_key->operators->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
@@ -142,6 +143,7 @@
                               {{ 'N/A' }}
                               @endif
                             </td>
+
                             <td>
                               <span class="text-danger">{{ $request->status->description ?? '' }}</span>
                             </td>

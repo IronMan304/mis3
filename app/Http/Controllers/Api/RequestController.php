@@ -33,7 +33,7 @@ class RequestController extends Controller
     public function index()
     {
         $borrower = Borrower::where('user_id', auth()->user()->id)
-            ->with('requests.tool_keys.tools', 'requests.tool_keys.status', 'requests.tool_keys.toolStatus', 'course', 'requests.status', 'service_requests.service', 'service_requests.borrower', 'service_requests.user', 'service_requests.tool.source', 'service_requests.status', 'service_requests.source', 'service_requests.operator', 'service_requests.ToolStatus')
+            ->with('requests.tool_keys.tools', 'requests.tool_keys.status', 'requests.tool_keys.toolStatus', 'course', 'requests.status', 'service_requests.service', 'service_requests.borrower', 'service_requests.user', 'service_requests.tool.source', 'service_requests.status', 'service_requests.source', 'service_requests.operator', 'service_requests.Technician', 'service_requests.ToolStatus')
             ->first();
 
 

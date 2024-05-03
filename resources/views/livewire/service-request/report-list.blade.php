@@ -152,7 +152,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-12 col-md-6 col-xl-3">
+                            {{--<div class="col-12 col-md-6 col-xl-3">
                                 <div class="form-group local-forms">
                                     <label>Operators </label>
                                     <select class="form-control" wire:model="soperator_id" wire:change="applyFilters" id="soperator_id">
@@ -160,6 +160,20 @@
                                         @foreach ($operators as $operator)
                                         <option value="{{ $operator->id }}">
                                             {{ $operator->first_name }} {{ $operator->middle_name }} {{ $operator->last_name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>--}}
+
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="form-group local-forms">
+                                    <label>Technician </label>
+                                    <select class="form-control" wire:model="technician_id" wire:change="applyFilters" id="technician_id">
+                                        <option value="" selected>All Operators</option>
+                                        @foreach ($technicians as $technician)
+                                        <option value="{{ $technician->id }}">
+                                            {{ $technician->first_name }} {{ $technician->middle_name }} {{ $technician->last_name }}
                                         </option>
                                         @endforeach
                                     </select>
@@ -232,8 +246,12 @@
                                         {{$service_request->service->description ?? ''}}
                                     </td>
 
-                                    <td>
+                                    {{--<td>
                                         {{ $service_request->operator->first_name ?? 'TBA'}}
+                                    </td>--}}
+
+                                    <td>
+                                        {{ $service_request->Technician->first_name ?? 'TBA'}}
                                     </td>
 
                                     <td>
@@ -323,13 +341,24 @@
                 @this.set('soperator_id', data);
             });
 
+             // Technician Select2
+             $('#technician_id').select2({
+                dropdownParent: $('#list-content-service-request-report')
+            });
+
+            $('#technician_id').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('technician_id', data);
+            });
+
 
 
         });
 
         document.addEventListener('livewire:update', function() {
             // Refresh Select2 on Livewire update
-            $('#scategory_id, #stool_type_id, #stool_id, #sborrower_id, #soperator_id').select2({
+            $('#scategory_id, #stool_type_id, #stool_id, #sborrower_id, #soperator_id, #technician_id').select2({
                 dropdownParent: $('#list-content-service-request-report')
             });
         });
