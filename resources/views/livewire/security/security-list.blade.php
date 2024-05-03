@@ -50,7 +50,7 @@
 										<td>
 											<div class="row">
 												<div class="col-12">
-													<span class="text-capitalize">{{ $security->first_name }} {{ $security->last_name }}</span>
+													<span class="text-capitalize">{{ $security->Honorific->description ?? ''}} {{ $security->first_name }} {{ $security->last_name }}</span>
 												</div>
 												
 											</div>

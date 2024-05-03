@@ -7,6 +7,7 @@ use Exception;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Security;
+use App\Models\Honorific;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +15,7 @@ class SecurityForm extends Component
 {
     use WithFileUploads;
 
-    public $securityId, $first_name, $middle_name, $last_name, $esignature;
+    public $securityId, $first_name, $middle_name, $last_name, $esignature, $honorific_id;
     public $action = '';
     public $message = '';
 
@@ -37,6 +38,7 @@ class SecurityForm extends Component
         $this->first_name = $security->first_name;
         $this->middle_name = $security->middle_name;
         $this->last_name = $security->last_name;
+        $this->honorific_id = $security->honorific_id;
     }
 
     public function store()
@@ -49,6 +51,7 @@ class SecurityForm extends Component
                     'first_name' => 'required',
                     'middle_name' => 'nullable',
                     'last_name' => 'required',
+                    'honorific_id' => 'nullable',
                 ]);
                 if ($this->esignature) {
                     $pictureName = Carbon::now()->timestamp . '.' . $this->esignature->extension();
@@ -67,6 +70,7 @@ class SecurityForm extends Component
                     'middle_name' => 'nullable',
                     'last_name' => 'required',
                     'esignature' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                    'honorific_id' => 'nullable',
                 ]);
 
                 $security = Security::create([
@@ -74,6 +78,7 @@ class SecurityForm extends Component
                     'middle_name' => $this->middle_name,
                     'last_name' => $this->last_name,
                     'esignature' => $this->esignature,
+                    'honorific_id' => $this->honorific_id,
                 ]);
                 $action = 'store';
                 $message = 'Successfully Created';
@@ -95,6 +100,9 @@ class SecurityForm extends Component
 
     public function render()
     {
-        return view('livewire.security.security-form');
+        $honorifics = Honorific::all();
+        return view('livewire.security.security-form', [
+            'honorifics' => $honorifics,
+        ]);
     }
 }
