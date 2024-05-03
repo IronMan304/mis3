@@ -52,33 +52,37 @@
 
 		<div class="notification-box">
 			<div class="col-md-12">
-				
-				<div class="tab-content">
-				<ul class="nav nav-tabs nav-tabs-solid">
-					<li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab">Equipment</a></li>
-					<li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Service</a></li>
-				</ul>
-					<div class="tab-pane show active" id="solid-tab1">
-						<div class="msg-sidebar notifications msg-noti">
-							<div class="topnav-dropdown-header">
-								<span>All Pending Equipment Requests</span>
-							</div>
-							<div id="msg_list">
-								<ul class="list-box" id="pending-requests-list">
-									<!-- Content for pending requests goes here -->
-								</ul>
+				<div class="card-box">
+					<ul class="nav nav-tabs nav-tabs-solid">
+						<li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab">Equipment</a></li>
+						<li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Service</a></li>
+					</ul>
+					<div class="tab-content">
+
+
+
+						<div class="tab-pane show active" id="solid-tab1">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span>All Pending Equipment Requests</span>
+								</div>
+								<div id="msg_list">
+									<ul class="list-box" id="pending-requests-list">
+										<!-- Content for pending requests goes here -->
+									</ul>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="tab-pane" id="solid-tab2">
-						<div class="msg-sidebar notifications msg-noti">
-							<div class="topnav-dropdown-header">
-								<span ><span>All Pending Service Requests</span>
-							</div>
-							<div id="msg_list1">
-								<ul class="list-box" id="pending-requests-list-service">
-									<!-- Content for pending requests goes here -->
-								</ul>
+						<div class="tab-pane" id="solid-tab2">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span><span>All Pending Service Requests</span>
+								</div>
+								<div id="msg_list1">
+									<ul class="list-box" id="pending-requests-list-service">
+										<!-- Content for pending requests goes here -->
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -301,10 +305,10 @@
 		updateRealtimeCount();
 		// Call the function initially
 		updateRealtimeCountService();
- // Update the counts every 5 seconds
- setInterval(function() {
-            updateRealtimeCount();
-            updateRealtimeCountService();
-        }, 5000);
+		// Update the counts every 5 seconds
+		setInterval(function() {
+			updateRealtimeCount();
+			updateRealtimeCountService();
+		}, 5000);
 	});
 </script>
