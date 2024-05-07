@@ -117,7 +117,7 @@
                             <!-- Adjust the position of the name -->
                             <strong>
                                 <!-- Place the name here -->
-                                {{ $president->honorific->description ?? '' }}
+                                {{ $president->security->Honorific->description ?? '' }}
                                 {{ $president->first_name ?? '' }}
                                 {{ $president->middle_name ?? '' }}
                                 {{ $president->last_name ?? '' }}<br>
@@ -143,7 +143,7 @@
                         @endif
                         @endif
                         <p style="position: relative; z-index: 2;">
-                            Thru: <strong>{{ $vp->honorific->description ?? '' }} {{ $vp->first_name ?? '' }} {{ $vp->middle_name ?? '' }} {{ $vp->last_name ?? '' }}<br></strong>
+                            Thru: <strong>{{ $vp->security->Honorific->description ?? '' }} {{ $vp->first_name ?? '' }} {{ $vp->middle_name ?? '' }} {{ $vp->last_name ?? '' }}<br></strong>
                             &emsp;&emsp;&emsp;{{$vp->position->description ?? ''}}<br>
                             &emsp;&emsp;&emsp;Negros Oriental State University
                         </p>
@@ -155,7 +155,7 @@
                             &emsp;&emsp;&emsp;{{ $request->borrower->course->description ?? '' }}
                         </p>
 
-                        <p>Dear {{ $president->honorific->description ?? '' }} {{ $president->last_name ?? '' }} ,</p>
+                        <p>Dear {{ $president->security->Honorific->description ?? '' }} {{ $president->last_name ?? '' }} ,</p>
 
                         <p>Greetings!</p>
 

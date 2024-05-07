@@ -69,7 +69,19 @@ class BorrowerAccountForm extends Component
             ]);
     
             // Assign the "requester" role to the user
-            $user->assignRole('requester');
+            if($borrower->position_id == 1)
+            {
+                $user->assignRole('student');
+            }elseif($borrower->position_id == 2)
+            {
+                $user->assignRole('faculty');
+            }elseif($borrower->position_id == 8)
+            {
+                $user->assignRole('guest');
+            }else{
+                $user->assignRole('requester');
+            }
+          
     
     
     

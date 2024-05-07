@@ -38,7 +38,7 @@ use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
 use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
-
+use App\Http\Controllers\Api\RequestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,9 +55,12 @@ use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
 //     return view('welcome');
 // });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/get-realtime-count', [RequestController::class, 'count']);
+Route::get('/get-realtime-count-service', [RequestController::class, 'countService']);
 
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('users', UserList::class);
@@ -102,7 +105,7 @@ Route::group(['middleware' => ['role:admin|head of office|staff']], function () 
     Route::get('tools', ToolList::class);
 
     Route::get('/requesters/{requesterId}/profile', [RequesterProfileController::class, 'index'])->name('rp.index');
-    Route::get('tool_reports', ReportList::class);
+    Route::get('tool_reports', ReportList::class)->name('tool_reports');
     Route::get('service_reports', ServiceRequestReportList::class);
 
     Route::get('service_requests', ServiceRequestList::class);
@@ -111,7 +114,8 @@ Route::group(['middleware' => ['role:admin|head of office|staff']], function () 
 });
 
 Route::group(['middleware' => ['role:admin|president|vice-president|head of office|staff']], function () {
-    Route::get('requests', RequestList::class);
+    Route::get('requests', RequestList::class)->name('requests');
+
 
     Route::get('/print/request_letter/{id}', [PrintController::class, 'print_request_letter'])->name('print.request');
 });

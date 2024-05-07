@@ -126,7 +126,7 @@ class UserForm extends Component
                 'first_name'    => 'required',
                 'middle_name'   => 'nullable',
                 'last_name'     => 'required',
-                'position_id'      => 'required',
+                'position_id'      => 'nullable',
                 'honorific_id'      => 'nullable',
                 'email'         => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
                 'password'      => ['required', 'confirmed', Rules\Password::defaults()],

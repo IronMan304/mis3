@@ -5665,6 +5665,7 @@ html.menu-opened body {
 .list-box {
     list-style: none;
     padding-left: 0;
+    padding: 0 0 100px 0px;
 }
 .list-item.new-message {
     background-color: rgba(0, 0, 0, 0.2);
@@ -5694,7 +5695,7 @@ html.menu-opened body {
     font-size: 20px;
 }
 .list-body {
-    padding: 0 0 0 50px;
+    padding: 0 0 0px 0px;
 }
 .message-author {
     color: #333448;

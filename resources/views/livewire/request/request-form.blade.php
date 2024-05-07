@@ -190,7 +190,7 @@
                 @endif
 
 
-                @if (auth()->user()->hasRole('requester'))
+                @if (auth()->user()->hasRole('requester') || auth()->user()->hasRole('student') || auth()->user()->hasRole('faculty') || auth()->user()->hasRole('guest'))
 
                 <div class="col-md-12" wire:ignore>
                     <div class="form-group local-forms">

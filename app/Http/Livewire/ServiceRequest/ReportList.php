@@ -5,6 +5,7 @@ namespace App\Http\Livewire\ServiceRequest;
 use Carbon\Carbon;
 use App\Models\Tool;
 use App\Models\Type;
+use App\Models\User;
 use App\Models\Source;
 use App\Models\Status;
 use App\Models\Request;
@@ -28,7 +29,7 @@ class ReportList extends Component
     public $sdateFrom;
     public $sdateTo;
     public $sdate;
-    public $sborrower_id, $scategory_id, $stool_type_id, $stool_id, $soperator_id, $sstatus_id, $source_id;
+    public $sborrower_id, $scategory_id, $stool_type_id, $stool_id, $soperator_id, $sstatus_id, $source_id, $technician_id;
 
     protected $listeners = [
         'refreshParentServiceRequest' => '$refresh',
@@ -52,7 +53,7 @@ class ReportList extends Component
     }
     public function resetFilters()
     {
-        $this->reset(['stool_type_id', 'sborrower_id', 'scategory_id', 'stype_id', 'stool_id', 'soperator_id', 'sstatus_id', 'source_id']);
+        $this->reset(['stool_type_id', 'sborrower_id', 'scategory_id', 'stype_id', 'stool_id', 'soperator_id', 'sstatus_id', 'source_id', 'technician_id']);
         $this->sdateFrom = null;
         $this->sdate = null;
         $this->sdateTo = null;
@@ -136,6 +137,9 @@ class ReportList extends Component
         if (!empty($this->soperator_id)) {
             $query->where('operator_id', $this->soperator_id);
         }
+        if (!empty($this->technician_id)) {
+            $query->where('technician_id', $this->technician_id);
+        }
 
         // Filter requests based on sdate range if sdates are selected
         if ($this->sdateFrom && $this->sdateTo) {
@@ -174,6 +178,7 @@ class ReportList extends Component
         $requests = $query->paginate($this->perPage);
         $borrowers = Borrower::all();
         $operators = Operator::all();
+        $technicians = User::role('technician')->get();
         $categories = Category::all();
         $types = Type::all();
         $tools = Tool::all();
@@ -185,6 +190,7 @@ class ReportList extends Component
             'requests' => $requests,
             'borrowers' => $borrowers,
             'operators' => $operators,
+            'technicians' => $technicians,
             'categories' => $categories,
             'types' => $types,
             'tools' => $tools,

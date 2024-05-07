@@ -69,7 +69,7 @@ class OperatorAccountForm extends Component
             //     'position_id' => $operator->position_id,
             // ]);
     
-            // Assign the "requester" role to the user
+            // Assign the "operator" role to the user
             $user->assignRole('operator');
     
     

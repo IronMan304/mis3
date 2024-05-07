@@ -12,7 +12,7 @@ class RequestOperatorKey extends Model
 
     protected $table = 'request_operators';
     protected $primaryKey = 'id';
-    protected $fillable = ['request_id', 'operator_id'];
+    protected $fillable = ['request_id', 'operator_id', 'operator1_id'];
 
     public function requests()
     {
@@ -21,6 +21,10 @@ class RequestOperatorKey extends Model
     public function operators()
     {
         return $this->belongsTo(Operator::class, 'operator_id', 'id');
+    }
+    public function operator()
+    {
+        return $this->belongsTo(User::class, 'operator1_id', 'id');
     }
 
 }

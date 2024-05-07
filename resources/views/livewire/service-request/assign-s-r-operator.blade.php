@@ -56,21 +56,21 @@
 	<script>
 		document.addEventListener('livewire:load', function() {
 			// Borrower Select2
-			$('#operator_id').select2({
+			$('#operator1_id').select2({
 				dropdownParent: $('#modal-content-asro')
 			});
 
-			$('#operator_id').on('change', function(e) {
+			$('#operator1_id').on('change', function(e) {
 				let data = $(this).val();
 				console.log(data);
-				@this.set('operator_id', data);
+				@this.set('operator1_id', data);
 			});
 		});
 
 
 		document.addEventListener('livewire:update', function() {
 			// Refresh Select2 on Livewire update
-			$('#operator_id').select2({
+			$('#operator1_id').select2({
 				dropdownParent: $('#modal-content-asro')
 			});
 		});

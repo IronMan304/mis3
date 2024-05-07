@@ -85,13 +85,16 @@ class ServiceRequestList extends Component
 
     public function render()
     {
-        if (empty($this->search)) {
-            $service_requests = ServiceRequest::paginate($this->perPage);
+        if (!empty($this->search)) {
+
+            $service_requests = ServiceRequest::where('request_number', 'LIKE', '%' . $this->search . '%');
+               
+            $service_requests = $service_requests->paginate($this->perPage);
         } else {
-            $service_requests = ServiceRequest::where('borrower_id', 'LIKE', '%' . $this->search . '%')
-                ->paginate($this->perPage);
+            $service_requests = [];
+            //$service_requests = ServiceRequest::paginate($this->perPage);
         }
-    
+
 
         return view('livewire.service-request.service-request-list', [
             'service_requests' => $service_requests,

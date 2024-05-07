@@ -43,7 +43,7 @@
                     </div>
                 </div>--}}
 
-                @if (auth()->user()->hasRole('admin'))
+               {{-- @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))
                 <div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Operator
@@ -68,6 +68,38 @@
                             @foreach ($operators as $operator)
                             <option value="{{ $operator->id }}">
                                 {{ $operator->first_name ?? ''}}  {{ $operator->middle_name ?? ''}}  {{ $operator->last_name ?? ''}}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                @endif--}}
+
+                @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))
+                <div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>Technician
+                        </label>
+                        <select class="form-control select" id="technician_id" wire:model="technician_id" >
+                            <option value="" selected>Choose a Technician</option>
+                            @foreach ($technicians as $technician)
+                            <option value="{{ $technician->id }}">
+                                {{ $technician->first_name ?? ''}} {{ $technician->middle_name ?? ''}}  {{ $technician->last_name ?? ''}}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                @elseif (auth()->user()->hasRole('technician'))
+                <div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>Technician
+                        </label>
+                        <select class="form-control select" id="technician_id" wire:model="technician_id" disabled>
+                            <option value="" selected>Choose a Technician</option>
+                            @foreach ($technicians as $technician)
+                            <option value="{{ $technician->id }}">
+                                {{ $technician->first_name ?? ''}}  {{ $technician->middle_name ?? ''}}  {{ $technician->last_name ?? ''}}
                             </option>
                             @endforeach
                         </select>
@@ -128,11 +160,22 @@
                 console.log(data);
                 @this.set('operator_id', data);
             });
+
+              // Borrower Select2
+              $('#technician_id').select2({
+                dropdownParent: $('#service-request-start-form-modal-content')
+            });
+
+            $('#technician_id').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('technician_id', data);
+            });
         });
 
         document.addEventListener('livewire:update', function() {
             // Refresh Select2 on Livewire update
-            $('#operator_id').select2({
+            $('#operator_id, #technician_id').select2({
                 dropdownParent: $('#service-request-start-form-modal-content')
             });
         });

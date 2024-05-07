@@ -161,6 +161,27 @@ $(document).ready(function($) {
 			$('.msg-sidebar .slimScrollDiv').height(msgrHeight);
 		});
 	}
+
+	// Right Sidebar Scroll1
+	if($('#msg_list1').length > 0) {
+		$('#msg_list1').slimscroll({
+			height: '100%',
+			color: '#878787',
+			disableFadeOut: true,
+			borderRadius: 0,
+			size: '4px',
+			alwaysVisible: false,
+			touchScrollStep: 100
+		});
+		var msgHeight = $(window).height() - 124;
+		$('#msg_list1').height(msgHeight);
+		$('.msg-sidebar .slimScrollDiv').height(msgHeight);
+		$(window).resize(function() {
+			var msgrHeight = $(window).height() - 124;
+			$('#msg_list1').height(msgrHeight);
+			$('.msg-sidebar .slimScrollDiv').height(msgrHeight);
+		});
+	}
 	
 	// Left Sidebar Scroll
 	if($slimScrolls.length > 0) {

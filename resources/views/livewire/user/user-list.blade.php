@@ -53,12 +53,12 @@
 						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
-									<th style="width: 30%">Name</th>
+									<th>Name</th>
 
-									<th style="width: 20%">Position</th>
-									<th style="width: 25%">Email</th>
+									<!-- <th>Position</th> -->
+									<th>Email</th>
 									<th>Role</th>
-									<th style="width: 15%">Action</th>
+									<th>Action</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -69,9 +69,9 @@
 										{{ $user->last_name }}
 									</td>
 
-									<td>
+									{{--<td>
 										{{ $user->position->description ?? '' }}
-									</td>
+									</td>--}}
 									<td>
 										{{ $user->email }}
 									</td>

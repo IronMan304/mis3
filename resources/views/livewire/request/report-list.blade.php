@@ -23,8 +23,9 @@
                                     <h3>Equipment Request Report</h3>
                                     <div class="doctor-search-blk">
                                         <div class="top-nav-search table-search-blk">
+                                            <p>{{ $rn }}</p>
                                             <form>
-                                                <input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
+                                                <input type="text" id="searchBox" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
                                                 <a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
                                             </form>
                                         </div>
@@ -155,7 +156,7 @@
                             <div class="col-12 col-md-6 col-xl-3">
                                 <div class="form-group local-forms">
                                     <label>Operators </label>
-                                    <select class="form-control" wire:model="operator_id" wire:change="applyFilters" id="operator_id">
+                                    <select class="form-control" wire:model="operator1_id" wire:change="applyFilters" id="operator1_id">
                                         <option value="" selected>All Operators</option>
                                         @foreach ($operators as $operator)
                                         <option value="{{ $operator->id }}">
@@ -224,9 +225,9 @@
                                     </td>
 
                                     <td>
-                                        @if ($request->request_operator_keys->isNotEmpty())
-                                        @foreach ($request->request_operator_keys as $request_operator_key)
-                                        {{ $request_operator_key->operators->first_name ?? ''}} {{ $request_operator_key->operators->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
+                                        @if ($request->RequestOperatorKey->isNotEmpty())
+                                        @foreach ($request->RequestOperatorKey as $request_operator_key)
+                                        {{ $request_operator_key->operator->first_name ?? ''}} {{ $request_operator_key->operator->last_name ?? ''}} {{ $request_operator_key->status->description ?? ''}} {{--({{ $request_operator_key->toolStatus->description ?? ''}})--}}
 
                                         @if (!$loop->last)
                                         {{-- Add a Space or separator between department names --}}
@@ -320,6 +321,7 @@
         <!-- Pagination links -->
         {{ $requests->links() }}
     </div>
+
     <script>
         document.addEventListener('livewire:load', function() {
 
@@ -345,8 +347,8 @@
                 @this.set('tool_type_id', data);
             });
 
-             // Tool Select2
-             $('#tool_id').select2({
+            // Tool Select2
+            $('#tool_id').select2({
                 dropdownParent: $('#list-content-tool-request-report')
             });
 
@@ -367,15 +369,15 @@
                 @this.set('borrower_id', data);
             });
 
-             // Operator Select2
-             $('#operator_id').select2({
+            // Operator Select2
+            $('#operator1_id').select2({
                 dropdownParent: $('#list-content-tool-request-report')
             });
 
-            $('#operator_id').on('change', function(e) {
+            $('#operator1_id').on('change', function(e) {
                 let data = $(this).val();
                 console.log(data);
-                @this.set('operator_id', data);
+                @this.set('operator1_id', data);
             });
 
         });
@@ -387,4 +389,6 @@
             });
         });
     </script>
+
+
 </div>

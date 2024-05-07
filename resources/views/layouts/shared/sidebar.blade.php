@@ -65,16 +65,16 @@
 
 					<ul style="display: none;">
 						@can('view-users')
-						<li><a href="/users">User</a></li>
+						<li><a href="/users">User Account</a></li>
 						@endcan
 						@can('view-borrowers')
-						<li><a href="/borrowers">Requester</a></li>
+						<li><a href="/borrowers">Requester Information</a></li>
 						@endcan
 						@can('view-operators')
 						<li><a href="/operators">Operator</a></li>
 						@endcan
 						@can('view-securities')
-						<li><a href="/securities">Security</a></li>
+						<li><a href="/securities">Signature</a></li>
 						@endcan
 					</ul>
 				</li>

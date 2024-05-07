@@ -3,19 +3,20 @@
 namespace App\Http\Livewire\ServiceRequest;
 
 use App\Models\Tool;
+use App\Models\User;
 use App\Models\Option;
-use App\Models\ServiceRequest;
+use App\Models\Service;
 use Livewire\Component;
 use App\Models\Operator;
+use App\Models\ServiceRequest;
 use App\Models\RequestOperatorKey;
-use App\Models\Service;
 
 class ServiceRequestStart extends Component
 {
     public $serviceRequestId, $option_id, $errorMessage, $tool_status_id;
     public $action = '';  //flash
     public $message = '';  //flash
-    public $operator_id, $tool_id;
+    public $operator_id, $tool_id, $technician_id;
     //public $approval_toolItems = '';
 
     protected $listeners = [
@@ -35,11 +36,12 @@ class ServiceRequestStart extends Component
     {
         $this->serviceRequestId = $serviceRequestId;
         $serviceRequest = ServiceRequest::whereId($serviceRequestId)->first();
-        if (auth()->user()->hasRole('operator')) {
+        if (auth()->user()->hasRole('technician')) {
             // Fetch the user_id from the Borrower table using the authenticated user's id
-            $this->operator_id = Operator::where('user_id', auth()->user()->id)->value('id');
+            //$this->operator_id = Operator::where('user_id', auth()->user()->id)->value('id');
+            $this->technician_id = auth()->user()->id;
         } else {
-            $this->operator_id = $serviceRequest->operator_id;
+            $this->technician_id = $serviceRequest->technician_id;
         }
 
         // $this->operatorItems = $request->request_operator_keys->map(function ($operator) {
@@ -56,7 +58,8 @@ class ServiceRequestStart extends Component
     public function store()
     {
         $data = $this->validate([
-            'operator_id' => auth()->user()->hasRole('operator') ? 'nullable' : 'required',
+            //'operator_id' => auth()->user()->hasRole('operator') ? 'nullable' : 'required',
+            'technician_id' => auth()->user()->hasRole('technician') ? 'nullable' : 'required',
             'tool_status_id' => 'nullable',
         ]);
 
@@ -64,9 +67,10 @@ class ServiceRequestStart extends Component
             $serviceRequest = ServiceRequest::whereId($this->serviceRequestId)->first();
             if ($serviceRequest->status_id == 10) { //approved
                 // Check if the user has the "requester" role
-                if (auth()->user()->hasRole('operator')) {
+                if (auth()->user()->hasRole('technician')) {
                     // Fetch the user_id from the Borrower table using the authenticated user's id
-                    $data['operator_id'] = Operator::where('user_id', auth()->user()->id)->value('id');
+                    //$data['operator_id'] = Operator::where('user_id', auth()->user()->id)->value('id');
+                    $data['technician_id'] = auth()->user()->id;
                 }
 
                 // ServiceRequest::update($data);
@@ -105,9 +109,11 @@ class ServiceRequestStart extends Component
     {
         $options = Option::all();
         $operators = Operator::all();
+        $technicians = User::role('technician')->get();
         return view('livewire.service-request.service-request-start', [
             'options' => $options,
             'operators' => $operators,
+            'technicians' => $technicians,
             'errorMessage' => $this->errorMessage,
         ]);
     }
