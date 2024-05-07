@@ -26,53 +26,67 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
+    
         $request->session()->regenerate();
-
+    
         $user = auth()->user();
-
+    
         if ($user) {
-            // Log the authentication activity
+            $roleNames = '';
+    
+            $roles = $user->getRoleNames()->toArray();
+    
+            if (!empty($roles)) {
+                $roleNames = implode(', ', $roles);
+            }
+    
+            // Log the login activity
             activity()
                 ->performedOn($user)
-                ->withProperties([
-                    'position' => $user->position->description,
-                ])
+                // ->withProperties([
+                //     'role' => $roleNames,
+                // ])
                 ->event('Login')
-                ->log('User authenticated');
-
-            if (auth()->user()->hasRole('admin')) {
-                return redirect()->intended(RouteServiceProvider::HOME);
-            } else {
-                return redirect()->intended(RouteServiceProvider::REQUEST);
-            }
+                ->log('User Logged in');
+        }
+    
+        if (auth()->user()->hasRole('admin')) {
+            return redirect()->intended(RouteServiceProvider::HOME);
+        } else {
+            return redirect()->intended(RouteServiceProvider::REQUEST);
         }
     }
-
-    /**
-     * Destroy an authenticated session.
-     */
+    
     public function destroy(Request $request): RedirectResponse
     {
         $user = auth()->user();
-
+    
         if ($user) {
+            $roleNames = '';
+    
+            $roles = $user->getRoleNames()->toArray();
+    
+            if (!empty($roles)) {
+                $roleNames = implode(', ', $roles);
+            }
+    
             // Log the logout activity
             activity()
                 ->performedOn($user)
-                ->withProperties([
-                    'position' => $user->position->description,
-                ])
+                // ->withProperties([
+                //     'role' => $roleNames,
+                // ])
                 ->event('Logout')
                 ->log('User logged out');
         }
-
+    
         Auth::guard('web')->logout();
-
+    
         $request->session()->invalidate();
-
+    
         $request->session()->regenerateToken();
-
+    
         return redirect('/');
     }
+    
 }

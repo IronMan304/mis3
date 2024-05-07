@@ -41,10 +41,11 @@
 					</div>
 
 					<div class="table-responsive">
-						<table class="table border-0 custom-table comman-table datatable mb-0">
+						<table class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
-									<td>User</td>
+									<th>User</th>
+									<th>Role</th>
 									<th>Type</th>
 									<th>Event</th>
 									<th>Properties</th>
@@ -53,10 +54,16 @@
 								</tr>
 							</thead>
 							<tbody>
-								@foreach ($activity_logs as $activity)
+								@foreach ($logs as $activity)
 								<tr>
 									<td>
-										{{ $activity->causer->first_name ?? ''}} {{ $activity->causer->middle_name ?? ''}} {{ $activity->causer->last_name ?? ''}} ({{ $activity->causer->position->description ?? ''}})
+										{{ $activity->causer->first_name ?? ''}} {{ $activity->causer->middle_name ?? ''}} {{ $activity->causer->last_name ?? ''}}
+									</td>
+									<td>
+										@foreach($activity->causer->roles as $role)
+										<li>{{ $role->name }}</li>
+										@endforeach
+										<br>
 									</td>
 
 
@@ -86,6 +93,7 @@
 						</table>
 					</div>
 				</div>
+				{{ $logs->links() }}
 			</div>
 		</div>
 	</div>
