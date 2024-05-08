@@ -292,7 +292,7 @@
 								<td>
 									<div class="btn-group" role="group">
 
-										<button type="button" wire:click="toolLog({{ $tool->id }})" @if($tool->status_id == 1) class="custom-badge status-light-green" @elseif ($tool->status_id == 2) class="custom-badge status-blue" @elseif($tool->status_id == 3) class="custom-badge status-gray" @elseif($tool->status_id == 4) class="custom-badge status-red" @elseif($tool->status_id == 17) class="custom-badge status-gray" @elseif($tool->status_id == 14) class="custom-badge status-orange" @elseif($tool->status_id == 5) class="custom-badge status-pink" @elseif($tool->status_id == 21) class="custom-badge status-purple" @elseif($tool->status_id == 23) class="custom-badge status-green" @elseif($tool->status_id == 22) class="custom-badge status-dark-purple" @endif>
+										<button type="button" wire:click="toolLog({{ $tool->id }})" @if($tool->status_id == 1) class="custom-badge status-light-green" @elseif ($tool->status_id == 2) class="custom-badge status-blue" @elseif($tool->status_id == 3) class="custom-badge status-gray" @elseif($tool->status_id == 4) class="custom-badge status-red" @elseif($tool->status_id == 17) class="custom-badge status-grey" @elseif($tool->status_id == 14) class="custom-badge status-orange" @elseif($tool->status_id == 5) class="custom-badge status-pink" @elseif($tool->status_id == 21) class="custom-badge status-purple" @elseif($tool->status_id == 23) class="custom-badge status-green" @elseif($tool->status_id == 22) class="custom-badge status-dark-purple" @endif>
 											{{ $tool->status->description ?? ''}}
 										</button>
 

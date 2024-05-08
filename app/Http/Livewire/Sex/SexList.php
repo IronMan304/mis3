@@ -5,9 +5,13 @@ namespace App\Http\Livewire\Sex;
 use App\Models\Sex;
 use Livewire\Component;
 use Spatie\Activitylog\Models\Activity;
+use Livewire\WithPagination;
 
 class SexList extends Component
 {
+    use withPagination;
+    protected $paginationTheme = 'bootstrap';
+    public $perPage = 10;
     public $sexId;
     public $search = '';
     public $action = '';  //flash
@@ -56,7 +60,7 @@ class SexList extends Component
         // Log the activity
         activity()
             ->performedOn($sex ?? null) // Pass $sex if it exists, otherwise pass null
-            ->event( $action)
+            ->event($action)
             ->withProperties([
                 // 'action' => $action,
                 'name' => $description, // Pass the description as an additional property
@@ -70,16 +74,16 @@ class SexList extends Component
 
     public function render()
     {
-        if (empty($this->search)) {
-            $sexes  = Sex::all();
-        } else {
-            $sexes  = Sex::where('description', 'LIKE', '%' . $this->search . '%')->get();
+        $query = Sex::query();
+
+        if (!empty($this->search)) {
+            $query->where('description', 'LIKE', '%' . $this->search . '%');
         }
-        $activity_logs = Activity::all();
+
+        $sexes = $query->paginate($this->perPage);
 
         return view('livewire.sex.sex-list', [
             'sexes' => $sexes,
-            'activity_logs' => $activity_logs,
         ]);
     }
 }

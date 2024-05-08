@@ -5659,6 +5659,20 @@ html.menu-opened body {
 .open-msg-box .notification-box {
     margin-right: 0;
 }
+.notification-box1 {
+    bottom: 0;
+    margin-right: -300px;
+    position: fixed;
+    right: 0;
+    top: 70px;
+    transition: all 0.4s ease 0s;
+    width: 300px;
+    z-index: 101;
+    border-left: 1px solid #ddd;
+}
+.open-msg-box1 .notification-box1 {
+    margin-right: 0;
+}
 .msg-sidebar {
     background-color: #fff;
 }

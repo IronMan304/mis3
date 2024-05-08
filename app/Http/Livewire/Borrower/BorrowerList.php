@@ -103,10 +103,16 @@ class BorrowerList extends Component
 
     public function render()
     {
-        if (empty($this->search)) {
-            $borrowers  = Borrower::paginate($this->perPage);
+        if (!empty($this->search)) {
+            $borrowers  = Borrower::where('first_name', 'LIKE', '%' . $this->search . '%')
+            ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
+            ->orWhere('last_name', 'LIKE', '%' . $this->search . '%')
+            ->orWhere('id_number', 'LIKE', '%' . $this->search . '%')
+            ->paginate($this->perPage);
+           
         } else {
-            $borrowers  = Borrower::where('first_name', 'LIKE', '%' . $this->search . '%')->paginate($this->perPage);
+           // $borrowers  = Borrower::paginate($this->perPage);
+           $borrowers  = [];
         }
 
         // $borrower = Borrower::with('sex')->get();

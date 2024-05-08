@@ -17,31 +17,7 @@
 						<span>Repair</span></a>
 				</li> -->
 
-				@can('view-request-management')
-				<li class="submenu">
-					<a href="#"><span class="menu-side"><i class="fa-solid fa-code-pull-request"></i></span>
-						<span>Request <br> Management</span> <span class="menu-arrow"></span>
-					</a>
 
-					<ul style="display: none;">
-
-						@can('view-equipment-requests')
-						<li><a href="/requests">Equipment</a></li>
-						@endcan
-						@can('view-service-requests')
-						<li><a href="/service_requests">Service</a></li>
-						@endcan
-						<!-- <li class="submenu">
-							<a href="javascript:void(0);"><span>Service <br>Management</span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="service_requests"><span>Service Request</span></a></li>
-
-								<li><a href="javascript:void(0);"><span>Assign</span></a></li>
-							</ul>
-						</li> -->
-					</ul>
-				</li>
-				@endcan
 
 				{{--<li class="submenu">
                             <a href="javascript:void(0);"><i class="fa fa-share-alt"></i> <span>Multi Level</span> <span class="menu-arrow"></span></a>
@@ -76,6 +52,32 @@
 						@can('view-securities')
 						<li><a href="/securities">Signature</a></li>
 						@endcan
+					</ul>
+				</li>
+				@endcan
+
+				@can('view-request-management')
+				<li class="submenu">
+					<a href="#"><span class="menu-side"><i class="fa-solid fa-code-pull-request"></i></span>
+						<span>Request <br> Management</span> <span class="menu-arrow"></span>
+					</a>
+
+					<ul style="display: none;">
+
+						@can('view-equipment-requests')
+						<li><a href="/requests">Equipment</a></li>
+						@endcan
+						@can('view-service-requests')
+						<li><a href="/service_requests">Service</a></li>
+						@endcan
+						<!-- <li class="submenu">
+							<a href="javascript:void(0);"><span>Service <br>Management</span> <span class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="service_requests"><span>Service Request</span></a></li>
+
+								<li><a href="javascript:void(0);"><span>Assign</span></a></li>
+							</ul>
+						</li> -->
 					</ul>
 				</li>
 				@endcan

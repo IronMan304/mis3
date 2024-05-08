@@ -79,8 +79,7 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::get('positions', PositionList::class);
     Route::get('options', OptionList::class);
 
-    Route::get('categories', CategoryList::class);
-    Route::get('types', TypeList::class);
+  
     Route::get('venues', VenueList::class);
 
     Route::get('trials', TrialList::class);
@@ -102,6 +101,8 @@ Route::group(['middleware' => ['role:admin|head of office|staff']], function () 
     Route::get('borrowers', BorrowerList::class);
     Route::get('operators', OperatorList::class);
 
+    Route::get('categories', CategoryList::class);
+    Route::get('types', TypeList::class);
     Route::get('tools', ToolList::class);
 
     Route::get('/requesters/{requesterId}/profile', [RequesterProfileController::class, 'index'])->name('rp.index');

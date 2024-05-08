@@ -42,6 +42,8 @@
 
 
 	<ul class="nav user-menu float-end">
+		@can('pending-notification')
+		{{--@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))--}}
 		<li class="nav-item dropdown d-none d-md-block">
 			<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link">
 				<img src="assets/img/icons/note-icon-01.svg" alt="">
@@ -89,6 +91,61 @@
 				</div>
 			</div>
 		</div>
+		{{--@endif--}}
+		@endcan
+
+
+		@can('reviewed-notification')
+		{{--@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('president') || auth()->user()->hasRole('vice-president'))--}}
+		<li class="nav-item dropdown d-none d-md-block">
+			<a href="javascript:void(0);" id="open_msg_box1" class="hasnotifications nav-link">
+				<img src="assets/img/icons/note-icon-01.svg" alt="">
+				<span id="count-reviewed" class="status-grey"></span>
+				<span id="count-reviewed-service" class="status-grey"></span>
+			</a>
+		</li>
+
+		<div class="notification-box1">
+			<div class="col-md-12">
+				<div class="card-box">
+					<ul class="nav nav-tabs nav-tabs-solid">
+						<li class="nav-item"><a class="nav-link active" href="#solid-tab3" data-bs-toggle="tab">Equipment</a></li>
+						<li class="nav-item"><a class="nav-link" href="#solid-tab4" data-bs-toggle="tab">Service</a></li>
+					</ul>
+					<div class="tab-content">
+
+
+
+						<div class="tab-pane show active" id="solid-tab3">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span>All Reviewed Equipment Requests</span>
+								</div>
+								<div id="msg_list2">
+									<ul class="list-box" id="reviewed-requests-list">
+										<!-- Content for pending requests goes here -->
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="solid-tab4">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span><span>All Reviewed Service Requests</span>
+								</div>
+								<div id="msg_list3">
+									<ul class="list-box" id="reviewed-requests-list-service">
+										<!-- Content for pending requests goes here -->
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{--@endif--}}
+		@endcan
 
 
 
@@ -153,6 +210,7 @@
 				success: function(response) {
 					$('#count-requests').text(response.countRequests);
 					$('#count-pending').text(response.countPending);
+		
 					// $('#count-reviewed').text(response.countReviewed);
 					// $('#count-approved').text(response.countApproved);
 					// $('#count-started').text(response.countStarted);
@@ -213,6 +271,8 @@
 							'</li>'
 						);
 					});
+
+		
 				},
 				error: function(xhr, status, error) {
 					console.error(error);
@@ -300,14 +360,174 @@
 			});
 		}
 
+		function updateReviewed() {
+			$.ajax({
+				url: '/get-realtime-count', // Update with the correct URL
+				type: 'GET',
+				success: function(response) {
+					$('#count-reviewed').text(response.countReviewed);
+		
+					// $('#count-reviewed').text(response.countReviewed);
+					// $('#count-approved').text(response.countApproved);
+					// $('#count-started').text(response.countStarted);
+					// $('#count-completed').text(response.countCompleted);
+
+					// Update pending requests list
+					$('#reviewed-requests-list').empty(); // Clear previous list
+					$.each(response.requestsReviewed, function(index, request) {
+						// Get the message creation time from request.created_at (assuming it's in UTC)
+						var messageTime = new Date(request.created_at);
+
+						// Convert the message time to Philippine time (UTC+8)
+						messageTime.setHours(messageTime.getHours() + 8);
+
+						// Format date
+						var formattedDate = messageTime.toLocaleDateString('en-US', {
+							year: 'numeric',
+							month: 'short',
+							day: 'numeric'
+						});
+
+						// Format time
+						var formattedTime = messageTime.toLocaleTimeString('en-US', {
+							hour: 'numeric',
+							minute: 'numeric',
+							hour12: true
+						});
+
+						// Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+						var dayOfWeek = messageTime.getDay();
+
+						// Define an array to map the day of the week to its name
+						var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+						// Get the day name
+						var dayName = daysOfWeek[dayOfWeek];
+
+						// Check if the message was sent today
+						var today = new Date();
+						var isToday = today.toDateString() === messageTime.toDateString();
+
+						// Format the time string
+						var formattedDateTime = formattedDate + ', ' + formattedTime + " " + (isToday ? 'today' : dayName);
+						$('#reviewed-requests-list').append(
+							'<li>' +
+							'<div class="list-item">' +
+							'<div class="list-left"></div>' +
+							'<div class="list-body">' +
+							'<div ><span class="message-author">' + request.request_number + '</span></div>' +
+							'<span class="message-time">' + formattedDateTime + '</span>' +
+
+							'<div class="clearfix"></div>' +
+							'<div class="message-content status-grey">' + 'Status: ' + request.status.description + '</div>' +
+							'<div class="message-content">' + 'Requester: ' + request.borrower.first_name + ' ' + request.borrower.middle_name + ' ' + request.borrower.last_name + '</div>' +
+
+							'</div>' +
+							'</div>' +
+							'</li>'
+						);
+					});
+
+		
+				},
+				error: function(xhr, status, error) {
+					console.error(error);
+				}
+			});
+		}
+
+		function updateReviewedService() {
+			$.ajax({
+				url: '/get-realtime-count-service', // Update with the correct URL
+				type: 'GET',
+				success: function(response) {
+					// Check if countPendingService is not null before updating the UI
+					if (response.countPendingService !== null) {
+						$('#count-reviewed-service').text(response.countReviewedService);
+					} else {
+						// Handle null value, for example, display a message or set a default value
+						$('#count-reviewed-service').text('N/A');
+					}
+
+					// Update pending requests list
+					$('#reviewed-requests-list-service').empty(); // Clear previous list
+					if (response.requestsReviewedService !== null) {
+						$.each(response.requestsReviewedService, function(index, requestService) {
+							// Get the message creation time from requestService.created_at (assuming it's in UTC)
+							var messageTime = new Date(requestService.created_at);
+
+							// Convert the message time to Philippine time (UTC+8)
+							messageTime.setHours(messageTime.getHours() + 8);
+
+							// Format date
+							var formattedDate = messageTime.toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric'
+							});
+
+							// Format time
+							var formattedTime = messageTime.toLocaleTimeString('en-US', {
+								hour: 'numeric',
+								minute: 'numeric',
+								hour12: true
+							});
+
+							// Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+							var dayOfWeek = messageTime.getDay();
+
+							// Define an array to map the day of the week to its name
+							var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+							// Get the day name
+							var dayName = daysOfWeek[dayOfWeek];
+
+							// Check if the message was sent today
+							var today = new Date();
+							var isToday = today.toDateString() === messageTime.toDateString();
+
+							// Format the time string
+							var formattedDateTime = formattedDate + ', ' + formattedTime + " " + (isToday ? 'today' : dayName);
+							$('#reviewed-requests-list-service').append(
+								'<li>' +
+								'<div class="list-item">' +
+								'<div class="list-left"></div>' +
+								'<div class="list-body">' +
+								'<div ><span class="message-author">' + requestService.request_number + '</span></div>' +
+								'<span class="message-time">' + formattedDateTime + '</span>' +
+
+								'<div class="clearfix"></div>' +
+								'<div class="message-content status-grey">' + 'Status: ' + requestService.status.description + '</div>' +
+								'<div class="message-content">' + 'Requester: ' + requestService.borrower.first_name + ' ' + requestService.borrower.middle_name + ' ' + requestService.borrower.last_name + '</div>' +
+
+								'</div>' +
+								'</div>' +
+								'</li>'
+							);
+						});
+					} else {
+						// Handle null value, for example, display a message or show a placeholder
+						$('#reviewed-requests-list-service').append('<li>No reviewed service requests</li>');
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error(error);
+				}
+			});
+		}
+
 
 		// Call the function initially
 		updateRealtimeCount();
+		updateReviewed();
+		updateReviewedService();
 		// Call the function initially
 		updateRealtimeCountService();
 		// Update the counts every 5 seconds
 		setInterval(function() {
 			updateRealtimeCount();
+			updateReviewed();
+			updateReviewedService();
 			updateRealtimeCountService();
 		}, 5000);
 	});

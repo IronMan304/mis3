@@ -44,13 +44,13 @@
 						<table id="borrower-table" class="table border-0 custom-table comman-table mb-0">
 							<thead>
 								<tr>
-									<th>Borrower</th>
-									<th>Id Number</th>
+									<th>Borrower Name/ID Number</th>
+									<!-- <th>Id Number</th> -->
 									<th>Contact Number</th>
 									<th>Sex</th>
 									<th>Position</th>
-									<th>College</th>
-									<th>Course</th>
+									<th>College/Course</th>
+									<!-- <th>Course</th> -->
 									<th>Action</th>
 
 								</tr>
@@ -61,10 +61,10 @@
 								<tr>
 									<td>
 										{{ $borrower->first_name }} {{ $borrower->middle_name }} {{ $borrower->last_name }}
-									</td>
-									<td>
+										<br>
 										{{ $borrower->id_number}}
 									</td>
+		
 									<td>
 										{{ $borrower->contact_number}}
 									</td>
@@ -76,10 +76,10 @@
 									</td>
 									<td>
 										{{ $borrower->college->description}}
-									</td>
-									<td>
+										<br>
 										{{ $borrower->course->description ?? ''}}
 									</td>
+							
 
 									<td class="text-center">
 										<div class="btn-group" role="group">
@@ -168,6 +168,6 @@
 
 		</div>
 		<!-- Pagination links -->
-		{{ $borrowers->links() }}
+		{{-- $borrowers->links() --}}
 	</div>
 </div>
