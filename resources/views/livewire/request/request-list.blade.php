@@ -13,6 +13,7 @@
 		</div>
 	</div>
 	<livewire:flash-message.flash-message />
+
 	<div class="row d-flex justify-content-center">
 		<div class="col-sm-12">
 			<div class="card card-table show-entire">

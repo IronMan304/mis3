@@ -264,7 +264,28 @@ class RequestController extends Controller
                 
             ->get();
 
+            $requestsPendingAndApproved = Request::where('status_id', 11)
+            ->orWhere('status_id', 10)
+            ->orderBy('id', 'desc')
+           -> with(['status' => function ($query) {
+                $query->select('id', 'description');
+            }, 'borrower' => function ($query) {
+                $query->select('id', 'first_name', 'middle_name', 'last_name');
+            }])
+                
+            ->get();
+
             $requestsReviewed = Request::where('status_id', 16)
+            ->orderBy('id', 'desc')
+           -> with(['status' => function ($query) {
+                $query->select('id', 'description');
+            }, 'borrower' => function ($query) {
+                $query->select('id', 'first_name', 'middle_name', 'last_name');
+            }])
+                
+            ->get();
+
+            $requestsApproved = Request::where('status_id', 10)
             ->orderBy('id', 'desc')
            -> with(['status' => function ($query) {
                 $query->select('id', 'description');
@@ -286,7 +307,7 @@ class RequestController extends Controller
 
         $countPending = $requestsPending->count();
         $countReviewed = $requestsReviewed->count();
-        // $countApproved = $requestsApproved->count();
+        $countApproved = $requestsApproved->count();
         // $countStarted = $requestsStarted->count();
         // $countCompleted = $requestsCompleted->count();
 
@@ -303,14 +324,14 @@ class RequestController extends Controller
             'countRequests' => $countRequests,
             'countPending' => $countPending,
             'countReviewed' => $countReviewed,
-            // 'countApproved' => $countApproved,
+            'countApproved' => $countApproved,
             // 'countStarted' => $countStarted,
             // 'countCompleted' => $countCompleted,
             'requestNumbers' => $requestNumbers,
             'requestsPending' => $requestsPending,
             'requestsReviewed' => $requestsReviewed,
-            // 'requestsApproved' => $requestsApproved,
-            // 'requestsStarted' => $requestsStarted,
+            'requestsApproved' => $requestsApproved,
+             'requestsPendingAndApproved' => $requestsPendingAndApproved,
             // 'requestsCompleted' => $requestsCompleted,
         ]);
     }
@@ -341,6 +362,15 @@ class RequestController extends Controller
                 ->orderBy('id', 'desc')
                 ->get();
 
+                $requestsApprovedService = ServiceRequest::with(['status' => function ($query) {
+                    $query->select('id', 'description');
+                }, 'borrower' => function ($query) {
+                    $query->select('id', 'first_name', 'middle_name', 'last_name');
+                }])
+                    ->where('status_id', 10) //pending
+                    ->orderBy('id', 'desc')
+                    ->get();
+
 
 
         // $requestsReviewed = ServiceRequest::where('status_id', 16)->get();
@@ -354,7 +384,7 @@ class RequestController extends Controller
         $countPendingService = $requestsPendingService->count();
         $countReviewedService = $requestsReviewedService->count();
         // $countReviewed = $requestsReviewed->count();
-        // $countApproved = $requestsApproved->count();
+        $countApprovedService = $requestsApprovedService->count();
         // $countStarted = $requestsStarted->count();
         // $countCompleted = $requestsCompleted->count();
 
@@ -372,14 +402,14 @@ class RequestController extends Controller
             'countPendingService' => $countPendingService,
             'countReviewedService' => $countReviewedService,
             // 'countReviewed' => $countReviewed,
-            // 'countApproved' => $countApproved,
+             'countApprovedService' => $countApprovedService,
             // 'countStarted' => $countStarted,
             // 'countCompleted' => $countCompleted,
             // 'requestNumbers' => $requestNumbers,
             'requestsPendingService' => $requestsPendingService,
             'requestsReviewedService' => $requestsReviewedService,
             // 'requestsReviewed' => $requestsReviewed,
-            // 'requestsApproved' => $requestsApproved,
+             'requestsApprovedService' => $requestsApprovedService,
             // 'requestsStarted' => $requestsStarted,
             // 'requestsCompleted' => $requestsCompleted,
         ]);

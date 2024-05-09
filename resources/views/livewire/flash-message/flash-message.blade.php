@@ -38,4 +38,5 @@
 		</div>
 	@endif
 	<livewire:broadcasting />
+
 </div>
