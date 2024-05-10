@@ -12,6 +12,19 @@
     @if ($errors->any())
     {{ implode('', $errors->all('<div>:message</div>')) }}
     @endif
+
+    @if(isset($errorMessage))
+    <div id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="text-dark">
+
+            <div class="alert alert-danger">
+                {{ $errorMessage }}
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+    
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">

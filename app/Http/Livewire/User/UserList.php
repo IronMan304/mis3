@@ -66,6 +66,7 @@ class UserList extends Component
         }
 
         $users = $users->with('roles')->paginate($this->perPage);
+        
 
         return view('livewire.user.user-list', [
             'users' => $users

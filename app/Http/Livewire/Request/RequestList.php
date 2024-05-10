@@ -41,6 +41,7 @@ class RequestList extends Component
         'refreshParentApproval' => '$refresh',
         'refreshParentSecurityApproval' => '$refresh',
         'refreshParentRequestStartForm' => '$refresh',
+        'refreshParentCancelRequest' => '$refresh',
         'deleteRequest',
         'editRequest',
         'deleteConfirmRequest',
