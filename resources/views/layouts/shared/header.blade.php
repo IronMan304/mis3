@@ -40,18 +40,19 @@
 		<i class="fa-solid fa-arrow-up"></i> <!-- Use the appropriate icon class here -->
 	</a>
 
-
 	<ul class="nav user-menu float-end">
 		@can('pending-notification')
 		{{--@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))--}}
 		<li class="nav-item dropdown d-none d-md-block">
 			<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link">
-				<span id="count-pending" class="status-pink"></span>
-				<span id="count-pending-service" class="status-pink"></span>
-				<img src="assets/img/icons/note-icon-01.svg" alt="">
+			<!-- <i class="fa-solid fa-wrench hasnotifications nav-link "></i> -->
+				<span id="count-pending" class="pink"></span>
+				<span id="count-reviewed" class="grey"></span>
+				<span id="count-approved" class="blue"></span>
 
-				<span id="count-approved" class="status-blue"></span>
-				<span id="count-approved-service" class="status-blue"></span>
+				<img src="assets/img/icons/note-icon-01.svg" alt="">
+				<span id="count-pending-service" class="pink"></span>
+				<span id="count-approved-service" class="blue"></span>
 			</a>
 		</li>
 
@@ -59,14 +60,27 @@
 			<div class="col-md-12">
 				<div class="card-box">
 					<ul class="nav nav-tabs nav-tabs-solid">
-						<li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab">Equipment</a></li>
-						<li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Service</a></li>
+						<!-- <li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab"> <span id="count-approved" class="status-blue"></span></a></li>
+						<li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Service</a></li> -->
+						<li class="nav-item dropdown">
+							<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">Equipment</a>
+							<div class="dropdown-menu dropdown-menu-end">
+								<a class="dropdown-item" href="#basic-justified-tab-pending" data-bs-toggle="tab" id="count-pending">Pending</a>
+								<a class="dropdown-item" href="#basic-justified-tab-reviewed" data-bs-toggle="tab" id="count-reviewed">Reviewed</a>
+								<a class="dropdown-item" href="#basic-justified-tab-approved" data-bs-toggle="tab" id="count-approved">Approved</a>
+							</div>
+						</li>
+						<li class="nav-item dropdown">
+							<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">Service</a>
+							<div class="dropdown-menu dropdown-menu-end">
+								<a class="dropdown-item" href="#basic-justified-tab-pending-service" data-bs-toggle="tab" id="count-pending-service">Pending</a>
+								<a class="dropdown-item" href="#basic-justified-tab-approved-service" data-bs-toggle="tab" id="count-approved-service">Approved</a>
+							</div>
+						</li>
 					</ul>
 					<div class="tab-content">
 
-
-
-						<div class="tab-pane show active" id="solid-tab1">
+						<div class="tab-pane show active" id="basic-justified-tab-pending">
 							<div class="msg-sidebar notifications msg-noti">
 								<div class="topnav-dropdown-header">
 									<span>All Pending Equipment Requests</span>
@@ -78,13 +92,49 @@
 								</div>
 							</div>
 						</div>
-						<div class="tab-pane" id="solid-tab2">
+						<div class="tab-pane" id="basic-justified-tab-reviewed">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span>All Reviewed Equipment Requests</span>
+								</div>
+								<div id="msg_list1">
+									<ul class="list-box" id="reviewed-requests-list">
+										<!-- Content for pending requests goes here -->
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="basic-justified-tab-approved">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span>All Approved Equipment Requests</span>
+								</div>
+								<div id="msg_list2">
+									<ul class="list-box" id="approved-requests-list">
+										<!-- Content for pending requests goes here -->
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="basic-justified-tab-pending-service">
 							<div class="msg-sidebar notifications msg-noti">
 								<div class="topnav-dropdown-header">
 									<span><span>All Pending Service Requests</span>
 								</div>
-								<div id="msg_list1">
+								<div id="msg_list4">
 									<ul class="list-box" id="pending-requests-list-service">
+										<!-- Content for pending requests goes here -->
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="basic-justified-tab-approved-service">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span><span>All Approved Service Requests</span>
+								</div>
+								<div id="msg_list5">
+									<ul class="list-box" id="approved-requests-list-service">
 										<!-- Content for pending requests goes here -->
 									</ul>
 								</div>
@@ -96,7 +146,6 @@
 		</div>
 		{{--@endif--}}
 		@endcan
-
 
 		@can('reviewed-notification')
 		{{--@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('president') || auth()->user()->hasRole('vice-president'))--}}
@@ -116,8 +165,6 @@
 						<li class="nav-item"><a class="nav-link" href="#solid-tab4" data-bs-toggle="tab">Service</a></li>
 					</ul>
 					<div class="tab-content">
-
-
 
 						<div class="tab-pane show active" id="solid-tab3">
 							<div class="msg-sidebar notifications msg-noti">
@@ -149,10 +196,7 @@
 		</div>
 		{{--@endif--}}
 		@endcan
-
-
-
-
+		
 		<li class="nav-item dropdown has-arrow user-profile-list">
 			<a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
 				<div class="user-names">

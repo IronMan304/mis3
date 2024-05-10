@@ -206,25 +206,32 @@ class RequestList extends Component
         $this->emit('refreshTable');
     }
 
+    // public function cancelRequest($requestId)
+    // {
+    //     if ($requestId) {
+    //         // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
+    //         Request::where('id', $requestId)->update(['status_id' => 8]);
+
+    //         // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
+    //         Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
+
+    //         $action = 'cancel';
+    //         $message = 'Request Cancelled';
+    //     }
+
+
+    //     // $action = 'error';
+    //     // $message = 'Successfully Deleted';
+
+    //     $this->emit('flashAction', $action, $message);
+    //     $this->emit('refreshTable');
+    // }
+
     public function cancelRequest($requestId)
     {
-        if ($requestId) {
-            // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
-            Request::where('id', $requestId)->update(['status_id' => 8]);
-
-            // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
-            Tool::whereIn('id', $this->toolItems)->update(['status_id' => 1]);
-
-            $action = 'cancel';
-            $message = 'Request Cancelled';
-        }
-
-
-        // $action = 'error';
-        // $message = 'Successfully Deleted';
-
-        $this->emit('flashAction', $action, $message);
-        $this->emit('refreshTable');
+        $this->requestId = $requestId;
+        $this->emit('requestId', $this->requestId);
+        $this->emit('openCancelRequestModal');
     }
 
     public function render()

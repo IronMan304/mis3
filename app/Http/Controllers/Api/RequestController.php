@@ -264,9 +264,10 @@ class RequestController extends Controller
                 
             ->get();
 
+
             $requestsPendingAndApproved = Request::where('status_id', 11)
             ->orWhere('status_id', 10)
-            ->orderBy('id', 'desc')
+            ->orderBy('updated_at', 'desc')
            -> with(['status' => function ($query) {
                 $query->select('id', 'description');
             }, 'borrower' => function ($query) {
@@ -316,7 +317,7 @@ class RequestController extends Controller
 
          $requestsPending = $requestsPending->sortByDesc('id');
         $requestsReviewed = $requestsReviewed->sortByDesc('id');
-        // $requestsApproved = $requestsApproved->sortByDesc('id');
+         $requestsApproved = $requestsApproved->sortByDesc('id');
         // $requestsStarted = $requestsStarted->sortByDesc('id');
         // $requestsCompleted = $requestsCompleted->sortByDesc('id');
 

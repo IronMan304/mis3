@@ -77,7 +77,7 @@
                     success: function(response) {
                         $('#count-requests').text(response.countRequests || '');
                         $('#count-pending').text(response.countPending || '');
-                        $('#count-approved').text(response.countApproved || '');
+                        // $('#count-approved').text(response.countApproved || '');
 
                         // $('#count-reviewed').text(response.countReviewed);
                         // $('#count-approved').text(response.countApproved);
@@ -86,7 +86,7 @@
 
                         // Update pending requests list
                         $('#pending-requests-list').empty(); // Clear previous list
-                        $.each(response.requestsPendingAndApproved, function(index, request) {
+                        $.each(response.requestsPending, function(index, request) {
                             // Get the message creation time from request.created_at (assuming it's in UTC)
                             var messageTime = new Date(request.created_at);
 
@@ -143,7 +143,6 @@
                             );
 
                         });
-
 
                     },
                     error: function(xhr, status, error) {
@@ -401,19 +400,181 @@
                 });
             }
 
+            function updateApproved() {
+                $.ajax({
+                    url: '/get-realtime-count', // Update with the correct URL
+                    type: 'GET',
+                    success: function(response) {
+                        $('#count-approved').text(response.countApproved);
 
-            // Call the function initially
+                        // $('#count-reviewed').text(response.countReviewed);
+                        // $('#count-approved').text(response.countApproved);
+                        // $('#count-started').text(response.countStarted);
+                        // $('#count-completed').text(response.countCompleted);
+
+                        // Update approved requests list
+                        $('#approved-requests-list').empty(); // Clear previous list
+                        $.each(response.requestsApproved, function(index, request) {
+                            // Get the message creation time from request.created_at (assuming it's in UTC)
+                            var messageTime = new Date(request.created_at);
+
+                            // Convert the message time to Philippine time (UTC+8)
+                            messageTime.setHours(messageTime.getHours() + 8);
+
+                            // Format date
+                            var formattedDate = messageTime.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            });
+
+                            // Format time
+                            var formattedTime = messageTime.toLocaleTimeString('en-US', {
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                hour12: true
+                            });
+
+                            // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+                            var dayOfWeek = messageTime.getDay();
+
+                            // Define an array to map the day of the week to its name
+                            var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+                            // Get the day name
+                            var dayName = daysOfWeek[dayOfWeek];
+
+                            // Check if the message was sent today
+                            var today = new Date();
+                            var isToday = today.toDateString() === messageTime.toDateString();
+
+                            // Format the time string
+                            var formattedDateTime = formattedDate + ', ' + formattedTime + " " + (isToday ? 'today' : dayName);
+                            // Check if borrower exists before accessing its properties
+                            var borrowerName = request.borrower ? (request.borrower.first_name + ' ' + (request.borrower.middle_name || '') + ' ' + request.borrower.last_name) : 'N/A';
+                            $('#approved-requests-list').append(
+                                '<li>' +
+                                '<div class="list-item">' +
+                                '<div class="list-left"></div>' +
+                                '<div class="list-body">' +
+                                '<div ><span class="message-author">' + request.request_number + '</span></div>' +
+                                '<span class="message-time">' + formattedDateTime + '</span>' +
+
+                                '<div class="clearfix"></div>' +
+                                '<div class="message-content status-blue">' + 'Status: ' + request.status.description + '</div>' +
+                                '<div class="message-content">' + 'Requester: ' + borrowerName + '</div>' +
+
+                                '</div>' +
+                                '</div>' +
+                                '</li>'
+                            );
+                        });
+
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+
+            function updateApprovedService() {
+                $.ajax({
+                    url: '/get-realtime-count-service', // Update with the correct URL
+                    type: 'GET',
+                    success: function(response) {
+                        $('#count-approved-service').text(response.countApproved);
+
+                        // $('#count-reviewed').text(response.countReviewed);
+                        // $('#count-approved').text(response.countApproved);
+                        // $('#count-started').text(response.countStarted);
+                        // $('#count-completed').text(response.countCompleted);
+
+                        // Update approved requests list
+                        $('#approved-requests-list-service').empty(); // Clear previous list
+                        $.each(response.requestsApprovedService, function(index, request) {
+                            // Get the message creation time from request.created_at (assuming it's in UTC)
+                            var messageTime = new Date(request.created_at);
+
+                            // Convert the message time to Philippine time (UTC+8)
+                            messageTime.setHours(messageTime.getHours() + 8);
+
+                            // Format date
+                            var formattedDate = messageTime.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            });
+
+                            // Format time
+                            var formattedTime = messageTime.toLocaleTimeString('en-US', {
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                hour12: true
+                            });
+
+                            // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+                            var dayOfWeek = messageTime.getDay();
+
+                            // Define an array to map the day of the week to its name
+                            var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+                            // Get the day name
+                            var dayName = daysOfWeek[dayOfWeek];
+
+                            // Check if the message was sent today
+                            var today = new Date();
+                            var isToday = today.toDateString() === messageTime.toDateString();
+
+                            // Format the time string
+                            var formattedDateTime = formattedDate + ', ' + formattedTime + " " + (isToday ? 'today' : dayName);
+                            // Check if borrower exists before accessing its properties
+                            var borrowerName = request.borrower ? (request.borrower.first_name + ' ' + (request.borrower.middle_name || '') + ' ' + request.borrower.last_name) : 'N/A';
+                            $('#approved-requests-list-service').append(
+                                '<li>' +
+                                '<div class="list-item">' +
+                                '<div class="list-left"></div>' +
+                                '<div class="list-body">' +
+                                '<div ><span class="message-author">' + request.request_number + '</span></div>' +
+                                '<span class="message-time">' + formattedDateTime + '</span>' +
+
+                                '<div class="clearfix"></div>' +
+                                '<div class="message-content status-blue">' + 'Status: ' + request.status.description + '</div>' +
+                                '<div class="message-content">' + 'Requester: ' + borrowerName + '</div>' +
+
+                                '</div>' +
+                                '</div>' +
+                                '</li>'
+                            );
+                        });
+
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+
             updateRealtimeCount();
-            updateReviewed();
-            updateReviewedService();
-            // Call the function initially
             updateRealtimeCountService();
-            // Update the counts every 5 seconds
+
+            updateReviewed();
+            updateApproved();
+
+            updateReviewedService();
+            updateApprovedService();
+         
             setInterval(function() {
                 updateRealtimeCount();
-                updateReviewed();
-                updateReviewedService();
                 updateRealtimeCountService();
+
+                updateReviewed();
+                updateApproved();
+               
+                updateReviewedService();
+                updateApprovedService();
+            
             }, 10000);
         });
     </script>

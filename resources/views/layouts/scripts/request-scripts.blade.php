@@ -14,6 +14,14 @@
       $('#requestModal').modal('show');
     });
 
+    window.livewire.on('closeCancelRequestModal', () => {
+      $('#cancelRequestModal').modal('hide');
+    });
+
+    window.livewire.on('openCancelRequestModal', () => {
+      $('#cancelRequestModal').modal('show');
+    });
+
     window.livewire.on('closeReturnModal', () => {
       $('#returnModal').modal('hide');
     });

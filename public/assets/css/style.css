@@ -6536,6 +6536,10 @@ a.status-blue {
     background-color: #e5f3fe;
     color: #008cff;
 }
+.blue,
+a.blue {
+    color: #008cff;
+}
 .status-purple,
 a.status-purple {
     background-color: #f3e7fd;
@@ -6551,6 +6555,10 @@ a.status-dark-purple {
     background: rgb(183, 236, 139);
     color: #2A4C0E;
 }
+.pink,
+a.pink {
+    color: #ff01a2;
+}
 .status-pink,
 a.status-pink {
     background-color: #ffe5f6;
@@ -6559,6 +6567,10 @@ a.status-pink {
 .status-grey,
 a.status-grey {
     background-color: #ddd;
+    color: #818181;
+}
+.grey,
+a.grey {
     color: #818181;
 }
 .btn-grey {

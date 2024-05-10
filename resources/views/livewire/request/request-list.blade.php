@@ -266,7 +266,7 @@
 											</button>
 											@endif--}}
 											@can('view-equipment-requests-logs')
-											<button type="button" class="btn btn-info btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="View Tool">
+											<button type="button" class="btn btn-secondary btn-sm mx-1" wire:click="viewRequestTool({{ $request->id }})" title="View Tool">
 												<i class="fa-solid fa-list"></i>
 											</button>
 											@endcan
@@ -329,7 +329,10 @@
 											@endforeach
 											@endif
 											@endcan
-
+											
+											<button type="button" class="btn btn-danger btn-sm mx-1" wire:click="cancelRequest({{ $request->id }})" title="Cancel"  >
+											<i class="fa-solid fa-rectangle-xmark"></i>
+											</button>
 										</div>
 									</td>
 
@@ -352,6 +355,12 @@
 	<div wire.ignore.self class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 		<div class="modal-dialog modal-dialog-centered">
 			<livewire:request.request-form />
+		</div>
+	</div>
+
+	<div wire.ignore.self class="modal fade" id="cancelRequestModal" tabindex="-1" role="dialog" aria-labelledby="cancelRequestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:request.cancel-request />
 		</div>
 	</div>
 
