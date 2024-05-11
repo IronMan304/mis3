@@ -476,7 +476,7 @@ chart.render();
 }
 // Patient Chart
 
-if ($('#patient-chart').length > 0) {
+if ($('#borrower-chart').length > 0) {
 	var sColStacked = {
 		chart: {
 			height: 230,
@@ -522,7 +522,7 @@ if ($('#patient-chart').length > 0) {
 	}
 
 	var chart = new ApexCharts(
-		document.querySelector("#patient-chart"),
+		document.querySelector("#borrower-chart"),
 		sColStacked
 	);
 

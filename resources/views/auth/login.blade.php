@@ -70,15 +70,24 @@
 
                                         <!-- Email Address -->
                                         <div class="form-group">
-                                            <x-input-label for="email" :value="__('Email')" />
+                                            <!-- <x-input-label for="email" :value="__('Email')" /> -->
+                                            <label>Email
+                                                @if($errors->any())
+                                                <span class="login-danger">*</span>
+                                                @endif
+                                            </label>
                                             <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-                                            <x-input-error :messages="$errors->get('email')" class="alert alert-danger" />
+                                            <x-input-error :messages="$errors->get('email')" class="alert status-pink" />
                                         </div>
 
                                         <!-- Password -->
                                         <div class="form-group">
-                                            <x-input-label for="password" :value="__('Password')" />
-
+                                            <!-- <x-input-label for="password" :value="__('Password')" /> -->
+                                            <label>Password
+                                                @if($errors->any())
+                                                <span class="login-danger">*</span>
+                                                @endif
+                                            </label>
                                             <x-text-input id="password" class="form-control pass-input" type="password" name="password" required autocomplete="current-password" />
                                             <span class="profile-views feather-eye-off toggle-password"></span>
 
@@ -95,7 +104,7 @@
                                             </div>
                                             {{--@if (Route::has('password.request'))
                                             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                                                {{ __('Forgot your password?') }}
+                                            {{ __('Forgot your password?') }}
                                             </a>
                                             @endif--}}
                                         </div>
