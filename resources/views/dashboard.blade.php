@@ -1,5 +1,5 @@
-@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))
 <x-app-layout>
+    @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))
     <livewire:broadcasting />
 
     <div class="content">
@@ -54,7 +54,7 @@
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                 <div class="dash-widget">
                     <div class="dash-boxs comman-flex-center">
-                    <i class="fa-solid fa-toolbox"></i>
+                        <i class="fa-solid fa-toolbox"></i>
                     </div>
                     <div class="dash-content dash-count">
                         <h4>Equipments</h4>
@@ -122,5 +122,13 @@
     </div>
 
     </div>
+    @elseif(auth()->user()->hasRole('technician'))
+    <script>
+        window.location.href = '/service_requests';
+    </script>
+    @else
+    <script>
+        window.location.href = '/requests';
+    </script>
+    @endif
 </x-app-layout>
-@endif

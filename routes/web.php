@@ -53,9 +53,9 @@ use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
 */
 
 //Route::get('/', [WelcomeController::class, 'index']);
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -129,4 +129,7 @@ Route::group(['middleware' => ['role:admin|president|vice-president|head of offi
 Route::group(['middleware' => ['role:admin|president|vice-president|head of office|staff|technician']], function () {
     Route::get('service_requests', ServiceRequestList::class);
 });
+
+Route::get('online-requests', OnlineList::class);
+
 require __DIR__ . '/auth.php';
