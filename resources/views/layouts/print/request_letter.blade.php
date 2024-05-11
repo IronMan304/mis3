@@ -77,7 +77,7 @@
       <div class="content" style="font-size: 13px;">
         {{--<p>{{ $request?->created_at?->format('m-d-Y') ?? '' }}</p>--}}
         <p>{{ $request?->created_at ? \Carbon\Carbon::parse($request->created_at)->format('F d, Y') : '' }}</p>
-
+        &emsp; &emsp; &emsp;<p>{{ $request->request_number ?? ''  }}</p>
 
         <br>
 
