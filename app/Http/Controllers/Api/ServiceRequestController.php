@@ -63,13 +63,42 @@ class ServiceRequestController extends Controller
             'tool_status_id' => 'nullable',
         ]);
 
+         // Assign authenticated user's id to borrower_id if the user has the "requester" role
+         if (auth()->user()->hasRole('requester') || auth()->user()->hasRole('student') || auth()->user()->hasRole('faculty') || auth()->user()->hasRole('guest')) {
+            $data['borrower_id'] = Borrower::where('user_id', auth()->user()->id)->value('id');
+        }
+
+        $borrower = Borrower::findOrFail($data['borrower_id']);
+        // Get the current year
+        $currentYear = date('Y');
+
+        $position = $borrower->position->description;
+        $prefix = strtoupper(substr($position, 0, 1)); // Capitalize the first letter of the position
+
+        // Get the last request number for the current year
+        $lastRequestNumber = DB::table('service_requests')
+            ->where('request_number', 'like', $prefix . 'SR' . $currentYear . '%')
+            ->max('request_number');
+
+        // Extract the number part and increment it
+        if ($lastRequestNumber) {
+            $lastNumber = (int)substr($lastRequestNumber, -4); // Extract the last 4 digits
+            $newNumber = $lastNumber + 1;
+        } else {
+            // If no previous request number exists, start with 1
+            $newNumber = 1;
+        }
+
+        // Pad the number with leading zeros if necessary
+        $newNumberPadded = str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+
+        // Generate the new request number
+        $data['request_number'] = $prefix . 'SR' . $currentYear . $newNumberPadded;
+
         $tool = Tool::findOrFail($data['tool_id']);
         if ($tool->status_id == 1) {
 
-            // Assign authenticated user's id to borrower_id if the user has the "requester" role
-            if (auth()->user()->hasRole('requester') || auth()->user()->hasRole('student') || auth()->user()->hasRole('faculty') || auth()->user()->hasRole('guest')) {
-                $data['borrower_id'] = Borrower::where('user_id', auth()->user()->id)->value('id');
-            }
+           
 
 
             $borrower = Borrower::findOrFail($data['borrower_id']);

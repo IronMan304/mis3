@@ -39,7 +39,7 @@ class ServiceRequestForm extends Component
         $this->serviceRequestId = $serviceRequestId;
         $serviceRequest = ServiceRequest::whereId($serviceRequestId)->first();
         $this->borrower_id = $serviceRequest->borrower_id;
-        $this->service_id = $serviceRequest->service_id;
+        //$this->service_id = $serviceRequest->service_id;
         $this->tool_id = $serviceRequest->tool_id;
         $this->staff_user_id = $serviceRequest->staff_user_id;
         $this->status_id = $serviceRequest->status_id;
@@ -53,7 +53,7 @@ class ServiceRequestForm extends Component
     {
         $data = $this->validate([
             'borrower_id' => 'required',
-            'service_id' => 'required',
+            //'service_id' => 'nullable',
             'tool_id' => 'required',
             'staff_user_id' => 'nullable',
             'status_id' => 'nullable',

@@ -51,7 +51,7 @@
 									<th>Request Number</th>
 									<td>Requester</td>
 									<th>Source</th>
-									<th>Service</th>
+									<!-- <th>Service</th> -->
 									<th>Equipment Type</th>
 									<th>Property Number</th>
 									<th>Operator</th>
@@ -72,9 +72,9 @@
 									<td>
 										{{ $service_request->tool->source->description ?? ''}}
 									</td>
-									<td>
+									{{--<td>
 										{{$service_request->service->description ?? ''}}
-									</td>
+									</td>--}}
 									<td>
 										{{ $service_request->tool->type->description ?? ''}}
 									</td>
@@ -88,7 +88,7 @@
 										{{ $service_request->Technician->first_name ?? 'TBA'}} {{ $service_request->Technician->middle_name ?? ''}} {{ $service_request->Technician->last_name ?? ''}}
 									</td>
 									<td>
-										{{ $service_request->set_date ?? ''}}
+										{{ $service_request->set_date ?? 'TBA'}}
 									</td>
 									<td>
 										{{ $service_request->status->description ?? ''}}
