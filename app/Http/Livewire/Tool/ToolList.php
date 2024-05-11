@@ -153,6 +153,12 @@ class ToolList extends Component
                 });
         }
 
+        // // Retrieve the tools only if there's a search query or at least one filter applied
+        // if (!empty($this->search) || !empty($this->owner_id) || !empty($this->type_id) || !empty($this->status_id) || !empty($this->source_id) || !empty($this->applicability_id) || !empty($this->security_id)) {
+        //     $tools = $query->paginate($this->perPage);
+        // } else {
+        //     $tools = []; // Empty collection if no search query or filters applied
+        // }
         $tools = $query->paginate($this->perPage);
         $sources = Source::all();
         $types = Type::all();

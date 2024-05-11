@@ -8,7 +8,7 @@
                     <img class="w-100" src="assets2/img/norsu.jpg" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
-                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">Manage Your Equipment Efficiently
+                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">Manage Your Equipment Inventory Efficiently
                             </h5>
                             <h1 class="display-1 text-white mb-md-4 animated zoomIn">Take Control of Your Equipment Inventory</h1>
                             <a href="" class="btn btn-secondary btn-sm py-md-3 px-md-5 animated slideInRight">Contact
@@ -20,9 +20,9 @@
                     <img class="w-100" src="assets2/img/norsu.jpg" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
-                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">Manage Your Equipment Efficiently
+                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">Manage Your Equipment Request Efficiently
                             </h5>
-                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">Take Control of Your Equipment Inventory</h1>
+                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">Take Control of Your Equipment Request</h1>
                             <a href="" class="btn btn-secondary btn-sm py-md-3 px-md-5 animated slideInRight">Contact
                                 Us</a>
                         </div>
@@ -59,14 +59,14 @@
                         </div>
                         <div class="col-sm-6 wow zoomIn" data-wow-delay="0.6s">
                             <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>User-Friendly Interface</h5>
-                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Real-time Tracking</h5>
+                            <h5 class="mb-3"><i class="fa fa-check-circle text-primary me-3"></i>Request Tracking</h5>
                         </div>
                     </div>
-                    <a href="{{ url('/equipment') }}" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn" data-wow-delay="0.6s">Get Started</a>
+                    <!-- <a href="{{ url('/equipment') }}" class="btn btn-primary py-3 px-5 mt-4 wow zoomIn" data-wow-delay="0.6s">Get Started</a> -->
                 </div>
                 <div class="col-lg-5" style="min-height: 500px;">
                     <div class="position-relative h-100">
-                        <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s" src="assets2/img/service-3.jpg" style="object-fit: cover;">
+                        <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s" src="#" style="object-fit: cover;">
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
     <!-- About End -->
 
     <!-- Pricing Start -->
-    <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <!-- <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container">
             <div class="row g-5">
                 <div class="col-lg-5">
@@ -118,7 +118,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- Pricing End -->
 
     <!-- Team Start -->

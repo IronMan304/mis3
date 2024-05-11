@@ -23,6 +23,7 @@ class Tool extends Model
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
+   
     public function source()
     {
         return $this->belongsTo(Source::class, 'source_id', 'id');

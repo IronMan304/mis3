@@ -26,20 +26,20 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-    
+
         $request->session()->regenerate();
-    
+
         $user = auth()->user();
-    
+
         if ($user) {
             $roleNames = '';
-    
+
             $roles = $user->getRoleNames()->toArray();
-    
+
             if (!empty($roles)) {
                 $roleNames = implode(', ', $roles);
             }
-    
+
             // Log the login activity
             activity()
                 ->performedOn($user)
@@ -49,27 +49,29 @@ class AuthenticatedSessionController extends Controller
                 ->event('Login')
                 ->log('User Logged in');
         }
-    
+
         if (auth()->user()->hasRole('admin')) {
             return redirect()->intended(RouteServiceProvider::HOME);
+        } else if (auth()->user()->hasRole('student') || auth()->user()->hasRole('faculty') || auth()->user()->hasRole('guest')) {
+            return redirect()->intended(RouteServiceProvider::ONLINE);
         } else {
             return redirect()->intended(RouteServiceProvider::REQUEST);
         }
     }
-    
+
     public function destroy(Request $request): RedirectResponse
     {
         $user = auth()->user();
-    
+
         if ($user) {
             $roleNames = '';
-    
+
             $roles = $user->getRoleNames()->toArray();
-    
+
             if (!empty($roles)) {
                 $roleNames = implode(', ', $roles);
             }
-    
+
             // Log the logout activity
             activity()
                 ->performedOn($user)
@@ -79,14 +81,13 @@ class AuthenticatedSessionController extends Controller
                 ->event('Logout')
                 ->log('User logged out');
         }
-    
+
         Auth::guard('web')->logout();
-    
+
         $request->session()->invalidate();
-    
+
         $request->session()->regenerateToken();
-    
+
         return redirect('/');
     }
-    
 }

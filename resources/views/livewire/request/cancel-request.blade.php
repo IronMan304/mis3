@@ -24,7 +24,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     @endif
-    
+
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
@@ -34,7 +34,7 @@
                             Request Cancellation Reason
                             <span class="login-danger">*</span>
                         </label>
-                        <input class="form-control" type="text" wire:model="cancel_reason" placeholder />
+                        <textarea class="form-control" wire:model="cancel_reason" placeholder="Enter reason..." rows="5"></textarea>
                     </div>
                 </div>
             </div>

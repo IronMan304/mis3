@@ -337,7 +337,7 @@
 			</div>
 		</div>
 	</div>
-	{{-- $tools->links() --}}
+	{{ $tools->links() }}
 
 </div>
 {{-- Modal --}}

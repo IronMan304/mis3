@@ -32,13 +32,15 @@ use App\Http\Livewire\Position\PositionList;
 use App\Http\Livewire\Security\SecurityList;
 use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Authentication\RoleList;
+use App\Http\Controllers\Api\RequestController;
 use App\Http\Controllers\Request\PrintController;
+use Spatie\Permission\Middlewares\RoleMiddleware;
 use App\Http\Controllers\RequesterProfileController;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
+use App\Http\Livewire\Online\OnlineList;
 use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
-use App\Http\Controllers\Api\RequestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,16 +53,18 @@ use App\Http\Controllers\Api\RequestController;
 */
 
 //Route::get('/', [WelcomeController::class, 'index']);
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/get-realtime-count', [RequestController::class, 'count']);
 Route::get('/get-realtime-count-service', [RequestController::class, 'countService']);
+
+
 
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('users', UserList::class);
@@ -84,6 +88,7 @@ Route::group(['middleware' => ['role:admin']], function () {
 
     Route::get('trials', TrialList::class);
      //Route::get('requests1', RequestList1::class);
+
 });
 
 Route::group(['middleware' => ['role:admin|president']], function () {
@@ -116,9 +121,10 @@ Route::group(['middleware' => ['role:admin|head of office|staff']], function () 
 
 Route::group(['middleware' => ['role:admin|president|vice-president|head of office|staff']], function () {
     Route::get('requests', RequestList::class)->name('requests');
-
-
     Route::get('/print/request_letter/{id}', [PrintController::class, 'print_request_letter'])->name('print.request');
 });
 
+Route::group(['middleware' => ['role:student|faculty|guest']], function () {
+    Route::get('online-requests', OnlineList::class);
+});
 require __DIR__ . '/auth.php';

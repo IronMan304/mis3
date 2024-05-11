@@ -20,6 +20,8 @@ class RouteServiceProvider extends ServiceProvider
     public const HOME = '/dashboard';
     public const REQUEST = '/requests';
 
+    public const ONLINE = '/online-requests';
+
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
