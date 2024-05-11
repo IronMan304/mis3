@@ -83,11 +83,11 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::get('positions', PositionList::class);
     Route::get('options', OptionList::class);
 
-  
+
     Route::get('venues', VenueList::class);
 
     Route::get('trials', TrialList::class);
-     //Route::get('requests1', RequestList1::class);
+    //Route::get('requests1', RequestList1::class);
 
 });
 
@@ -114,17 +114,19 @@ Route::group(['middleware' => ['role:admin|head of office|staff']], function () 
     Route::get('tool_reports', ReportList::class)->name('tool_reports');
     Route::get('service_reports', ServiceRequestReportList::class);
 
-    Route::get('service_requests', ServiceRequestList::class);
+
 
     Route::get('logs', LogList::class);
 });
 
 Route::group(['middleware' => ['role:admin|president|vice-president|head of office|staff']], function () {
-    Route::get('requests', RequestList::class)->name('requests');
     Route::get('/print/request_letter/{id}', [PrintController::class, 'print_request_letter'])->name('print.request');
 });
 
-Route::group(['middleware' => ['role:student|faculty|guest']], function () {
-    Route::get('online-requests', OnlineList::class);
+Route::group(['middleware' => ['role:admin|president|vice-president|head of office|staff|operator']], function () {
+    Route::get('requests', RequestList::class)->name('requests');
+});
+Route::group(['middleware' => ['role:admin|president|vice-president|head of office|staff|technician']], function () {
+    Route::get('service_requests', ServiceRequestList::class);
 });
 require __DIR__ . '/auth.php';

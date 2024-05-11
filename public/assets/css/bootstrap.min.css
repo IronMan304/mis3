@@ -2874,6 +2874,23 @@ fieldset:disabled .btn {
     --bs-btn-disabled-bg: #ffc107;
     --bs-btn-disabled-border-color: #ffc107;
 }
+.btn-warning1 {
+    --bs-btn-color: #000;
+    --bs-btn-bg: #8B4513; /* Brown color */
+    --bs-btn-border-color: #8B4513; /* Brown color */
+    --bs-btn-hover-color: #000;
+    --bs-btn-hover-bg: #A0522D; /* Darker brown color on hover */
+    --bs-btn-hover-border-color: #A0522D; /* Darker brown color on hover */
+    --bs-btn-focus-shadow-rgb: 217, 164, 6;
+    --bs-btn-active-color: #000;
+    --bs-btn-active-bg: #D2691E; /* Lighter brown color when active */
+    --bs-btn-active-border-color: #D2691E; /* Lighter brown color when active */
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #000;
+    --bs-btn-disabled-bg: #8B4513; /* Brown color for disabled button */
+    --bs-btn-disabled-border-color: #8B4513; /* Brown color for disabled button */
+}
+
 .btn-danger {
     --bs-btn-color: #fff;
     --bs-btn-bg: #dc3545;

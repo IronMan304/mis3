@@ -5,7 +5,7 @@
 				<ul class="breadcrumb">
 					<li class="breadcrumb-item"><a href="/">Dashboard</a></li>
 					<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-					<li class="breadcrumb-item active">Request List</li>
+					<li class="breadcrumb-item active">Equipment Request List</li>
 
 
 				</ul>
@@ -23,7 +23,7 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<div class="doctor-table-blk">
-									<h3>Request List</h3>
+									<h3>Equipment Request List</h3>
 									<div class="doctor-search-blk">
 										<div class="col-auto text-end float-end ms-auto download-grp">
 											<div class="top-nav-search table-search-blk">
@@ -305,7 +305,7 @@
 											@endif -->
 
 											@if($securityButton || auth()->user()->hasRole('admin') || auth()->user()->can('view-equipment-requests-request-approval'))
-											<button type="button" class="btn btn-warning btn-sm mx-1" wire:click="securityApprovalForm({{ $request->id }})" title="Letter">
+											<button type="button" class="btn btn-warning1 btn-sm mx-1" wire:click="securityApprovalForm({{ $request->id }})" title="Letter">
 												<i class="fa-solid fa-envelope"></i>
 											</button>
 											@endif

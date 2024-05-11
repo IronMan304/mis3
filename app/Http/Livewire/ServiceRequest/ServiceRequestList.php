@@ -24,7 +24,9 @@ class ServiceRequestList extends Component
         'refreshParentSReturn' => '$refresh',
         'deleteServiceRequest',
         'editServiceRequest',
-        'deleteConfirmServiceRequest'
+        'deleteConfirmServiceRequest',
+        'refreshParentCancelRequest' => '$refresh',
+        
     ];
 
     public function updatingSearch()
@@ -32,6 +34,12 @@ class ServiceRequestList extends Component
         $this->emit('refreshTable');
     }
 
+    public function cancelServiceRequest($serviceRequestId)
+    {
+        $this->serviceRequestId = $serviceRequestId;
+        $this->emit('serviceRequestId', $this->serviceRequestId);
+        $this->emit('openCancelRequestModal');
+    }
     public function createServiceRequest()
     {
         $this->emit('resetInputFields');

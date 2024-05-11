@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Http\Livewire\Request;
+namespace App\Http\Livewire\ServiceRequest;
 
 use Carbon\Carbon;
 use App\Models\Tool;
-use App\Models\Request;
+use App\Models\ServiceRequest;
 use Livewire\Component;
-use App\Models\ToolRequest;
 
 class CancelRequest extends Component
 {
-    public $requestId, $cancel_reason, $errorMessage;
+    public $serviceRequestId, $cancel_reason, $errorMessage, $tool_id;
     public $approval_toolItems = [];
     public $action = '';  //flash
     public $message = '';  //flash
 
     protected $listeners = [
-        'requestId',
+        'serviceRequestId',
         'resetInputFields'
     ];
 
@@ -28,14 +27,13 @@ class CancelRequest extends Component
     }
 
     //edit
-    public function requestId($requestId)
+    public function serviceRequestId($serviceRequestId)
     {
-        $this->requestId = $requestId;
-        $cancel_request = Request::whereId($requestId)->first();
+        $this->serviceRequestId = $serviceRequestId;
+        $cancel_request = ServiceRequest::whereId($serviceRequestId)->first();
         $this->cancel_reason = $cancel_request->cancel_reason;
-        $this->approval_toolItems = $cancel_request->tool_keys->map(function ($tool) {
-            return $tool->tool_id;
-        })->toArray();
+        $this->tool_id = $cancel_request->tool_id;
+     
     }
 
     //store
@@ -45,30 +43,22 @@ class CancelRequest extends Component
             'cancel_reason' => 'required',
         ]);
 
-        if ($this->requestId) {
-            $request = Request::whereId($this->requestId)->first();
-            if ($request->status_id == 11 || $request->status_id == 16 || $request->status_id == 10 || $request->status_id == 6) { //can only cancel if request is still not completed or incomplete
-                Request::whereId($this->requestId)->first()->update($data);
+        if ($this->serviceRequestId) {
+            $service_request = ServiceRequest::whereId($this->serviceRequestId)->first();
+            if ($service_request->status_id == 11 || $service_request->status_id == 16 || $service_request->status_id == 10 || $service_request->status_id == 6) { //can only cancel if request is still not completed or incomplete
+                ServiceRequest::whereId($this->serviceRequestId)->first()->update($data);
 
                 // If it's an existing request, update the status to 'Cancelled' (assuming 8 represents 'Cancelled')
-                Request::where('id', $this->requestId)->update([
+                ServiceRequest::where('id', $this->serviceRequestId)->update([
                     'status_id' => 8,
                     'dt_cancelled_user_id' => auth()->user()->id,
                     'dt_cancelled' => Carbon::now()->setTimezone('Asia/Manila'),
                 ]);
 
-                foreach ($this->approval_toolItems as $toolId) {
-                    $toolRequest = ToolRequest::where('request_id', $this->requestId)
-                        ->where('tool_id', $toolId)
-                        ->first();
-                    $toolRequest->update([
-                        'status_id' => 8, // cancelled
-
-                    ]);
-                }
 
                 // Update the tool status to 'Available' (assuming 1 represents 'In Stock') for the associated tools
-                Tool::whereIn('id', $this->approval_toolItems)->update(['status_id' => 1]);
+                Tool::where('id', $this->tool_id)->update(['status_id' => 1]);
+
 
                 $action = 'edit';
                 $message = 'Successfully Cancelled';
@@ -87,7 +77,7 @@ class CancelRequest extends Component
 
     public function render()
     {
-        return view('livewire.request.cancel-request', [
+        return view('livewire.service-request.cancel-request', [
             'errorMessage' => $this->errorMessage,
         ]);
     }

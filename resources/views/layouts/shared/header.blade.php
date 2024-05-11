@@ -41,18 +41,28 @@
 	</a>
 
 	<ul class="nav user-menu float-end">
-		@can('pending-notification')
+		@can('notification')
 		{{--@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))--}}
 		<li class="nav-item dropdown d-none d-md-block">
 			<a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link">
-			<!-- <i class="fa-solid fa-wrench hasnotifications nav-link "></i> -->
+				<!-- <i class="fa-solid fa-wrench hasnotifications nav-link "></i> -->
+				@can('pending-notif-er')
 				<span id="count-pending" class="pink"></span>
+				@endcan
+				@can('reviewed-notif-er')
 				<span id="count-reviewed" class="grey"></span>
+				@endcan
+				@can('approved-notif-er')
 				<span id="count-approved" class="blue"></span>
+				@endcan
 
 				<img src="assets/img/icons/note-icon-01.svg" alt="">
+				@can('pending-notif-sr')
 				<span id="count-pending-service" class="pink"></span>
+				@endcan
+				@can('approved-notif-sr')
 				<span id="count-approved-service" class="blue"></span>
+				@endcan
 			</a>
 		</li>
 
@@ -63,24 +73,38 @@
 						<!-- <li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab"> <span id="count-approved" class="status-blue"></span></a></li>
 						<li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Service</a></li> -->
 						<li class="nav-item dropdown">
+							@can('er')
 							<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">Equipment</a>
+							@endcan
 							<div class="dropdown-menu dropdown-menu-end">
+								@can('pending-notif-er')
 								<a class="dropdown-item" href="#basic-justified-tab-pending" data-bs-toggle="tab" id="count-pending">Pending</a>
+								@endcan
+								@can('reviewed-notif-er')
 								<a class="dropdown-item" href="#basic-justified-tab-reviewed" data-bs-toggle="tab" id="count-reviewed">Reviewed</a>
+								@endcan
+								@can('approved-notif-er')
 								<a class="dropdown-item" href="#basic-justified-tab-approved" data-bs-toggle="tab" id="count-approved">Approved</a>
+								@endcan
 							</div>
 						</li>
 						<li class="nav-item dropdown">
+							@can('sr')
 							<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">Service</a>
+							@endcan
 							<div class="dropdown-menu dropdown-menu-end">
+								@can('pending-notif-sr')
 								<a class="dropdown-item" href="#basic-justified-tab-pending-service" data-bs-toggle="tab" id="count-pending-service">Pending</a>
+								@endcan
+								@can('approved-notif-sr')
 								<a class="dropdown-item" href="#basic-justified-tab-approved-service" data-bs-toggle="tab" id="count-approved-service">Approved</a>
+								@endcan
 							</div>
 						</li>
 					</ul>
 					<div class="tab-content">
 
-						<div class="tab-pane show active" id="basic-justified-tab-pending">
+						<div class="tab-pane" id="basic-justified-tab-pending">
 							<div class="msg-sidebar notifications msg-noti">
 								<div class="topnav-dropdown-header">
 									<span>All Pending Equipment Requests</span>
@@ -166,7 +190,7 @@
 					</ul>
 					<div class="tab-content">
 
-						<div class="tab-pane show active" id="solid-tab3">
+						<div class="tab-pane" id="solid-tab3">
 							<div class="msg-sidebar notifications msg-noti">
 								<div class="topnav-dropdown-header">
 									<span>All Reviewed Equipment Requests</span>
@@ -196,7 +220,7 @@
 		</div>
 		{{--@endif--}}
 		@endcan
-		
+
 		<li class="nav-item dropdown has-arrow user-profile-list">
 			<a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
 				<div class="user-names">

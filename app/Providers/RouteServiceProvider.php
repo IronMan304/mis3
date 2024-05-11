@@ -22,6 +22,9 @@ class RouteServiceProvider extends ServiceProvider
 
     public const ONLINE = '/online-requests';
 
+    public const SR = '/service_requests';
+    //public const ER = '/requests';
+
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */

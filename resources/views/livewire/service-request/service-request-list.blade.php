@@ -125,6 +125,10 @@
 												<i class="fa fa-trash"></i>
 											</a>
 											@endcan
+
+											<button type="button" class="btn btn-danger btn-sm mx-1" wire:click="cancelServiceRequest({{ $service_request->id }})" title="Cancel"  >
+											<i class="fa-solid fa-rectangle-xmark"></i>
+											</button>
 										</div>
 									</td>
 
@@ -160,6 +164,12 @@
 	<div wire.ignore.self class="modal fade" id="sreturnModal" tabindex="-1" role="dialog" aria-labelledby="sreturnModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 		<div class="modal-dialog modal-dialog-centered">
 			<livewire:service-request.return-form />
+		</div>
+	</div>
+
+	<div wire.ignore.self class="modal fade" id="cancelRequestModal" tabindex="-1" role="dialog" aria-labelledby="cancelRequestModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-dialog-centered">
+			<livewire:service-request.cancel-request />
 		</div>
 	</div>
 
