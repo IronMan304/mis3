@@ -35,7 +35,8 @@
                                 </div>
                             </div>
                             <div class="col-auto text-end float-end ms-auto download-grp">
-
+                                <div wire:loading wire:target="exportToPdf" class="text-dark">Exporting... Please wait...</div>
+                                <a wire:click="exportToPdf" class="btn btn-light ms-2"><img src="assets/img/icons/pdf-icon-01.svg" alt="" title="Export to PDF"></a>
                             </div>
                         </div>
                     </div>
@@ -159,208 +160,208 @@
                                         <option value="" selected>All Operators</option>
                                         @foreach ($operators as $operator)
                                         <option value="{{ $operator->id }}">
-                                            {{ $operator->first_name }} {{ $operator->middle_name }} {{ $operator->last_name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>--}}
-
-                            <div class="col-12 col-md-6 col-xl-3">
-                                <div class="form-group local-forms">
-                                    <label>Technician </label>
-                                    <select class="form-control" wire:model="technician_id" wire:change="applyFilters" id="technician_id">
-                                        <option value="" selected>All Operators</option>
-                                        @foreach ($technicians as $technician)
-                                        <option value="{{ $technician->id }}">
-                                            {{ $technician->first_name }} {{ $technician->middle_name }} {{ $technician->last_name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-6 col-xl-3">
-                                <div class="form-group local-forms">
-                                    <label>Source </label>
-                                    <select class="form-control" wire:model="source_id" wire:change="applyFilters" id="source_id">
-                                        <option value="" selected>All Sources</option>
-                                        @foreach ($sources as $source)
-                                        <option value="{{ $source->id }}">
-                                            {{ $source->description }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
+                            {{ $operator->first_name }} {{ $operator->middle_name }} {{ $operator->last_name }}
+                            </option>
+                            @endforeach
+                            </select>
                         </div>
+                    </div>--}}
 
-                    </div>
-
-
-
-                    <div class="table-responsive">
-                        <table class="table border-0 custom-table comman-table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Requester</th>
-                                    <th>Requested Thru</th>
-                                    <th>Source</th>
-                                    <th>Service</th>
-                                    <th>Operator</th>
-                                    <th>Category: Type</th>
-                                    <th>Equipment</th>
-                                    <th>Date Scheduled</th>
-                                    <th>Status</th>
-                                    <th>Date Requested</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($requests as $service_request)
-                                <tr>
-                                    <td>{{ $service_request->id }}</td>
-                                    <td>
-                                        {{ $service_request->borrower->first_name ?? '' }} {{ $service_request->borrower->middle_name ?? '' }} {{ $service_request->borrower->last_name ?? '' }}
-                                    </td>
-                                    <td>
-                                        @if($service_request->borrower)
-                                        @if($service_request->borrower->user_id == $service_request->user_id)
-                                        {{ 'Online (Mobile app)' }} <br>
-                                        {{ $service_request->borrower->user->email ?? ''}}
-                                        @else
-                                        {{ 'Offline (Face to Face)' }} <br>
-                                        {{ $service_request->user->email ?? ''}}
-                                        @endif
-                                        @else
-                                        {{ 'NULL' }}
-                                        @endif
-                                    </td>
-                                    <td>
-                                        {{ $service_request->source->description ?? ''}}
-                                    </td>
-
-                                    <td>
-                                        {{$service_request->service->description ?? ''}}
-                                    </td>
-
-                                    {{--<td>
-                                        {{ $service_request->operator->first_name ?? 'TBA'}}
-                                    </td>--}}
-
-                                    <td>
-                                        {{ $service_request->Technician->first_name ?? 'TBA'}}
-                                    </td>
-
-                                    <td>
-                                        {{ $service_request->tool->type->category->description ?? ''}}: {{ $service_request->tool->type->description ?? ''}}
-                                    </td>
-                                    <td>
-                                        {{ $service_request->tool->property_number ?? ''}}
-                                    </td>
-
-                                    <td>
-                                        {{ $service_request->set_date ?? ''}}
-                                    </td>
-                                    <td>
-                                        {{ $service_request->status->description ?? ''}}
-                                    </td>
-
-                                    <td>
-                                        {{ $service_request->created_at }}
-                                    </td>
-
-                                </tr>
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="form-group local-forms">
+                            <label>Technician </label>
+                            <select class="form-control" wire:model="technician_id" wire:change="applyFilters" id="technician_id">
+                                <option value="" selected>All Operators</option>
+                                @foreach ($technicians as $technician)
+                                <option value="{{ $technician->id }}">
+                                    {{ $technician->first_name }} {{ $technician->middle_name }} {{ $technician->last_name }}
+                                </option>
                                 @endforeach
-                            </tbody>
-                        </table>
+                            </select>
+                        </div>
                     </div>
+
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="form-group local-forms">
+                            <label>Source </label>
+                            <select class="form-control" wire:model="source_id" wire:change="applyFilters" id="source_id">
+                                <option value="" selected>All Sources</option>
+                                @foreach ($sources as $source)
+                                <option value="{{ $source->id }}">
+                                    {{ $source->description }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
+
+            </div>
+
+
+
+            <div class="table-responsive">
+                <table class="table border-0 custom-table comman-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Requester</th>
+                            <th>Requested Thru</th>
+                            <th>Source</th>
+                            <th>Service</th>
+                            <th>Operator</th>
+                            <th>Category: Type</th>
+                            <th>Equipment</th>
+                            <th>Date Scheduled</th>
+                            <th>Status</th>
+                            <th>Date Requested</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($requests as $service_request)
+                        <tr>
+                            <td>{{ $service_request->id }}</td>
+                            <td>
+                                {{ $service_request->borrower->first_name ?? '' }} {{ $service_request->borrower->middle_name ?? '' }} {{ $service_request->borrower->last_name ?? '' }}
+                            </td>
+                            <td>
+                                @if($service_request->borrower)
+                                @if($service_request->borrower->user_id == $service_request->user_id)
+                                {{ 'Online (Mobile app)' }} <br>
+                                {{ $service_request->borrower->user->email ?? ''}}
+                                @else
+                                {{ 'Offline (Face to Face)' }} <br>
+                                {{ $service_request->user->email ?? ''}}
+                                @endif
+                                @else
+                                {{ 'NULL' }}
+                                @endif
+                            </td>
+                            <td>
+                                {{ $service_request->source->description ?? ''}}
+                            </td>
+
+                            <td>
+                                {{$service_request->service->description ?? ''}}
+                            </td>
+
+                            {{--<td>
+                                        {{ $service_request->operator->first_name ?? 'TBA'}}
+                            </td>--}}
+
+                            <td>
+                                {{ $service_request->Technician->first_name ?? 'TBA'}}
+                            </td>
+
+                            <td>
+                                {{ $service_request->tool->type->category->description ?? ''}}: {{ $service_request->tool->type->description ?? ''}}
+                            </td>
+                            <td>
+                                {{ $service_request->tool->property_number ?? ''}}
+                            </td>
+
+                            <td>
+                                {{ $service_request->set_date ?? ''}}
+                            </td>
+                            <td>
+                                {{ $service_request->status->description ?? ''}}
+                            </td>
+
+                            <td>
+                                {{ $service_request->created_at }}
+                            </td>
+
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
-        <!-- Pagination links -->
-        {{ $requests->links() }}
     </div>
-    <script>
-        document.addEventListener('livewire:load', function() {
+</div>
+<!-- Pagination links -->
+{{ $requests->links() }}
+</div>
+<script>
+    document.addEventListener('livewire:load', function() {
 
-            // Category Select2
-            $('#scategory_id').select2({
-                dropdownParent: $('#list-content-service-request-report')
-            });
-
-            $('#scategory_id').on('change', function(e) {
-                let data = $(this).val();
-                console.log(data);
-                @this.set('scategory_id', data);
-            });
-
-            // Tool Type Select2
-            $('#stool_type_id').select2({
-                dropdownParent: $('#list-content-service-request-report')
-            });
-
-            $('#stool_type_id').on('change', function(e) {
-                let data = $(this).val();
-                console.log(data);
-                @this.set('stool_type_id', data);
-            });
-
-            // Tool Select2
-            $('#stool_id').select2({
-                dropdownParent: $('#list-content-service-request-report')
-            });
-
-            $('#stool_id').on('change', function(e) {
-                let data = $(this).val();
-                console.log(data);
-                @this.set('stool_id', data);
-            });
-
-            // Borrower Select2
-            $('#sborrower_id').select2({
-                dropdownParent: $('#list-content-service-request-report')
-            });
-
-            $('#sborrower_id').on('change', function(e) {
-                let data = $(this).val();
-                console.log(data);
-                @this.set('sborrower_id', data);
-            });
-
-            // Operator Select2
-            $('#soperator_id').select2({
-                dropdownParent: $('#list-content-service-request-report')
-            });
-
-            $('#soperator_id').on('change', function(e) {
-                let data = $(this).val();
-                console.log(data);
-                @this.set('soperator_id', data);
-            });
-
-             // Technician Select2
-             $('#technician_id').select2({
-                dropdownParent: $('#list-content-service-request-report')
-            });
-
-            $('#technician_id').on('change', function(e) {
-                let data = $(this).val();
-                console.log(data);
-                @this.set('technician_id', data);
-            });
-
-
-
+        // Category Select2
+        $('#scategory_id').select2({
+            dropdownParent: $('#list-content-service-request-report')
         });
 
-        document.addEventListener('livewire:update', function() {
-            // Refresh Select2 on Livewire update
-            $('#scategory_id, #stool_type_id, #stool_id, #sborrower_id, #soperator_id, #technician_id').select2({
-                dropdownParent: $('#list-content-service-request-report')
-            });
+        $('#scategory_id').on('change', function(e) {
+            let data = $(this).val();
+            console.log(data);
+            @this.set('scategory_id', data);
         });
-    </script>
+
+        // Tool Type Select2
+        $('#stool_type_id').select2({
+            dropdownParent: $('#list-content-service-request-report')
+        });
+
+        $('#stool_type_id').on('change', function(e) {
+            let data = $(this).val();
+            console.log(data);
+            @this.set('stool_type_id', data);
+        });
+
+        // Tool Select2
+        $('#stool_id').select2({
+            dropdownParent: $('#list-content-service-request-report')
+        });
+
+        $('#stool_id').on('change', function(e) {
+            let data = $(this).val();
+            console.log(data);
+            @this.set('stool_id', data);
+        });
+
+        // Borrower Select2
+        $('#sborrower_id').select2({
+            dropdownParent: $('#list-content-service-request-report')
+        });
+
+        $('#sborrower_id').on('change', function(e) {
+            let data = $(this).val();
+            console.log(data);
+            @this.set('sborrower_id', data);
+        });
+
+        // Operator Select2
+        $('#soperator_id').select2({
+            dropdownParent: $('#list-content-service-request-report')
+        });
+
+        $('#soperator_id').on('change', function(e) {
+            let data = $(this).val();
+            console.log(data);
+            @this.set('soperator_id', data);
+        });
+
+        // Technician Select2
+        $('#technician_id').select2({
+            dropdownParent: $('#list-content-service-request-report')
+        });
+
+        $('#technician_id').on('change', function(e) {
+            let data = $(this).val();
+            console.log(data);
+            @this.set('technician_id', data);
+        });
+
+
+
+    });
+
+    document.addEventListener('livewire:update', function() {
+        // Refresh Select2 on Livewire update
+        $('#scategory_id, #stool_type_id, #stool_id, #sborrower_id, #soperator_id, #technician_id').select2({
+            dropdownParent: $('#list-content-service-request-report')
+        });
+    });
+</script>
 </div>

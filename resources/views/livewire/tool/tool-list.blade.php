@@ -55,9 +55,9 @@
 										</div>
 										<div class="add-group">
 											<a wire:click="createTool" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt title="Add Equipment">
-											</a>
+											{{--</a>
 											<a wire:click="createTool" class="btn btn-primary ms-2 bt-sty" title="Import from Excel"><i class="fa-solid fa-file-import fs-6"></i>
-											</a>
+											</a>--}}
 											<a wire:click="refreshPage" class="btn btn-primary doctor-refresh ms-2"><img src="assets/img/icons/re-fresh.svg" alt="" title="Refresh page"></a>
 										</div>
 
@@ -73,7 +73,7 @@
 										<a wire:click="exportToPdf" class="btn btn-light ms-2"><img src="assets/img/icons/pdf-icon-01.svg" alt="" title="Export to PDF"></a>
 										<!-- <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-02.svg" alt=""></a>
 											<a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-03.svg" alt=""></a> -->
-										<a href="javascript:;" class="btn btn-light ms-2"><img src="assets/img/icons/pdf-icon-04.svg" alt="" title="Export to Excel"></a>
+										<!-- <a href="javascript:;" class="btn btn-light ms-2"><img src="assets/img/icons/pdf-icon-04.svg" alt="" title="Export to Excel"></a> -->
 
 									</div>
 								</div>

@@ -35,8 +35,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-auto text-end float-end ms-auto download-grp">
 
+                            <div class="col-auto text-end float-end ms-auto download-grp">
+                                <div wire:loading wire:target="exportToPdf" class="text-dark">Exporting... Please wait...</div>
+                                <a wire:click="exportToPdf" class="btn btn-light ms-2"><img src="assets/img/icons/pdf-icon-01.svg" alt="" title="Export to PDF"></a>
                             </div>
                         </div>
                     </div>
@@ -198,8 +200,9 @@
                             <tbody>
                                 @foreach ($requests as $request)
                                 <tr>
-                                    <td>{{ $request->request_number}}</td>
                                     <td>{{ $request->id }}</td>
+                                    <td>{{ $request->request_number}}</td>
+
                                     <td>
                                         {{ $request->borrower->first_name ?? '' }} {{ $request->borrower->middle_name ?? '' }} {{ $request->borrower->last_name ?? '' }}
                                     </td>
