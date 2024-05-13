@@ -48,11 +48,23 @@ class AuthController extends Controller
         $user = User::where('email', $fields['email'])->first();
 
         //Check the password
-        if(!$user || !Hash::check($fields['password'], $user->password)){
+        if (!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
                 'message' => 'Bad credentials'
             ], 401);
         }
+
+        // Get the user's roles
+        $roles = $user->roles->pluck('name');
+
+        // Check if the user has one of the allowed roles
+        $allowedRoles = ['student', 'faculty', 'guest'];
+        $userRoles = $user->roles->pluck('name')->toArray();
+
+        if (count(array_intersect($userRoles, $allowedRoles)) === 0) {
+            return response(['message' => 'Unauthorized access'], 403);
+        }
+
 
         $token = $user->createToken('myapptoken')->plainTextToken;
         $borrower = $user->borrower; // Assuming there's a relationship between User and Borrower
@@ -60,6 +72,7 @@ class AuthController extends Controller
         $response = [
             'user' => $user,
             'borrower' => $borrower,
+            'roles' => $roles,
             'token' => $token,
         ];
 

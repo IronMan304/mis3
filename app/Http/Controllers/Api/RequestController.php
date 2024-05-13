@@ -41,16 +41,26 @@ class RequestController extends Controller
         $options = Option::all();
         $status = Status::all();
 
+        // Limit the number of requests to 50
+    //$limitedRequests = $borrower->requests->take(5);
+
         // Combine tools and operators into a single array
         $data = [
             'borrower' => [
                 'first_name' => $borrower->first_name,
                 'middle_name' => $borrower->middle_name,
                 'last_name' => $borrower->last_name,
+                'email' => $borrower->user->email,
                 'position_id' => $borrower->position_id,
-
+                'college' => $borrower->college->description,
+                'course' => $borrower->course->description,
+                //'age' => $borrower->age->description,
+                'gender' => $borrower->sex->description,
                 'service_requests' => $borrower->service_requests,
+                'contact_number' => $borrower->contact_number,
+                'id_number' => $borrower->id_number,
                 'requests' => $borrower->requests,
+                //'requests' => $limitedRequests,
                 //'request_tools' => $requestToolKeys,
             ],
             'tools' => $tools,
