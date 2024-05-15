@@ -32,7 +32,7 @@
                                 <p>Make online requests using ncictso mobile app</p>
                                 <p>Click the button below to download the APK file:</p>
 
-                                <a href="" class="btn btn-primary">Download APK</a>
+                                <a href="https://drive.google.com/file/d/1V3qvDoxMMJKG_Tf82vFsx35dunQDrcHO/view?usp=drive_link" class="btn btn-primary" target="_blank">Download APK</a>
 
                             </div>
                         </div>

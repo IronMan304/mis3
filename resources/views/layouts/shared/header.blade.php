@@ -104,6 +104,33 @@
 					</ul>
 					<div class="tab-content">
 
+					<div class="tab-pane show active" id="#">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span>Filter above</span>
+								</div>
+								<div id="#">
+									<ul class="list-box" id="#">
+										<!-- Content for pending requests goes here -->
+									</ul>
+									<ul class="list-box" id="#">
+										<!-- Content for pending requests goes here -->
+									</ul>
+									<ul class="list-box" id="#">
+										<!-- Content for pending requests goes here -->
+									</ul>
+									<ul class="list-box" id="#">
+										<!-- Content for pending requests goes here -->
+									</ul>
+									<ul class="list-box" id="#">
+										<!-- Content for pending requests goes here -->
+									</ul>
+									<ul class="list-box" id="#">
+										<!-- Content for pending requests goes here -->
+									</ul>
+								</div>
+							</div>
+						</div>
 						<div class="tab-pane" id="basic-justified-tab-pending">
 							<div class="msg-sidebar notifications msg-noti">
 								<div class="topnav-dropdown-header">

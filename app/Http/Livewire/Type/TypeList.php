@@ -97,7 +97,7 @@ class TypeList extends Component
             $types  = Type::where('description', 'LIKE', '%' . $this->search . '%')->get();
         }
 
-        return view('livewire.Type.Type-list', [
+        return view('livewire.type.type-list', [
             'types' => $types,
             'totalToolCount' => $this->getTotalToolCount(),
             'totalInStockCount' => $this->getTotalInStockCount(),
