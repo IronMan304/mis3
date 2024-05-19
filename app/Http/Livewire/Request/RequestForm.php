@@ -105,15 +105,15 @@ class RequestForm extends Component
         $borrower = Borrower::findOrFail($this->borrower_id);
         // Get the current year
         $currentYear = date('Y');
-        
+
         $position = $borrower->position->description;
         $prefix = strtoupper(substr($position, 0, 1)); // Capitalize the first letter of the position
-        
+
         // Get the last request number for the current year
         $lastRequestNumber = DB::table('requests')
             ->where('request_number', 'like', $prefix . 'ER' . $currentYear . '%')
             ->max('request_number');
-        
+
         // Extract the number part and increment it
         if ($lastRequestNumber) {
             $lastNumber = (int)substr($lastRequestNumber, -4); // Extract the last 4 digits
@@ -122,10 +122,10 @@ class RequestForm extends Component
             // If no previous request number exists, start with 1
             $newNumber = 1;
         }
-        
+
         // Pad the number with leading zeros if necessary
         $newNumberPadded = str_pad($newNumber, 4, '0', STR_PAD_LEFT);
-        
+
         // Generate the new request number
         $data['request_number'] = $prefix . 'ER' . $currentYear . $newNumberPadded;
 
@@ -195,7 +195,12 @@ class RequestForm extends Component
                     Tool::whereIn('id', $this->toolItems)->update(['status_id' => 14]); // "In request" is the status of a tool if non-admin makes the request
 
                     $request = Request::create($data);
+
+                    // Initialize minSecurityId with a value greater than any possible security_id
+                    $minSecurityId = PHP_INT_MAX;
+                    $maxSecurityId = PHP_INT_MIN;
                     foreach ($this->toolItems as $toolId) {
+                        $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
                         $toolRequest = ToolRequest::create([
                             'request_id' => $request->id,
                             'tool_id' => $toolId,
@@ -205,11 +210,14 @@ class RequestForm extends Component
                         ]);
 
                         // Fetch all security_ids for the current tool
-                        $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
 
-                        $minSecurityId = min($securityIds);
-                        $maxSecurityId = max($securityIds);
+
+                        // $minSecurityId = min($securityIds);
+                        // $maxSecurityId = max($securityIds);
                         // Create a record in request_tool_tool_security table for each security_id
+                        // Update minSecurityId and maxSecurityId if necessary
+                        $minSecurityId = min($minSecurityId, ...$securityIds);
+                        $maxSecurityId = max($maxSecurityId, ...$securityIds);
                         foreach ($securityIds as $securityId) {
                             RequestToolToolSecurityKey::create([
                                 'request_tools_id' => $toolRequest->id,

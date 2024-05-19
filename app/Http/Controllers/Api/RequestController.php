@@ -42,7 +42,7 @@ class RequestController extends Controller
         $status = Status::all();
 
         // Limit the number of requests to 50
-    //$limitedRequests = $borrower->requests->take(5);
+        //$limitedRequests = $borrower->requests->take(5);
 
         // Combine tools and operators into a single array
         $data = [
@@ -160,11 +160,18 @@ class RequestController extends Controller
         $data['user_id'] = auth()->user()->id;
 
         // Create the request
-        $request = Request::create($data);
+
 
         // Check if toolItems are provided and if they are valid
         if (isset($data['toolItems']) && is_array($data['toolItems'])) {
+
+            $request = Request::create($data);
+            // Initialize minSecurityId with a value greater than any possible security_id
+            $minSecurityId = PHP_INT_MAX;
+            $maxSecurityId = PHP_INT_MIN;
+
             foreach ($data['toolItems'] as $toolId) {
+                $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
                 $tool = Tool::find($toolId);
 
                 if (!$tool) {
@@ -180,9 +187,31 @@ class RequestController extends Controller
                     'dt_requested' => Carbon::now()->setTimezone('Asia/Manila'),
                 ]);
 
-                // Fetch all security_ids for the current tool
-                $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
+                // // Fetch all security_ids for the current tool
+                // $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
 
+                // // Create a record in request_tool_tool_security table for each security_id
+                // foreach ($securityIds as $securityId) {
+                //     RequestToolToolSecurityKey::create([
+                //         'request_tools_id' => $toolRequest->id,
+                //         'security_id' => $securityId,
+                //         'status_id' => 11,
+                //         'request_id' => $request->id,
+                //     ]);
+                // }
+
+                // // Update current_security_id and max_security_id for the request
+                // $request->update([
+                //     'current_security_id' => min($securityIds),
+                //     'max_security_id' => max($securityIds)
+                // ]);
+
+                // Fetch all security_ids for the current tool
+                //  $securityIds = ToolSecurity::where('tool_id', $toolId)->pluck('security_id')->toArray();
+
+                // Update minSecurityId and maxSecurityId if necessary
+                $minSecurityId = min($minSecurityId, ...$securityIds);
+                $maxSecurityId = max($maxSecurityId, ...$securityIds);
                 // Create a record in request_tool_tool_security table for each security_id
                 foreach ($securityIds as $securityId) {
                     RequestToolToolSecurityKey::create([
@@ -193,11 +222,8 @@ class RequestController extends Controller
                     ]);
                 }
 
-                // Update current_security_id and max_security_id for the request
-                $request->update([
-                    'current_security_id' => min($securityIds),
-                    'max_security_id' => max($securityIds)
-                ]);
+                $request->update(['current_security_id' =>  $minSecurityId]);
+                $request->update(['max_security_id' =>  $maxSecurityId]);
             }
         } else {
             return response()->json(['error' => 'No toolItems provided'], 400);
@@ -266,46 +292,55 @@ class RequestController extends Controller
 
         $requestsPending = Request::where('status_id', 11)
             ->orderBy('id', 'desc')
-           -> with(['status' => function ($query) {
+            ->with(['status' => function ($query) {
                 $query->select('id', 'description');
             }, 'borrower' => function ($query) {
                 $query->select('id', 'first_name', 'middle_name', 'last_name');
             }])
-                
+
             ->get();
 
 
-            $requestsPendingAndApproved = Request::where('status_id', 11)
+        $requestsPendingAndApproved = Request::where('status_id', 11)
             ->orWhere('status_id', 10)
             ->orderBy('updated_at', 'desc')
-           -> with(['status' => function ($query) {
+            ->with(['status' => function ($query) {
                 $query->select('id', 'description');
             }, 'borrower' => function ($query) {
                 $query->select('id', 'first_name', 'middle_name', 'last_name');
             }])
-                
+
             ->get();
 
-            $requestsReviewed = Request::where('status_id', 16)
+        $requestsReviewed = Request::where('status_id', 16)
             ->orderBy('id', 'desc')
-           -> with(['status' => function ($query) {
+            ->with(['status' => function ($query) {
                 $query->select('id', 'description');
             }, 'borrower' => function ($query) {
                 $query->select('id', 'first_name', 'middle_name', 'last_name');
             }])
-                
+
             ->get();
 
-            $requestsApproved = Request::where('status_id', 10)
+        $requestsApproved = Request::where('status_id', 10)
             ->orderBy('id', 'desc')
-           -> with(['status' => function ($query) {
+            ->with(['status' => function ($query) {
                 $query->select('id', 'description');
             }, 'borrower' => function ($query) {
                 $query->select('id', 'first_name', 'middle_name', 'last_name');
             }])
-                
+
             ->get();
 
+            // $requestsPending = Request::where('status_id', 16)
+            // ->orderBy('id', 'desc')
+            // ->with(['status' => function ($query) {
+            //     $query->select('id', 'description');
+            // }, 'borrower' => function ($query) {
+            //     $query->select('id', 'first_name', 'middle_name', 'last_name');
+            // }])
+
+            // ->get();
 
 
         // $requestsReviewed = Request::where('status_id', 16)->get();
@@ -325,9 +360,9 @@ class RequestController extends Controller
         // Store request numbers in an array
         $requestNumbers = $requests->sortByDesc('id');
 
-         $requestsPending = $requestsPending->sortByDesc('id');
+        $requestsPending = $requestsPending->sortByDesc('id');
         $requestsReviewed = $requestsReviewed->sortByDesc('id');
-         $requestsApproved = $requestsApproved->sortByDesc('id');
+        $requestsApproved = $requestsApproved->sortByDesc('id');
         // $requestsStarted = $requestsStarted->sortByDesc('id');
         // $requestsCompleted = $requestsCompleted->sortByDesc('id');
 
@@ -336,13 +371,13 @@ class RequestController extends Controller
             'countPending' => $countPending,
             'countReviewed' => $countReviewed,
             'countApproved' => $countApproved,
-            // 'countStarted' => $countStarted,
+            'requests' => $requests,
             // 'countCompleted' => $countCompleted,
             'requestNumbers' => $requestNumbers,
             'requestsPending' => $requestsPending,
             'requestsReviewed' => $requestsReviewed,
             'requestsApproved' => $requestsApproved,
-             'requestsPendingAndApproved' => $requestsPendingAndApproved,
+            'requestsPendingAndApproved' => $requestsPendingAndApproved,
             // 'requestsCompleted' => $requestsCompleted,
         ]);
     }
@@ -364,23 +399,23 @@ class RequestController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
-            $requestsReviewedService = ServiceRequest::with(['status' => function ($query) {
-                $query->select('id', 'description');
-            }, 'borrower' => function ($query) {
-                $query->select('id', 'first_name', 'middle_name', 'last_name');
-            }])
-                ->where('status_id', 16) //pending
-                ->orderBy('id', 'desc')
-                ->get();
+        $requestsReviewedService = ServiceRequest::with(['status' => function ($query) {
+            $query->select('id', 'description');
+        }, 'borrower' => function ($query) {
+            $query->select('id', 'first_name', 'middle_name', 'last_name');
+        }])
+            ->where('status_id', 16) //pending
+            ->orderBy('id', 'desc')
+            ->get();
 
-                $requestsApprovedService = ServiceRequest::with(['status' => function ($query) {
-                    $query->select('id', 'description');
-                }, 'borrower' => function ($query) {
-                    $query->select('id', 'first_name', 'middle_name', 'last_name');
-                }])
-                    ->where('status_id', 10) //pending
-                    ->orderBy('id', 'desc')
-                    ->get();
+        $requestsApprovedService = ServiceRequest::with(['status' => function ($query) {
+            $query->select('id', 'description');
+        }, 'borrower' => function ($query) {
+            $query->select('id', 'first_name', 'middle_name', 'last_name');
+        }])
+            ->where('status_id', 10) //pending
+            ->orderBy('id', 'desc')
+            ->get();
 
 
 
@@ -413,14 +448,14 @@ class RequestController extends Controller
             'countPendingService' => $countPendingService,
             'countReviewedService' => $countReviewedService,
             // 'countReviewed' => $countReviewed,
-             'countApprovedService' => $countApprovedService,
+            'countApprovedService' => $countApprovedService,
             // 'countStarted' => $countStarted,
             // 'countCompleted' => $countCompleted,
             // 'requestNumbers' => $requestNumbers,
             'requestsPendingService' => $requestsPendingService,
             'requestsReviewedService' => $requestsReviewedService,
             // 'requestsReviewed' => $requestsReviewed,
-             'requestsApprovedService' => $requestsApprovedService,
+            'requestsApprovedService' => $requestsApprovedService,
             // 'requestsStarted' => $requestsStarted,
             // 'requestsCompleted' => $requestsCompleted,
         ]);

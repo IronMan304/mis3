@@ -72,7 +72,7 @@
                             <option value="" selected>Select Tools</option>
                             @foreach($service_requests as $tool_request)
                             <option value="{{ $tool_request->tool_id }}">
-                                {{ $tool_request->tool->property_number ?? ''}}
+                            {{ $tool_request->tool->type->description ?? ''}}: {{ $tool_request->tool->property_number ?? ''}}
                             </option>
                         
                             @endforeach

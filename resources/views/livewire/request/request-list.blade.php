@@ -145,7 +145,7 @@
 									<td>
 										@if ($request->tool_keys)
 										@foreach ($request->tool_keys as $toolKey)
-										{{ $toolKey->tools->brand ?? '' }}: {{ $toolKey->status->description ?? '' }} {{ isset($toolKey->toolStatus->description) ? '(' . $toolKey->toolStatus->description . ')' : '' }}
+										{{ $toolKey->tools->brand ?? '' }}: {{ $toolKey->tools->property_number ?? '' }}: {{ $toolKey->status->description ?? '' }} {{ isset($toolKey->toolStatus->description) ? '(' . $toolKey->toolStatus->description . ')' : '' }}
 
 										@if (!$loop->last)
 										{{-- Add a Space or separator between department names --}}

@@ -66,15 +66,15 @@
                     <div class="form-group local-forms">
                         <label>Equipment
                         </label>
-                        <select class="form-control select"  wire:model="tool_id">
+                        <select class="form-control select"  wire:model="tool_id" id="tool_id">
                             <option value=null selected>Select Equipment</option>
                             @foreach ($tools as $tool)
                             @if($source_id == 3)
-                            <option value="{{ $tool->id }}" @if($tool->status_id != 1) disabled @endif>
+                            <option value="{{ $tool->id }}" @if($tool->status_id != 1 && $tool->status_id != 4 ) disabled @endif>
                                 {{ $tool->type->description }}: {{ $tool->property_number}} ({{$tool->status->description}})
                             </option>
-                            @endif
-                            @if($tool->source_id == 4 && $tool->owner_id == $borrower_id && $tool->owner_id != null)
+                           
+                            @elseif($tool->source_id == 4 && $tool->owner_id == $borrower_id && $tool->owner_id != null)
                             <option value="{{ $tool->id }}" @if($tool->status_id != 1) disabled @endif>
                                 {{ $tool->type->description }}: {{ $tool->property_number}} ({{$tool->status->description}})
                             </option>
@@ -109,34 +109,31 @@
     </form>
     <script>
         document.addEventListener('livewire:load', function() {
-            window.livewire.hook('element.updated', () => {
-                initSelect2();
-            });
+            initSelect2();
         });
 
         function initSelect2() {
             $('#borrower_id').select2({
                 dropdownParent: $('#modal-content-srf')
-            });
-
-            $('#borrower_id').on('change', function(e) {
+            }).on('change', function(e) {
                 let data = $(this).val();
                 @this.set('borrower_id', data);
             });
 
-            // Initialize Select2 for tool_id dropdown
             $('#tool_id').select2({
                 dropdownParent: $('#modal-content-srf')
-            });
-
-            $('#tool_id').on('change', function(e) {
+            }).on('change', function(e) {
                 let data = $(this).val();
                 @this.set('tool_id', data);
             });
         }
+
         document.addEventListener('livewire:update', function() {
-            // Refresh Select2 on Livewire update
-            $('#borrower_id, #tool_id').select2({
+            $('#borrower_id').select2({
+                dropdownParent: $('#modal-content-srf')
+            });
+
+            $('#tool_id').select2({
                 dropdownParent: $('#modal-content-srf')
             });
         });

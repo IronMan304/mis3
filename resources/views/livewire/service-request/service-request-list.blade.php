@@ -49,15 +49,15 @@
 							<thead>
 								<tr>
 									<th>Request Number</th>
-									<td>Requester</td>
-									<th>Source</th>
+									<th>Requester</th>
+									<!-- <th>Source</th> -->
 									<!-- <th>Service</th> -->
-									<th>Equipment Type</th>
-									<th>Property Number</th>
-									<th>Operator</th>
+									<th>Equipment Information</th>
+									<!-- <th>Property Number</th> -->
+									<th>Technician</th>
 									<th>Appointed Date</th>
 									<th>Status</th>
-									<td>Action</td>
+									<th>Action</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -67,20 +67,24 @@
 										{{ $service_request->request_number ?? ''}}
 									</td>
 									<td>
-										{{ $service_request->borrower->first_name ?? ''}}
+										{{ $service_request->borrower->first_name ?? ''}} {{ $service_request->borrower->middle_name ?? ''}} {{ $service_request->borrower->last_name ?? ''}}
 									</td>
 									<td>
-										{{ $service_request->tool->source->description ?? ''}}
+										Source: {{ $service_request->tool->source->description ?? ''}}
+										<br>
+										Type: {{ $service_request->tool->type->description ?? ''}}
+										<br>
+										Property Number: {{ $service_request->tool->property_number ?? ''}}: {{ $service_request->ToolStatus->description ?? ''}}
 									</td>
 									{{--<td>
 										{{$service_request->service->description ?? ''}}
 									</td>--}}
-									<td>
+									{{--<td>
 										{{ $service_request->tool->type->description ?? ''}}
 									</td>
 									<td>
 										{{ $service_request->tool->property_number ?? ''}}: {{ $service_request->ToolStatus->description ?? ''}}
-									</td>
+									</td>--}}
 									{{--<td>
 										{{ $service_request->operator->first_name ?? 'TBA'}}
 									</td>--}}

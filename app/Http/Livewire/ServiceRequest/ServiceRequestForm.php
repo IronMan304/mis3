@@ -97,6 +97,8 @@ class ServiceRequestForm extends Component
             $message = 'Successfully Updated';
         } else {
             if ($tool->status_id == 1) {
+                if (($tool->source_id == 3 && $tool->owner_id === null) || $tool->source_id == 4 && $tool->owner_id == $data['borrower_id'])
+                {
                 $data['staff_user_id'] = auth()->user()->id;
                 $data['status_id'] = 11; //pending
                 Tool::where('id', $this->tool_id)->update(['status_id' => 14]);
@@ -108,6 +110,9 @@ class ServiceRequestForm extends Component
                 $this->emit('closeServiceRequestModal');
                 $this->emit('refreshParentServiceRequest');
                 $this->emit('refreshTable');
+                } else {
+                    $this->errorMessage = 'Make sure the equipment owner is correct';
+                }
             } else {
                 $this->errorMessage = 'You can only request equipment that are In stock';
             }

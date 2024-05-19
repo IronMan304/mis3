@@ -52,8 +52,8 @@
                             <div class="login-right">
                                 <div class="login-right-wrap">
                                     <div class="account-logo" style="display: flex; justify-content: space-between; align-items: center;">
-                                        <a href="index.html"><img src="assets/img/top-logo.png" alt="" style="width: 510px;"></a>
-                                        <a href="index.html"><img src="assets/img/ncictso.png" alt="" style="width: 150px;"></a>
+                                        <a href=""><img src="assets/img/top-logo.png" alt="" style="width: 510px;"></a>
+                                        <a href=""><img src="assets/img/ncictso.png" alt="" style="width: 150px;"></a>
                                     </div>
                                     <h2>Login</h2>
                                     @error('msg')

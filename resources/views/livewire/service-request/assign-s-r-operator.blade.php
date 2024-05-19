@@ -50,7 +50,7 @@
 				<div class="modal-footer">
 					<button class="btn btn-primary" wire:click="rejectServiceRequest({{ $serviceRequestId }})">Reject</button>
 
-					<button type="submit" class="btn btn-primary">Save</button>
+					<button type="submit" class="btn btn-primary">Approve</button>
 				</div>
 	</form>
 	<script>

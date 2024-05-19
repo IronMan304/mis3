@@ -28,6 +28,19 @@
             margin-top: 50px;
             margin-bottom: 50px;
         }
+
+        .logo-container {
+            /* display: flex;
+            align-items: center; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container img {
+            margin-right: 10px;
+            /* Optional: adds some space between the logos */
+        }
     </style>
     <div class="modal-header">
         <h1 class="modal-title fs-5">
@@ -76,29 +89,41 @@
                     <div class="sidebar1 text-center sidebar-box">
                         <div class="vision">
                             <h5>Vision</h5>
-                            <p style="font-size: 10px;">A dynamic, competetive and globally responsive state university.</p>
+                            <p style="font-size: 12px;">A dynamic, competetive and globally responsive state university.</p>
                         </div>
                         <div class="mission">
                             <h5>Mission</h5>
-                            <p style="font-size: 10px;">The University shall provide excellent instruction, relevant and responsive research and extension services, and quality-assured production through competent and highly motivated human capital.</p>
+                            <p style="font-size: 12px;">The University shall provide excellent instruction, relevant and responsive research and extension services, and quality-assured production through competent and highly motivated human capital.</p>
                         </div>
                         <div class="quality-policy">
                             <h5>Quality Policy</h5>
-                            <p style="font-size: 10px;">NOrSU commits itself to the provision of quality instruction, research, extension services and production as well as compliance to applicable regulatory requirements and continual improvement of its management system.</p>
+                            <p style="font-size: 12px;">NOrSU commits itself to the provision of quality instruction, research, extension services and production as well as compliance to applicable regulatory requirements and continual improvement of its management system.</p>
                         </div>
-                        <div class="inner-box">
+                        <div class="inner-box"> <a href=""><img src="assets/img/norsu.png" alt="Top Logo" style="width: 410px;"></a>
                         </div>
                     </div>
                 </div>
 
 
                 <div class="col-lg-10">
+                    <div class="logo-container">
+
+                        <a href=""><img src="assets/img/top-logo.png" alt="Top Logo" style="width: 410px;"></a>
+                        <a href=""><img src="assets/img/ncictso.png" alt="" style="width: 120px; margin-top: 9px;"></a>
+                    </div>
                     <div class="content" style="font-size: 13px;">
                         {{--<p>{{ $request?->created_at?->format('m-d-Y') ?? '' }}</p>--}}
-                   
-                            <p>{{ $request?->created_at ? \Carbon\Carbon::parse($request->created_at)->format('F d, Y') : '' }}</p>
-                            &emsp; &emsp; &emsp;<p>{{ $request->request_number ?? ''  }}</p>
-                      
+
+                        <div style="display: flex; justify-content: space-between;">
+                            <p style="margin: 0;">
+                                {{ $request?->created_at ? \Carbon\Carbon::parse($request->created_at)->format('F d, Y') : '' }}
+                            </p>
+                            <p style="margin: 0;">
+                                <strong>{{ $request->request_number ?? '' }}</strong>
+                            </p>
+                        </div>
+
+
 
 
 
@@ -231,8 +256,12 @@
 
                         <p>
                             <strong>Borrowing Period:</strong><br>
-                            Start Date: @foreach ($requests as $request) {{ $request->date_needed ?? '' }} @endforeach <br>
-                            End Date: @foreach ($requests as $request) {{ $request->estimated_return_date ?? '' }} @endforeach
+                            Start Date: @foreach ($requests as $request) 
+                            {{ $request?->date_needed ? \Carbon\Carbon::parse($request->date_needed)->format('F d, Y') : '' }}
+                            @endforeach <br>
+                            End Date: @foreach ($requests as $request) 
+                            {{ $request?->estimated_return_date ? \Carbon\Carbon::parse($request->estimated_return_date)->format('F d, Y') : '' }}
+                            @endforeach
                         </p>
 
                         <p><strong>Purpose of Borrowing:</strong> @foreach ($requests as $request) {{ $request->purpose ?? '' }} @endforeach</p>
