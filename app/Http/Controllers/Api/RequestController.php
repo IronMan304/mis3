@@ -530,14 +530,18 @@ class RequestController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
-        $requestsStartedService = ServiceRequest::with(['status' => function ($query) {
-            $query->select('id', 'description');
-        }, 'borrower' => function ($query) {
-            $query->select('id', 'first_name', 'middle_name', 'last_name');
-        }])
-            ->where('status_id', 6) //pending
+            $requestsStartedService = ServiceRequest::with(['status' => function ($query) {
+                $query->select('id', 'description');
+            }, 'borrower' => function ($query) {
+                $query->select('id', 'first_name', 'middle_name', 'last_name');
+            }])
+            ->where('status_id', 6) // Pending status
+            ->when(Auth::user()->hasRole('technician'), function ($query) {
+                $query->where('technician_id', auth()->user()->id);
+            })
             ->orderBy('id', 'desc')
             ->get();
+        
 
         $requestsCompletedService = ServiceRequest::with(['status' => function ($query) {
             $query->select('id', 'description');
