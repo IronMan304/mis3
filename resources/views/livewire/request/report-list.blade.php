@@ -168,6 +168,20 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="form-group local-forms">
+                                    <label>Status </label>
+                                    <select class="form-control" wire:model="status_id" wire:change="applyFilters" id="status_id">
+                                        <option value="" selected>All Status</option>
+                                        @foreach ($statuses as $status)
+                                        <option value="{{ $status->id }}">
+                                            {{ $status->description }} 
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -383,11 +397,22 @@
                 @this.set('operator1_id', data);
             });
 
+              // Operator Select2
+              $('#status_id').select2({
+                dropdownParent: $('#list-content-tool-request-report')
+            });
+
+            $('#status_id').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('status_id', data);
+            });
+
         });
 
         document.addEventListener('livewire:update', function() {
             // Refresh Select2 on Livewire update
-            $('#category_id, #tool_type_id, #tool_id, #borrower_id, #operator_id').select2({
+            $('#category_id, #tool_type_id, #tool_id, #borrower_id, #operator_id, #status_id').select2({
                 dropdownParent: $('#list-content-tool-request-report')
             });
         });

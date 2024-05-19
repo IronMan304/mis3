@@ -315,61 +315,61 @@ class RequestController extends Controller
 
 
         $roleIds = Auth::user()->roles->pluck('id');
-      
+
         if (Auth::user()->hasRole('vice-president')) {
-               // Query for president users, only if vice-president already approved the request
-               $requestsReviewed = Request::where('status_id', 16)
-               ->orderBy('id', 'desc')
-               ->with([
-                   'status' => function ($query) {
-                       $query->select('id', 'description');
-                   },
-                   'borrower' => function ($query) {
-                       $query->select('id', 'first_name', 'middle_name', 'last_name');
-                   }
-               ])
-               ->whereHas('requestToolToolSecurityKey', function ($query) {
-                   $query->where('security_id', 5) // Ensure it checks for vice-president security_id
-                         ->where('status_id', 11); // Ensure it's pending by vice-president
-               })
-               ->whereHas('requestToolToolSecurityKey', function ($query) use ($roleIds) {
-                   $query->whereIn('security_id', $roleIds); // Ensure it also checks for president's security_id
-               })
-               ->get();
-            } elseif (Auth::user()->hasRole('president')) {
-                // Query for president users, only if vice-president already approved the request
-                $requestsReviewed = Request::where('status_id', 16)
-                    ->orderBy('id', 'desc')
-                    ->with([
-                        'status' => function ($query) {
-                            $query->select('id', 'description');
-                        },
-                        'borrower' => function ($query) {
-                            $query->select('id', 'first_name', 'middle_name', 'last_name');
-                        }
-                    ])
-                    ->whereHas('requestToolToolSecurityKey', function ($query) {
-                        $query->where('security_id', 5) // Ensure it checks for vice-president security_id
-                              ->where('status_id', 10); // Ensure it's approved by vice-president
-                    })
-                    ->whereHas('requestToolToolSecurityKey', function ($query) use ($roleIds) {
-                        $query->whereIn('security_id', $roleIds); // Ensure it also checks for president's security_id
-                    })
-                    ->get();
-            } else {
-                      // Query for admin users
+            // Query for president users, only if vice-president already approved the request
             $requestsReviewed = Request::where('status_id', 16)
-            ->orderBy('id', 'desc')
-            ->with([
-                'status' => function ($query) {
-                    $query->select('id', 'description');
-                },
-                'borrower' => function ($query) {
-                    $query->select('id', 'first_name', 'middle_name', 'last_name');
-                }
-            ])
-            ->get();
-            }
+                ->orderBy('id', 'desc')
+                ->with([
+                    'status' => function ($query) {
+                        $query->select('id', 'description');
+                    },
+                    'borrower' => function ($query) {
+                        $query->select('id', 'first_name', 'middle_name', 'last_name');
+                    }
+                ])
+                ->whereHas('requestToolToolSecurityKey', function ($query) {
+                    $query->where('security_id', 5) // Ensure it checks for vice-president security_id
+                        ->where('status_id', 11); // Ensure it's pending by vice-president
+                })
+                ->whereHas('requestToolToolSecurityKey', function ($query) use ($roleIds) {
+                    $query->whereIn('security_id', $roleIds); // Ensure it also checks for president's security_id
+                })
+                ->get();
+        } elseif (Auth::user()->hasRole('president')) {
+            // Query for president users, only if vice-president already approved the request
+            $requestsReviewed = Request::where('status_id', 16)
+                ->orderBy('id', 'desc')
+                ->with([
+                    'status' => function ($query) {
+                        $query->select('id', 'description');
+                    },
+                    'borrower' => function ($query) {
+                        $query->select('id', 'first_name', 'middle_name', 'last_name');
+                    }
+                ])
+                ->whereHas('requestToolToolSecurityKey', function ($query) {
+                    $query->where('security_id', 5) // Ensure it checks for vice-president security_id
+                        ->where('status_id', 10); // Ensure it's approved by vice-president
+                })
+                ->whereHas('requestToolToolSecurityKey', function ($query) use ($roleIds) {
+                    $query->whereIn('security_id', $roleIds); // Ensure it also checks for president's security_id
+                })
+                ->get();
+        } else {
+            // Query for admin users
+            $requestsReviewed = Request::where('status_id', 16)
+                ->orderBy('id', 'desc')
+                ->with([
+                    'status' => function ($query) {
+                        $query->select('id', 'description');
+                    },
+                    'borrower' => function ($query) {
+                        $query->select('id', 'first_name', 'middle_name', 'last_name');
+                    }
+                ])
+                ->get();
+        }
 
 
 
@@ -384,14 +384,28 @@ class RequestController extends Controller
 
             ->get();
 
-        $requestsStarted = Request::where('status_id', 6)
-            ->orderBy('id', 'desc')
-            ->with(['status' => function ($query) {
-                $query->select('id', 'description');
-            }, 'borrower' => function ($query) {
-                $query->select('id', 'first_name', 'middle_name', 'last_name');
-            }])
-            ->get();
+        if (Auth::user()->hasRole('operator')) {
+            $requestsStarted = Request::where('status_id', 6)
+                ->whereHas('RequestOperatorKey', function ($query) {
+                    $query->where('operator1_id', Auth::user()->id);
+                })
+                ->orderBy('id', 'desc')
+                ->with(['status' => function ($query) {
+                    $query->select('id', 'description');
+                }, 'borrower' => function ($query) {
+                    $query->select('id', 'first_name', 'middle_name', 'last_name');
+                }])
+                ->get();
+        } else {
+            $requestsStarted = Request::where('status_id', 6)
+                ->orderBy('id', 'desc')
+                ->with(['status' => function ($query) {
+                    $query->select('id', 'description');
+                }, 'borrower' => function ($query) {
+                    $query->select('id', 'first_name', 'middle_name', 'last_name');
+                }])
+                ->get();
+        }
 
         $requestsCompleted = Request::where('status_id', 12)
             ->orderBy('id', 'desc')

@@ -55,13 +55,18 @@
 				@can('approved-notif-er')
 				<span id="count-approved" class="blue"></span>
 				@endcan
-
+				@can('started-notif-er')
+				<span id="count-started" class="text-green"></span>
+				@endcan
 				<img src="assets/img/icons/note-icon-01.svg" alt="">
 				@can('pending-notif-sr')
 				<span id="count-pending-service" class="pink"></span>
 				@endcan
 				@can('approved-notif-sr')
 				<span id="count-approved-service" class="blue"></span>
+				@endcan
+				@can('started-notif-sr')
+				<span id="count-started-service" class="text-green"></span>
 				@endcan
 			</a>
 		</li>
@@ -86,6 +91,9 @@
 								@can('approved-notif-er')
 								<a class="dropdown-item" href="#basic-justified-tab-approved" data-bs-toggle="tab" id="count-approved">Approved</a>
 								@endcan
+								@can('started-notif-er')
+								<a class="dropdown-item" href="#basic-justified-tab-started" data-bs-toggle="tab" id="count-started">Started</a>
+								@endcan
 							</div>
 						</li>
 						<li class="nav-item dropdown">
@@ -99,12 +107,15 @@
 								@can('approved-notif-sr')
 								<a class="dropdown-item" href="#basic-justified-tab-approved-service" data-bs-toggle="tab" id="count-approved-service">Approved</a>
 								@endcan
+								@can('started-notif-sr')
+								<a class="dropdown-item" href="#basic-justified-tab-started-service" data-bs-toggle="tab" id="count-started-service">Started</a>
+								@endcan
 							</div>
 						</li>
 					</ul>
 					<div class="tab-content">
 
-					<div class="tab-pane show active" id="#">
+						<div class="tab-pane show active" id="#">
 							<div class="msg-sidebar notifications msg-noti">
 								<div class="topnav-dropdown-header">
 									<span>Filter above</span>
@@ -167,6 +178,18 @@
 								</div>
 							</div>
 						</div>
+						<div class="tab-pane" id="basic-justified-tab-started">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span>All Started Equipment Requests</span>
+								</div>
+								<div id="msg_list3">
+									<ul class="list-box" id="started-requests-list">
+										<!-- Content for started requests goes here -->
+									</ul>
+								</div>
+							</div>
+						</div>
 						<div class="tab-pane" id="basic-justified-tab-pending-service">
 							<div class="msg-sidebar notifications msg-noti">
 								<div class="topnav-dropdown-header">
@@ -186,6 +209,19 @@
 								</div>
 								<div id="msg_list5">
 									<ul class="list-box" id="approved-requests-list-service">
+										<!-- Content for pending requests goes here -->
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="basic-justified-tab-started-service">
+							<div class="msg-sidebar notifications msg-noti">
+								<div class="topnav-dropdown-header">
+									<span><span>All Started Service Requests</span>
+								</div>
+								<div id="msg_list6">
+									<ul class="list-box" id="started-requests-list-service">
 										<!-- Content for pending requests goes here -->
 									</ul>
 								</div>

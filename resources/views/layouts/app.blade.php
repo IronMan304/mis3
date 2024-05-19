@@ -559,15 +559,176 @@
                 });
             }
          
+            function updateStarted() {
+                $.ajax({
+                    url: '/get-realtime-count', // Update with the correct URL
+                    type: 'GET',
+                    success: function(response) {
+                        $('#count-started').text(response.countStarted);
+
+                        // $('#count-reviewed').text(response.countReviewed);
+                        // $('#count-approved').text(response.countApproved);
+                        // $('#count-started').text(response.countStarted);
+                        // $('#count-completed').text(response.countCompleted);
+
+                        // Update approved requests list
+                        $('#started-requests-list').empty(); // Clear previous list
+                        $.each(response.requestsStarted, function(index, request) {
+                            // Get the message creation time from request.created_at (assuming it's in UTC)
+                            var messageTime = new Date(request.created_at);
+
+                            // Convert the message time to Philippine time (UTC+8)
+                            messageTime.setHours(messageTime.getHours() + 8);
+
+                            // Format date
+                            var formattedDate = messageTime.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            });
+
+                            // Format time
+                            var formattedTime = messageTime.toLocaleTimeString('en-US', {
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                hour12: true
+                            });
+
+                            // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+                            var dayOfWeek = messageTime.getDay();
+
+                            // Define an array to map the day of the week to its name
+                            var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+                            // Get the day name
+                            var dayName = daysOfWeek[dayOfWeek];
+
+                            // Check if the message was sent today
+                            var today = new Date();
+                            var isToday = today.toDateString() === messageTime.toDateString();
+
+                            // Format the time string
+                            var formattedDateTime = formattedDate + ', ' + formattedTime + " " + (isToday ? 'today' : dayName);
+                            // Check if borrower exists before accessing its properties
+                            var borrowerName = request.borrower ? (request.borrower.first_name + ' ' + (request.borrower.middle_name || '') + ' ' + request.borrower.last_name) : 'N/A';
+                            $('#started-requests-list').append(
+                                '<li>' +
+                                '<div class="list-item">' +
+                                '<div class="list-left"></div>' +
+                                '<div class="list-body">' +
+                                '<div ><span class="message-author">' + request.request_number + '</span></div>' +
+                                '<span class="message-time">' + formattedDateTime + '</span>' +
+
+                                '<div class="clearfix"></div>' +
+                                '<div class="message-content status-green">' + 'Status: ' + request.status.description + '</div>' +
+                                '<div class="message-content">' + 'Requester: ' + borrowerName + '</div>' +
+
+                                '</div>' +
+                                '</div>' +
+                                '</li>'
+                            );
+                        });
+
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+
+            function updateStartedService() {
+                $.ajax({
+                    url: '/get-realtime-count-service', // Update with the correct URL
+                    type: 'GET',
+                    success: function(response) {
+                        // Check if countPendingService is not null before updating the UI
+                        if (response.countStartedService !== null) {
+                            $('#count-started-service').text(response.countStartedService);
+                        } else {
+                            // Handle null value, for example, display a message or set a default value
+                            $('#count-started-service').text('N/A');
+                        }
+
+                        // Update pending requests list
+                        $('#started-requests-list-service').empty(); // Clear previous list
+                        if (response.requestsStartedService !== null) {
+                            $.each(response.requestsStartedService, function(index, requestService) {
+                                // Get the message creation time from requestService.created_at (assuming it's in UTC)
+                                var messageTime = new Date(requestService.created_at);
+
+                                // Convert the message time to Philippine time (UTC+8)
+                                messageTime.setHours(messageTime.getHours() + 8);
+
+                                // Format date
+                                var formattedDate = messageTime.toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                });
+
+                                // Format time
+                                var formattedTime = messageTime.toLocaleTimeString('en-US', {
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true
+                                });
+
+                                // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+                                var dayOfWeek = messageTime.getDay();
+
+                                // Define an array to map the day of the week to its name
+                                var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+                                // Get the day name
+                                var dayName = daysOfWeek[dayOfWeek];
+
+                                // Check if the message was sent today
+                                var today = new Date();
+                                var isToday = today.toDateString() === messageTime.toDateString();
+
+                                // Format the time string
+                                var formattedDateTime = formattedDate + ', ' + formattedTime + " " + (isToday ? 'today' : dayName);
+                                // Check if borrower exists before accessing its properties
+                                var borrowerName = requestService.borrower ? (requestService.borrower.first_name + ' ' + (requestService.borrower.middle_name || '') + ' ' + requestService.borrower.last_name) : 'N/A';
+                                $('#started-requests-list-service').append(
+                                    '<li>' +
+                                    '<div class="list-item">' +
+                                    '<div class="list-left"></div>' +
+                                    '<div class="list-body">' +
+                                    '<div ><span class="message-author">' + requestService.request_number + '</span></div>' +
+                                    '<span class="message-time">' + formattedDateTime + '</span>' +
+
+                                    '<div class="clearfix"></div>' +
+                                    '<div class="message-content status-green">' + 'Status: ' + requestService.status.description + '</div>' +
+                                    '<div class="message-content">' + 'Requester: ' + borrowerName + '</div>' +
+
+                                    '</div>' +
+                                    '</div>' +
+                                    '</li>'
+                                );
+                            });
+                        } else {
+                            // Handle null value, for example, display a message or show a placeholder
+                            $('#started-requests-list-service').append('<li>No started service requests</li>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
 
             updateRealtimeCount();
             updateRealtimeCountService();
 
             updateReviewed();
             updateApproved();
+            updateStarted();
 
             updateReviewedService();
             updateApprovedService();
+            updateStartedService();
          
             setInterval(function() {
                 updateRealtimeCount();
@@ -575,9 +736,11 @@
 
                 updateReviewed();
                 updateApproved();
+                updateStarted();
                
                 updateReviewedService();
                 updateApprovedService();
+                updateStartedService();
             
             }, 10000);
         });

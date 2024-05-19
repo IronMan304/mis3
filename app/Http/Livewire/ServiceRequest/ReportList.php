@@ -176,7 +176,8 @@ class ReportList extends Component
         }
 
         // Paginate the filtered requests
-        $requests = $query->paginate($this->perPage);
+        //$requests = $query->paginate($this->perPage);
+        $requests = $query->orderBy('id', 'desc')->paginate($this->perPage);
         $borrowers = Borrower::all();
         $operators = Operator::all();
         $technicians = User::role('technician')->get();

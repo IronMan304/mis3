@@ -228,7 +228,7 @@
                             </td>
                             <td>
                                 @if($service_request->borrower)
-                                @if($service_request->borrower->user_id == $service_request->user_id)
+                                @if($service_request->borrower->user_id == $service_request->staff_user_id)
                                 {{ 'Online (Mobile app)' }} <br>
                                 {{ $service_request->borrower->user->email ?? ''}}
                                 @else
