@@ -330,9 +330,11 @@
 											@endif
 											@endcan
 											
+											@can('view-equipment-requests-cancel')
 											<button type="button" class="btn btn-danger btn-sm mx-1" wire:click="cancelRequest({{ $request->id }})" title="Cancel"  >
 											<i class="fa-solid fa-rectangle-xmark"></i>
 											</button>
+											@endcan
 										</div>
 									</td>
 

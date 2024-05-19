@@ -28,7 +28,7 @@
     <form wire:submit.prevent="store" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="row">
-                @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff'))
+                @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('head of office'))
 
 
                 <div class="col-md-12" wire:ignore>

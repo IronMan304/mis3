@@ -312,15 +312,67 @@ class RequestController extends Controller
 
             ->get();
 
-        $requestsReviewed = Request::where('status_id', 16)
-            ->orderBy('id', 'desc')
-            ->with(['status' => function ($query) {
-                $query->select('id', 'description');
-            }, 'borrower' => function ($query) {
-                $query->select('id', 'first_name', 'middle_name', 'last_name');
-            }])
 
+
+        $roleIds = Auth::user()->roles->pluck('id');
+      
+        if (Auth::user()->hasRole('vice-president')) {
+               // Query for president users, only if vice-president already approved the request
+               $requestsReviewed = Request::where('status_id', 16)
+               ->orderBy('id', 'desc')
+               ->with([
+                   'status' => function ($query) {
+                       $query->select('id', 'description');
+                   },
+                   'borrower' => function ($query) {
+                       $query->select('id', 'first_name', 'middle_name', 'last_name');
+                   }
+               ])
+               ->whereHas('requestToolToolSecurityKey', function ($query) {
+                   $query->where('security_id', 5) // Ensure it checks for vice-president security_id
+                         ->where('status_id', 11); // Ensure it's pending by vice-president
+               })
+               ->whereHas('requestToolToolSecurityKey', function ($query) use ($roleIds) {
+                   $query->whereIn('security_id', $roleIds); // Ensure it also checks for president's security_id
+               })
+               ->get();
+            } elseif (Auth::user()->hasRole('president')) {
+                // Query for president users, only if vice-president already approved the request
+                $requestsReviewed = Request::where('status_id', 16)
+                    ->orderBy('id', 'desc')
+                    ->with([
+                        'status' => function ($query) {
+                            $query->select('id', 'description');
+                        },
+                        'borrower' => function ($query) {
+                            $query->select('id', 'first_name', 'middle_name', 'last_name');
+                        }
+                    ])
+                    ->whereHas('requestToolToolSecurityKey', function ($query) {
+                        $query->where('security_id', 5) // Ensure it checks for vice-president security_id
+                              ->where('status_id', 10); // Ensure it's approved by vice-president
+                    })
+                    ->whereHas('requestToolToolSecurityKey', function ($query) use ($roleIds) {
+                        $query->whereIn('security_id', $roleIds); // Ensure it also checks for president's security_id
+                    })
+                    ->get();
+            } else {
+                      // Query for admin users
+            $requestsReviewed = Request::where('status_id', 16)
+            ->orderBy('id', 'desc')
+            ->with([
+                'status' => function ($query) {
+                    $query->select('id', 'description');
+                },
+                'borrower' => function ($query) {
+                    $query->select('id', 'first_name', 'middle_name', 'last_name');
+                }
+            ])
             ->get();
+            }
+
+
+
 
         $requestsApproved = Request::where('status_id', 10)
             ->orderBy('id', 'desc')
@@ -332,21 +384,50 @@ class RequestController extends Controller
 
             ->get();
 
-            // $requestsPending = Request::where('status_id', 16)
-            // ->orderBy('id', 'desc')
-            // ->with(['status' => function ($query) {
-            //     $query->select('id', 'description');
-            // }, 'borrower' => function ($query) {
-            //     $query->select('id', 'first_name', 'middle_name', 'last_name');
-            // }])
+        $requestsStarted = Request::where('status_id', 6)
+            ->orderBy('id', 'desc')
+            ->with(['status' => function ($query) {
+                $query->select('id', 'description');
+            }, 'borrower' => function ($query) {
+                $query->select('id', 'first_name', 'middle_name', 'last_name');
+            }])
+            ->get();
 
-            // ->get();
+        $requestsCompleted = Request::where('status_id', 12)
+            ->orderBy('id', 'desc')
+            ->with(['status' => function ($query) {
+                $query->select('id', 'description');
+            }, 'borrower' => function ($query) {
+                $query->select('id', 'first_name', 'middle_name', 'last_name');
+            }])
+            ->get();
 
+        $requestsIncomplete = Request::where('status_id', 13)
+            ->orderBy('id', 'desc')
+            ->with(['status' => function ($query) {
+                $query->select('id', 'description');
+            }, 'borrower' => function ($query) {
+                $query->select('id', 'first_name', 'middle_name', 'last_name');
+            }])
+            ->get();
 
-        // $requestsReviewed = Request::where('status_id', 16)->get();
-        // $requestsApproved = Request::where('status_id', 10)->get();
-        // $requestsStarted = Request::where('status_id', 6)->get();
-        // $requestsCompleted = Request::where('status_id', 12)->get();
+        $requestsRejected = Request::where('status_id', 15)
+            ->orderBy('id', 'desc')
+            ->with(['status' => function ($query) {
+                $query->select('id', 'description');
+            }, 'borrower' => function ($query) {
+                $query->select('id', 'first_name', 'middle_name', 'last_name');
+            }])
+            ->get();
+
+        $requestsCancelled = Request::where('status_id', 8)
+            ->orderBy('id', 'desc')
+            ->with(['status' => function ($query) {
+                $query->select('id', 'description');
+            }, 'borrower' => function ($query) {
+                $query->select('id', 'first_name', 'middle_name', 'last_name');
+            }])
+            ->get();
 
         // Count the number of requests with status_id equal to 11
         $countRequests = $requests->count();
@@ -354,8 +435,12 @@ class RequestController extends Controller
         $countPending = $requestsPending->count();
         $countReviewed = $requestsReviewed->count();
         $countApproved = $requestsApproved->count();
-        // $countStarted = $requestsStarted->count();
-        // $countCompleted = $requestsCompleted->count();
+        $countStarted = $requestsStarted->count();
+        $countCompleted = $requestsCompleted->count();
+        $countIncomplete = $requestsIncomplete->count();
+
+        $countRejected = $requestsRejected->count();
+        $countCancelled = $requestsCancelled->count();
 
         // Store request numbers in an array
         $requestNumbers = $requests->sortByDesc('id');
@@ -363,29 +448,43 @@ class RequestController extends Controller
         $requestsPending = $requestsPending->sortByDesc('id');
         $requestsReviewed = $requestsReviewed->sortByDesc('id');
         $requestsApproved = $requestsApproved->sortByDesc('id');
-        // $requestsStarted = $requestsStarted->sortByDesc('id');
-        // $requestsCompleted = $requestsCompleted->sortByDesc('id');
+        $requestsStarted = $requestsStarted->sortByDesc('id');
+        $requestsCompleted = $requestsCompleted->sortByDesc('id');
+        $requestsIncomplete = $requestsIncomplete->sortByDesc('id');
+
+        $requestsRejected = $requestsRejected->sortByDesc('id');
+        $requestsCancelled = $requestsCancelled->sortByDesc('id');
+
+
 
         return response()->json([
+            'requests' => $requests,
             'countRequests' => $countRequests,
             'countPending' => $countPending,
             'countReviewed' => $countReviewed,
             'countApproved' => $countApproved,
-            'requests' => $requests,
-            // 'countCompleted' => $countCompleted,
+            'countStarted' => $countStarted,
+            'countCompleted' => $countCompleted,
+            'countIncomplete' => $countIncomplete,
+            'countRejected' => $countRejected,
+            'countCancelled' => $countCancelled,
+
             'requestNumbers' => $requestNumbers,
             'requestsPending' => $requestsPending,
             'requestsReviewed' => $requestsReviewed,
             'requestsApproved' => $requestsApproved,
+            'requestsStarted' => $requestsStarted,
             'requestsPendingAndApproved' => $requestsPendingAndApproved,
-            // 'requestsCompleted' => $requestsCompleted,
+            'requestsCompleted' => $requestsCompleted,
+            'requestsIncomplete' => $requestsIncomplete,
+            'requestsRejected' => $requestsRejected,
+            'requestsCancelled' => $requestsCancelled,
         ]);
     }
 
     public function countService()
     {
         //$count = Request::count(); // Get the count using your model
-
 
         // Retrieve requests with status_id equal to 11
         $serviceRequests = ServiceRequest::all();
@@ -417,53 +516,76 @@ class RequestController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
+        $requestsStartedService = ServiceRequest::with(['status' => function ($query) {
+            $query->select('id', 'description');
+        }, 'borrower' => function ($query) {
+            $query->select('id', 'first_name', 'middle_name', 'last_name');
+        }])
+            ->where('status_id', 6) //pending
+            ->orderBy('id', 'desc')
+            ->get();
 
-
-        // $requestsReviewed = ServiceRequest::where('status_id', 16)->get();
-        // $requestsApproved = ServiceRequest::where('status_id', 10)->get();
-        // $requestsStarted = ServiceRequest::where('status_id', 6)->get();
-        // $requestsCompleted = ServiceRequest::where('status_id', 12)->get();
-
-        // Count the number of requests with status_id equal to 11
-        // $countRequests = $requests->count();
+        $requestsCompletedService = ServiceRequest::with(['status' => function ($query) {
+            $query->select('id', 'description');
+        }, 'borrower' => function ($query) {
+            $query->select('id', 'first_name', 'middle_name', 'last_name');
+        }])
+            ->where('status_id', 12) //pending
+            ->orderBy('id', 'desc')
+            ->get();
+        $requestsIncompleteService = ServiceRequest::with(['status' => function ($query) {
+            $query->select('id', 'description');
+        }, 'borrower' => function ($query) {
+            $query->select('id', 'first_name', 'middle_name', 'last_name');
+        }])
+            ->where('status_id', 13) //pending
+            ->orderBy('id', 'desc')
+            ->get();
+        $requestsRejectedService = ServiceRequest::with(['status' => function ($query) {
+            $query->select('id', 'description');
+        }, 'borrower' => function ($query) {
+            $query->select('id', 'first_name', 'middle_name', 'last_name');
+        }])
+            ->where('status_id', 15) //pending
+            ->orderBy('id', 'desc')
+            ->get();
+        $requestsCancelledService = ServiceRequest::with(['status' => function ($query) {
+            $query->select('id', 'description');
+        }, 'borrower' => function ($query) {
+            $query->select('id', 'first_name', 'middle_name', 'last_name');
+        }])
+            ->where('status_id', 8) //pending
+            ->orderBy('id', 'desc')
+            ->get();
 
         $countPendingService = $requestsPendingService->count();
         $countReviewedService = $requestsReviewedService->count();
-        // $countReviewed = $requestsReviewed->count();
         $countApprovedService = $requestsApprovedService->count();
-        // $countStarted = $requestsStarted->count();
-        // $countCompleted = $requestsCompleted->count();
-
-        // // Store request numbers in an array
-        // $requestNumbers = $requests->sortByDesc('id');
-
-        // $requestsPending = $requestsPending->sortByDesc('id');
-        // $requestsReviewed = $requestsReviewed->sortByDesc('id');
-        // $requestsApproved = $requestsApproved->sortByDesc('id');
-        // $requestsStarted = $requestsStarted->sortByDesc('id');
-        // $requestsCompleted = $requestsCompleted->sortByDesc('id');
+        $countStartedService = $requestsStartedService->count();
+        $countCompletedService = $requestsCompletedService->count();
+        $countIncompleteService = $requestsIncompleteService->count();
+        $countRejectedService = $requestsRejectedService->count();
+        $countCancelledService = $requestsCancelledService->count();
 
         return response()->json([
             // 'countRequests' => $countRequests,
             'countPendingService' => $countPendingService,
             'countReviewedService' => $countReviewedService,
-            // 'countReviewed' => $countReviewed,
             'countApprovedService' => $countApprovedService,
-            // 'countStarted' => $countStarted,
-            // 'countCompleted' => $countCompleted,
-            // 'requestNumbers' => $requestNumbers,
+            'countStartedService' => $countStartedService,
+            'countCompletedService' => $countCompletedService,
+            'countIncompleteService' => $countIncompleteService,
+            'countRejectedService' => $countRejectedService,
+            'countCancelledService' => $countCancelledService,
+
             'requestsPendingService' => $requestsPendingService,
             'requestsReviewedService' => $requestsReviewedService,
-            // 'requestsReviewed' => $requestsReviewed,
             'requestsApprovedService' => $requestsApprovedService,
-            // 'requestsStarted' => $requestsStarted,
-            // 'requestsCompleted' => $requestsCompleted,
+            'requestsStartedService' => $requestsStartedService,
+            'requestsCompletedService' => $requestsCompletedService,
+            'requestsIncompleteService' => $requestsIncompleteService,
+            'requestsRejectedService' => $requestsRejectedService,
+            'requestsCancelledService' => $requestsCancelledService,
         ]);
     }
-
-    // public function tools()
-    // {
-    //     $tools = Tool::all();
-    //     return $tools;
-    // }
 }

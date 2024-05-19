@@ -97,5 +97,10 @@ class Request extends Model
         return $this->belongsTo(User::class, 'dt_cancelled_user_id', 'id');
     }
 
+    public function RequestToolToolSecurityKey()
+    {
+        return $this->hasMany(RequestToolToolSecurityKey::class, 'request_id');
+    }
+
 
 }

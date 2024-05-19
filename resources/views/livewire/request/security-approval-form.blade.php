@@ -23,11 +23,25 @@
             /* Rounded corners for inner box */
             height: 100px;
             /* Set height of the inner box */
-            overflow: auto;
-            /* Add scrollbar if content overflows */
+            display: flex;
+            /* Use flexbox for centering */
+            justify-content: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically */
             margin-top: 50px;
             margin-bottom: 50px;
         }
+
+        .inner-box img {
+            max-width: 100%;
+            /* Make the image responsive */
+            max-height: 100%;
+            /* Ensure image does not exceed the box height */
+            object-fit: contain;
+            /* Maintain aspect ratio and fit within the box */
+        }
+
 
         .logo-container {
             /* display: flex;
@@ -89,7 +103,7 @@
                     <div class="sidebar1 text-center sidebar-box">
                         <div class="vision">
                             <h5>Vision</h5>
-                            <p style="font-size: 12px;">A dynamic, competetive and globally responsive state university.</p>
+                            <p style="font-size: 12px;">A dynamic, competitive and globally responsive state university.</p>
                         </div>
                         <div class="mission">
                             <h5>Mission</h5>
@@ -99,10 +113,12 @@
                             <h5>Quality Policy</h5>
                             <p style="font-size: 12px;">NOrSU commits itself to the provision of quality instruction, research, extension services and production as well as compliance to applicable regulatory requirements and continual improvement of its management system.</p>
                         </div>
-                        <div class="inner-box"> <a href=""><img src="assets/img/norsu.png" alt="Top Logo" style="width: 410px;"></a>
+                        <div class="inner-box">
+                            <a href=""><img src="assets/img/norsu.png" alt="Top Logo"></a>
                         </div>
                     </div>
                 </div>
+
 
 
                 <div class="col-lg-10">
@@ -119,7 +135,7 @@
                                 {{ $request?->created_at ? \Carbon\Carbon::parse($request->created_at)->format('F d, Y') : '' }}
                             </p>
                             <p style="margin: 0;">
-                                <strong>{{ $request->request_number ?? '' }}</strong>
+                                Request Number: <strong>{{ $request->request_number ?? '' }}</strong>
                             </p>
                         </div>
 
@@ -256,10 +272,10 @@
 
                         <p>
                             <strong>Borrowing Period:</strong><br>
-                            Start Date: @foreach ($requests as $request) 
+                            Start Date: @foreach ($requests as $request)
                             {{ $request?->date_needed ? \Carbon\Carbon::parse($request->date_needed)->format('F d, Y') : '' }}
                             @endforeach <br>
-                            End Date: @foreach ($requests as $request) 
+                            End Date: @foreach ($requests as $request)
                             {{ $request?->estimated_return_date ? \Carbon\Carbon::parse($request->estimated_return_date)->format('F d, Y') : '' }}
                             @endforeach
                         </p>

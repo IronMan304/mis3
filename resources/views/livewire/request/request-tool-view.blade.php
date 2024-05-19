@@ -94,7 +94,7 @@
 												@endif
 												@else
 												{{ $rtts_key->updated_at ?? '' }}<br>
-												{{ $rtts_key->user->first_name ?? ''}} {{ $rtts_key->user->middle_name ?? ''}} {{ $rtts_key->user->last_name ?? ''}} {{ '(' . $rtts_key->user->position->description . ')' ?? ''}}<br>
+												{{$rtts_key->user->first_name ?? ''}} {{$rtts_key->user->middle_name ?? ''}} {{$rtts_key->user->last_name ?? ''}} {{ '(' . ($rtts_key->user->position->description ?? '') . ')' }}<br>
 												@php
 												$latestUpdatedAtPerSecurityId[$rtts_key->security_id] = $rtts_key->updated_at;
 												@endphp

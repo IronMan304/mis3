@@ -21,6 +21,13 @@
 								<div class="doctor-table-blk">
 									<h3>User List</h3>
 									<div class="doctor-search-blk">
+										<div class="top-nav-search table-search-blk">
+											<form>
+												<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
+												<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
+											</form>
+										</div>
+
 										<div class="add-group">
 											<a wire:click="createUser" class="btn btn-primary ms-2"><img src="{{ asset('assets/img/icons/plus.svg') }}" alt>
 											</a>
@@ -29,12 +36,7 @@
 								</div>
 							</div>
 							<div class="col-auto text-end float-end ms-auto download-grp">
-								<div class="top-nav-search table-search-blk">
-									<form>
-										<input type="text" class="form-control" placeholder="Search here" wire:model.debounce.500ms="search">
-										<a class="btn"><img src="{{ asset('assets/img/icons/search-normal.svg') }}" alt></a>
-									</form>
-								</div>
+
 							</div>
 						</div>
 					</div>
@@ -46,6 +48,33 @@
 							<div class="col-sm-2">
 
 							</div>
+						</div>
+					</div>
+
+					<div class="staff-search-table">
+
+						<div class="row">
+
+							<div class="col-12 col-md-6 col-xl-3">
+								<div class="form-group local-forms">
+									<label>Role</label>
+									<select class="form-control" wire:model="role_id" wire:change="applyFilters" id="role_id">
+										<option value="" selected>All Roles</option>
+										@foreach ($roles as $role)
+										<option value="{{ $role->id }}">
+											{{ $role->name }}
+										</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+
+							<div class="col-6 col-md-6 col-xl-3">
+								<div class="doctor-submit">
+									<button class="btn btn-primary submit-list-form me-2" wire:click="resetFilters">Reset Filters</button>
+								</div>
+							</div>
+
 						</div>
 					</div>
 
