@@ -96,7 +96,7 @@ class ServiceRequestForm extends Component
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
-            if ($tool->status_id == 1) {
+            if ($tool->status_id == 1 || $tool->status_id == 22) {
                 if (($tool->source_id == 3 && $tool->owner_id === null) || $tool->source_id == 4 && $tool->owner_id == $data['borrower_id'])
                 {
                 $data['staff_user_id'] = auth()->user()->id;
@@ -114,7 +114,7 @@ class ServiceRequestForm extends Component
                     $this->errorMessage = 'Make sure the equipment owner is correct';
                 }
             } else {
-                $this->errorMessage = 'You can only request equipment that are In stock';
+                $this->errorMessage = 'You can only request equipment that either In stock or On Hand';
             }
         }
     }

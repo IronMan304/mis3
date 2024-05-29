@@ -289,7 +289,7 @@ class ReportList extends Component
         ]);
 
         // Set the filename
-        $filename = 'equipment-request-report.pdf';
+        $filename = 'service-request-report.pdf';
         $this->exporting = false;
 
         // Stream or download the PDF

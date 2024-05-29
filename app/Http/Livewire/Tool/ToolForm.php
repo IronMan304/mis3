@@ -150,7 +150,10 @@ class ToolForm extends Component
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
-            $data['status_id'] = 1;
+            //$data['status_id'] = 1;
+            if ($this->source_id == 3) {
+                $data['status_id'] = 1;
+            }
 
             $tool = Tool::create($data);
         

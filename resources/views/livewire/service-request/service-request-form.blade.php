@@ -69,13 +69,13 @@
                         <select class="form-control select"  wire:model="tool_id" id="tool_id">
                             <option value=null selected>Select Equipment</option>
                             @foreach ($tools as $tool)
-                            @if($source_id == 3)
-                            <option value="{{ $tool->id }}" @if($tool->status_id != 1 && $tool->status_id != 4 ) disabled @endif>
+                            @if($source_id == 3 && $tool->source_id != 4)
+                            <option value="{{ $tool->id }}" @if($tool->status_id != 1 && $tool->status_id != 22) disabled @endif>
                                 {{ $tool->type->description }}: {{ $tool->property_number}} ({{$tool->status->description}})
                             </option>
                            
-                            @elseif($tool->source_id == 4 && $tool->owner_id == $borrower_id && $tool->owner_id != null)
-                            <option value="{{ $tool->id }}" @if($tool->status_id != 1) disabled @endif>
+                            @elseif($source_id == 4 && $tool->owner_id == $borrower_id && $tool->owner_id != null)
+                            <option value="{{ $tool->id }}" @if($tool->status_id != 1 && $tool->status_id != 4 && $tool->status_id != 22) disabled @endif>
                                 {{ $tool->type->description }}: {{ $tool->property_number}} ({{$tool->status->description}})
                             </option>
                             @endif
