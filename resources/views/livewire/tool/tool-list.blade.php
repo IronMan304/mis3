@@ -198,8 +198,6 @@
 					</div>
 				</div>
 
-
-
 				<div class="table-responsive">
 					<table class="table border-0 custom-table comman-table mb-0">
 						<thead>
@@ -208,6 +206,7 @@
 								<th>Type</th>
 								<th>Property Number</th>
 								<th>Brand</th>
+								<th>Part</th>
 								<th>Applicability</th>
 								<th>Security</th>
 								<th>Source</th>
@@ -232,6 +231,20 @@
 								</td>
 								<td>
 									{{ $tool->brand }}
+								</td>
+
+								<td>
+									@if ($tool->Parts)
+									@foreach ($tool->Parts as $part)
+									- {{ $part->name ?? 'N/A' }}
+
+									@if (!$loop->last)
+									{{-- Add a Space or separator between department names --}}
+									<br>
+									@endif
+									@endforeach
+
+									@endif
 								</td>
 
 								<td>
@@ -341,7 +354,7 @@
 
 </div>
 {{-- Modal --}}
-
+<script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <div wire.ignore.self class="modal fade" id="toolModal" tabindex="-1" role="dialog" aria-labelledby="toolModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 	<div class="modal-dialog modal-dialog-centered modal-lg">
 		<livewire:tool.tool-form />

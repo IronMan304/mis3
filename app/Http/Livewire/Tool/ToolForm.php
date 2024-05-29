@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Tool;
 
+use App\Models\Part;
 use App\Models\Tool;
 use App\Models\Type;
 use App\Models\Source;
@@ -9,6 +10,7 @@ use Livewire\Component;
 use App\Models\Borrower;
 use App\Models\Category;
 use App\Models\Position;
+use App\Models\Status;
 use App\Models\ToolPosition;
 use App\Models\ToolSecurity;
 
@@ -21,6 +23,7 @@ class ToolForm extends Component
     public $preserveDataTableState = false;
     public $positionItems = [];
     public $securityItems = [];
+    public $partItems = [];
 
     protected $listeners = [
         'toolId',
@@ -38,31 +41,55 @@ class ToolForm extends Component
     public function toolId($toolId)
     {
         $this->toolId = $toolId;
-        $tool = Tool::whereId($toolId)->first();
-        $this->category_id = $tool->category_id;
-        $this->source_id = $tool->source_id;
-        $this->type_id = $tool->type_id;
-        $this->status_id = $tool->status_id;
-        $this->property_number = $tool->property_number;
-        $this->barcode = $tool->barcode;
-        $this->brand = $tool->brand;
-        $this->owner_id = $tool->owner_id;
+        $tool = Tool::find($toolId);
 
-        //$this->position_id = $tool->position;
-        // Populate toolItems with the IDs of associated tools
-        $this->positionItems = $tool->position_keys->pluck('position_id')->toArray();
-        $this->securityItems = $tool->security_keys->pluck('security_id')->toArray();
+        if ($tool) {
+            $this->category_id = $tool->category_id;
+            $this->source_id = $tool->source_id;
+            $this->type_id = $tool->type_id;
+            $this->status_id = $tool->status_id;
+            $this->property_number = $tool->property_number;
+            $this->barcode = $tool->barcode;
+            $this->brand = $tool->brand;
+            $this->owner_id = $tool->owner_id;
+
+            // Populate toolItems with the IDs of associated tools
+            $this->positionItems = $tool->position_keys->pluck('position_id')->toArray();
+            $this->securityItems = $tool->security_keys->pluck('security_id')->toArray();
+            $this->partItems = $tool->Parts->pluck('id')->toArray(); // Get parts IDs
+
+             // Map the part items correctly
+            //  $this->partItems = $tool->Parts->map(function($part) {
+            //     return [
+            //         'part_type_id' => $part->part_type_id,
+            //         'property_number' => $part->property_number,
+            //         'brand_id' => $part->brand_id,
+            //     ];
+            // })->toArray();
+        }
     }
+
+    // public function addPart()
+    // {
+
+    //     $this->partItems[] = [
+    //         'part_type_id' => null,
+    //         'property_number' => '',
+    //         'brand_id' => null,
+    //     ];
+
+    //     $this->emit('disableButton1');
+    //     $this->emit('enableButton2');
+    // }
+
     public function preserveDataTableState()
     {
         $this->preserveDataTableState = true;
     }
 
-
     //store
     public function store()
     {
-        // dd(auth()->user()->id);
         $rules = [
             'user_id' => 'nullable',
             'category_id' => 'required',
@@ -74,74 +101,85 @@ class ToolForm extends Component
             'barcode' => 'nullable',
             'positionItems' => 'nullable|array',
             'securityItems' => 'nullable|array',
-            //'position_id' => 'nullable',
             'owner_id' => 'nullable',
         ];
-
-        if($this->source_id == 4){
-            $rules['owner_id'] = 'required'; 
+    
+        if ($this->source_id == 4) {
+            $rules['owner_id'] = 'required';
         }
-
+    
         $data = $this->validate($rules);
-
-        if($this->source_id == 4){
+    
+        if ($this->source_id == 4) {
             $data['status_id'] = 22;
         }
-        // Include the 'user_id' in the data array
         $data['user_id'] = auth()->user()->id;
-     
-
+    
         if ($this->toolId) {
             $tool = Tool::find($this->toolId);
             if ($tool) {
-                // Update the tool with the provided data
                 $tool->update($data);
-
-                // Delete previous ToolPosition entries for the tool
+    
+                // Delete previous ToolPosition and ToolSecurity entries for the tool
                 $tool->position_keys()->delete();
                 $tool->security_keys()->delete();
-
-                //Iterate through each position item and update or create ToolPosition
+                $tool->parts()->update(['tool_id' => null, 'status_id' => 25]);
+    
                 foreach ($this->positionItems as $positionId) {
                     ToolPosition::updateOrCreate(
-                        ['tool_id' => $tool->id, 'position_id' => $positionId],
+                        ['tool_id' => $tool->id, 'position_id' => $positionId]
                     );
                 }
-
-                //Iterate through each position item and update or create ToolPosition
+    
                 foreach ($this->securityItems as $securityId) {
                     ToolSecurity::updateOrCreate(
-                        ['tool_id' => $tool->id, 'security_id' => $securityId],
+                        ['tool_id' => $tool->id, 'security_id' => $securityId]
                     );
+                }
+    
+                foreach ($this->partItems as $partId) {
+                    $part = Part::find($partId);
+                    if ($part) {
+                        $part->tool_id = $tool->id;
+                        $part->status_id = $part->tool_id ? 20 : 25;
+                        $part->update();
+                    }
                 }
             }
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
             $data['status_id'] = 1;
-
-            // When creating a new tool, set the 'user_id'
-            //$data['user_id'] = auth()->user()->id;
-            // $data['status_id'];
-
+    
             $tool = Tool::create($data);
+    
             foreach ($this->positionItems as $positionId) {
                 ToolPosition::create([
                     'tool_id' => $tool->id,
                     'position_id' => $positionId,
                 ]);
             }
+    
             foreach ($this->securityItems as $securityId) {
                 ToolSecurity::create([
                     'tool_id' => $tool->id,
                     'security_id' => $securityId,
                 ]);
             }
-
+    
+            foreach ($this->partItems as $partId) {
+                $part = Part::find($partId);
+                if ($part) {
+                    $part->tool_id = $tool->id;
+                    $part->status_id = $part->tool_id ? 20 : 25;
+                    $part->save();
+                }
+            }
+    
             $action = 'store';
             $message = 'Successfully Created';
         }
-
+    
         $this->emit('flashAction', $action, $message);
         $this->emit('preserveDataTableState');
         $this->resetInputFields();
@@ -149,6 +187,13 @@ class ToolForm extends Component
         $this->emit('closeToolModal');
         $this->emit('refreshParentTool');
     }
+    public function deletePart($partIndex)
+    {
+        unset($this->partItems[$partIndex]);
+        $this->partItems = array_values($this->partItems);
+    }
+
+    
 
     public function render()
     {
@@ -158,9 +203,12 @@ class ToolForm extends Component
         $positions = Position::all();
         $securities = Position::all();
         $tools = Tool::all();
-         // Fetch the user_id from the Borrower table using the authenticated user's id
         $borrower = Borrower::where('user_id', auth()->user()->id)->value('id');
         $borrowers = Borrower::all();
+        $parts = Part::all(); 
+        // $partTypes = PartType::all();
+        // $partTypes = Status::all();
+        // $brands = Status::all();
 
         return view('livewire.tool.tool-form', [
             'categories' => $categories,
@@ -171,6 +219,9 @@ class ToolForm extends Component
             'borrower' => $borrower,
             'securities' => $securities,
             'borrowers' => $borrowers,
+            'parts' => $parts,
+            // 'partTypes' => $partTypes,
+            // 'brands' => $brands,
         ]);
     }
 }

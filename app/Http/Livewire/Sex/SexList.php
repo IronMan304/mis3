@@ -63,7 +63,7 @@ class SexList extends Component
             ->event($action)
             ->withProperties([
                 // 'action' => $action,
-                'name' => $description, // Pass the description as an additional property
+                'deleted_description' => $description, // Pass the description as an additional property
             ])
             ->log(auth()->user()->first_name . ' ' . $action . 'd ' . $description);
 

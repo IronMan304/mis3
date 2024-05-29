@@ -39,23 +39,69 @@ class CollegeForm extends Component
             'description' => 'required',
             'code' => 'required'
         ]);
-
+    
+        $college = null;
+        $formerDescription = null;
+        $formerCode = null;
+    
         if ($this->collegeId) {
-            College::whereId($this->collegeId)->first()->update($data);
-            $action = 'edit';
-            $message = 'Successfully Updated';
+            $college = College::find($this->collegeId);
+            if ($college) {
+                $formerDescription = $college->description;
+                $formerCode = $college->code;
+                $college->update($data);
+                $action = 'edit';
+                $message = 'Successfully Updated';
+            }
         } else {
-            College::create($data);
+            $college = College::create($data);
             $action = 'store';
             $message = 'Successfully Created';
         }
-
+    
+        // Log the activity
+        $properties = [];
+        $logMessage = auth()->user()->first_name . ' ' . $action . 'd college.';
+    
+        if ($action === 'edit') {
+            if ($formerDescription !== $data['description']) {
+                $properties['old_description'] = $formerDescription;
+                $properties['new_description'] = $data['description'];
+                $logMessage .= ' Description: ' . $formerDescription . ' to ' . $data['description'] . '.';
+            }
+            if ($formerCode !== $data['code']) {
+                $properties['old_code'] = $formerCode;
+                $properties['new_code'] = $data['code'];
+                $logMessage .= ' Code: ' . $formerCode . ' to ' . $data['code'] . '.';
+            }
+    
+            // Only log if there are changes
+            if (!empty($properties)) {
+                activity()
+                    ->performedOn($college)
+                    ->withProperties($properties)
+                    ->event($action)
+                    ->log($logMessage);
+            }
+        } else if ($action === 'store') {
+            $properties['new_description'] = $data['description'];
+            $properties['new_code'] = $data['code'];
+            $logMessage .= ' Description: ' . $data['description'] . ', Code: ' . $data['code'] . '.';
+    
+            activity()
+                ->performedOn($college)
+                ->withProperties($properties)
+                ->event($action)
+                ->log($logMessage);
+        }
+    
         $this->emit('flashAction', $action, $message);
         $this->resetInputFields();
         $this->emit('closeCollegeModal');
         $this->emit('refreshParentCollege');
         $this->emit('refreshTable');
     }
+    
 
     public function render()
     {

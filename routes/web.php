@@ -4,18 +4,20 @@
 use App\Models\Request;
 use App\Http\Livewire\Log\LogList;
 use App\Http\Livewire\Sex\SexList;
+use App\Http\Livewire\Part\PartList;
 use App\Http\Livewire\Tool\ToolList;
 use App\Http\Livewire\Type\TypeList;
 use App\Http\Livewire\User\UserList;
+
 use Illuminate\Support\Facades\Route;
 
+
 use App\Http\Livewire\Trial\TrialList;
-
-
 use App\Http\Livewire\Venue\VenueList;
 use App\Http\Livewire\Course\CourseList;
-use App\Http\Livewire\Option\OptionList;
 
+use App\Http\Livewire\Online\OnlineList;
+use App\Http\Livewire\Option\OptionList;
 use App\Http\Livewire\Source\SourceList;
 use App\Http\Livewire\Status\StatusList;
 use App\Http\Livewire\Request\ReportList;
@@ -38,7 +40,6 @@ use Spatie\Permission\Middlewares\RoleMiddleware;
 use App\Http\Controllers\RequesterProfileController;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
-use App\Http\Livewire\Online\OnlineList;
 use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
 /*
@@ -109,6 +110,7 @@ Route::group(['middleware' => ['role:admin|head of office|staff']], function () 
     Route::get('categories', CategoryList::class);
     Route::get('types', TypeList::class);
     Route::get('tools', ToolList::class);
+    Route::get('parts', PartList::class);
 
     Route::get('/requesters/{requesterId}/profile', [RequesterProfileController::class, 'index'])->name('rp.index');
     Route::get('tool_reports', ReportList::class)->name('tool_reports');

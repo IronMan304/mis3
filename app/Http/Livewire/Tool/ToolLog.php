@@ -21,7 +21,7 @@ class ToolLog extends Component
 
     protected $listeners = [
         'toolId',
-        'resetInputFields',
+        //'resetInputFields',
     ];
      public function updatingSearch()
     {
@@ -37,22 +37,22 @@ class ToolLog extends Component
         $this->emit('closeToolLogModal');
     }
 
-    public function eToolLog()
-    {
+    // public function eToolLog()
+    // {
       
-    }
+    // }
 
-    public function sToolLog()
-    {
+    // public function sToolLog()
+    // {
    
-    }
+    // }
 
-    public function resetInputFields()
-    {
-        $this->reset();
-        $this->resetValidation();
-        $this->resetErrorBag();
-    }
+    // public function resetInputFields()
+    // {
+    //     $this->reset();
+    //     $this->resetValidation();
+    //     $this->resetErrorBag();
+    // }
 
     //edit
     public function toolId($toolId)
