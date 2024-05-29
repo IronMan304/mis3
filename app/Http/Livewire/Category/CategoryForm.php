@@ -23,15 +23,15 @@ class CategoryForm extends Component
         $this->resetErrorBag();
     }
 
-    //edit
+    // Edit
     public function categoryId($categoryId)
     {
         $this->categoryId = $categoryId;
-        $Category = Category::whereId($categoryId)->first();
-        $this->description = $Category->description;
+        $category = Category::findOrFail($categoryId);
+        $this->description = $category->description;
     }
 
-    //store
+    // Store
     public function store()
     {
         $data = $this->validate([
@@ -39,11 +39,14 @@ class CategoryForm extends Component
         ]);
 
         if ($this->categoryId) {
-            Category::whereId($this->categoryId)->first()->update($data);
+            $category = Category::findOrFail($this->categoryId);
+            $this->logChanges($category, $data);
+            $category->update($data);
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
-            Category::create($data);
+            $category = Category::create($data);
+            $this->logNewCategory($category);
             $action = 'store';
             $message = 'Successfully Created';
         }
@@ -55,51 +58,43 @@ class CategoryForm extends Component
         $this->emit('refreshTable');
     }
 
-     // Soft delete category
-     public function deleteCategory()
-     {
-         if ($this->categoryId) {
-             $category = Category::find($this->categoryId);
- 
-             if ($category) {
-                 $category->delete();
-                 $action = 'error';
-                 $message = 'Successfully Deleted';
-             } else {
-                 $action = 'error';
-                 $message = 'Category not found';
-             }
- 
-             $this->emit('flashAction', $action, $message);
-             $this->resetInputFields();
-             $this->emit('closeCategoryModal');
-             $this->emit('refreshParentCategory');
-             $this->emit('refreshTable');
-         }
-     }
- 
-     // Recover soft-deleted category
-     public function recoverCategory()
-     {
-         if ($this->categoryId) {
-             $category = Category::withTrashed()->find($this->categoryId);
- 
-             if ($category) {
-                 $category->restore();
-                 $action = 'success';
-                 $message = 'Successfully Recovered';
-             } else {
-                 $action = 'error';
-                 $message = 'Category not found or already recovered';
-             }
- 
-             $this->emit('flashAction', $action, $message);
-             $this->resetInputFields();
-             $this->emit('closeCategoryModal');
-             $this->emit('refreshParentCategory');
-             $this->emit('refreshTable');
-         }
-     }
+    private function logChanges($category, $data)
+    {
+        $properties = [];
+        $logMessage = auth()->user()->first_name . ' updated category: ';
+
+        $fields = ['description'];
+        foreach ($fields as $field) {
+            if ($category->$field != $data[$field]) {
+                $properties["old_$field"] = $category->$field;
+                $properties["new_$field"] = $data[$field];
+                $logMessage .= ucfirst($field) . ": " . $category->$field . " to " . $data[$field] . ", ";
+            }
+        }
+
+        if (!empty($properties)) {
+            activity()
+                ->performedOn($category)
+                ->withProperties($properties)
+                ->event('updated')
+                ->log(rtrim($logMessage, ', '));
+        }
+    }
+
+    private function logNewCategory($category)
+    {
+        $properties = [
+            'description' => $category->description,
+        ];
+
+        $logMessage = auth()->user()->first_name . ' created category: Description - ' . $category->description . '.';
+
+        activity()
+            ->performedOn($category)
+            ->withProperties($properties)
+            ->event('created')
+            ->log($logMessage);
+    }
 
     public function render()
     {

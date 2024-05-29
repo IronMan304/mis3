@@ -24,16 +24,16 @@ class TypeForm extends Component
         $this->resetErrorBag();
     }
 
-    //edit
+    // Edit
     public function typeId($typeId)
     {
         $this->typeId = $typeId;
-        $type = Type::whereId($typeId)->first();
+        $type = Type::findOrFail($typeId);
         $this->description = $type->description;
         $this->category_id = $type->category_id;
     }
 
-    //store
+    // Store
     public function store()
     {
         $data = $this->validate([
@@ -42,11 +42,14 @@ class TypeForm extends Component
         ]);
 
         if ($this->typeId) {
-            Type::whereId($this->typeId)->first()->update($data);
+            $type = Type::findOrFail($this->typeId);
+            $this->logChanges($type, $data);
+            $type->update($data);
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
-            Type::create($data);
+            $type = Type::create($data);
+            $this->logNewType($type);
             $action = 'store';
             $message = 'Successfully Created';
         }
@@ -56,6 +59,45 @@ class TypeForm extends Component
         $this->emit('closeTypeModal');
         $this->emit('refreshParentType');
         $this->emit('refreshTable');
+    }
+
+    private function logChanges($type, $data)
+    {
+        $properties = [];
+        $logMessage = auth()->user()->first_name . ' updated type: ';
+
+        $fields = ['description', 'category_id'];
+        foreach ($fields as $field) {
+            if ($type->$field != $data[$field]) {
+                $properties["old_$field"] = $type->$field;
+                $properties["new_$field"] = $data[$field];
+                $logMessage .= ucfirst(str_replace('_', ' ', $field)) . ": " . $type->$field . " to " . $data[$field] . ", ";
+            }
+        }
+
+        if (!empty($properties)) {
+            activity()
+                ->performedOn($type)
+                ->withProperties($properties)
+                ->event('updated')
+                ->log(rtrim($logMessage, ', '));
+        }
+    }
+
+    private function logNewType($type)
+    {
+        $properties = [
+            'new_description' => $type->description,
+            'new_category_id' => $type->category_id,
+        ];
+
+        $logMessage = auth()->user()->first_name . ' created type: Description - ' . $type->description . ', Category ID - ' . $type->category_id . '.';
+
+        activity()
+            ->performedOn($type)
+            ->withProperties($properties)
+            ->event('created')
+            ->log($logMessage);
     }
 
     public function render()

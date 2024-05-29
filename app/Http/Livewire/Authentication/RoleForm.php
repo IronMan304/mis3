@@ -26,20 +26,22 @@ class RoleForm extends Component
         $this->resetValidation();
         $this->resetErrorBag();
     }
-    
+
     //edit
     public function roleId($roleId)
     {
         $this->roleId = $roleId;
         $role = Role::find($roleId);
         $this->name = $role->name;
-        $this->selectedPerms = array_map('strval' ,json_decode($role->permissions->pluck('id')));
+        $this->selectedPerms = $role->permissions->pluck('id')->map(function($id) {
+            return (string) $id;
+        })->toArray();
     }
 
     //store
     public function store()
     {
-        if(empty($this->permissions)){
+        if (empty($this->permissions)) {
             $this->permissions = array_map('strval', $this->selectedPerms);
         }
 
@@ -49,15 +51,16 @@ class RoleForm extends Component
 
         if ($this->roleId) {
             $role = Role::find($this->roleId);
+            $this->logChanges($role, $data);
             $role->update($data);
             $role->syncPermissions($this->permissions);
 
             $action = 'edit';
             $message = 'Successfully Updated';
-
         } else {
             $role = Role::create($data);
             $role->syncPermissions($this->permissions);
+            $this->logNewRole($role);
             $action = 'store';
             $message = 'Successfully Created';
         }
@@ -69,10 +72,60 @@ class RoleForm extends Component
         $this->emit('refreshTable');
     }
 
+    private function logChanges($role, $data)
+    {
+        $properties = [];
+        $logMessage = auth()->user()->first_name . ' updated role: ';
+
+        $fields = ['name'];
+        foreach ($fields as $field) {
+            if ($role->$field != $data[$field]) {
+                $properties["old_$field"] = $role->$field;
+                $properties["new_$field"] = $data[$field];
+                $logMessage .= ucfirst(str_replace('_', ' ', $field)) . ": " . $role->$field . " to " . $data[$field] . ", ";
+            }
+        }
+
+        // Log permission changes
+        $oldPermissions = $role->permissions->pluck('name')->toArray();
+        $newPermissions = Permission::whereIn('id', $this->permissions)->pluck('name')->toArray();
+
+        if ($oldPermissions != $newPermissions) {
+            $properties['old_permissions'] = $oldPermissions;
+            $properties['new_permissions'] = $newPermissions;
+            $logMessage .= "Permissions changed, ";
+        }
+
+        if (!empty($properties)) {
+            activity()
+                ->performedOn($role)
+                ->withProperties($properties)
+                ->event('updated')
+                ->log(rtrim($logMessage, ', '));
+        }
+    }
+
+    private function logNewRole($role)
+    {
+        $properties = [
+            'new_name' => $role->name,
+            'old_permissions' => [],  // No old permissions for new role
+            'new_permissions' => Permission::whereIn('id', $this->permissions)->pluck('name')->toArray()
+        ];
+
+        $logMessage = auth()->user()->first_name . ' created role. Name: ' . $role->name . '.';
+
+        activity()
+            ->performedOn($role)
+            ->withProperties($properties)
+            ->event('created')
+            ->log($logMessage);
+    }
+
     public function render()
     {
         $perms = Permission::all();
-        return view('livewire.authentication.role-form',[
+        return view('livewire.authentication.role-form', [
             'perms' => $perms
         ]);
     }

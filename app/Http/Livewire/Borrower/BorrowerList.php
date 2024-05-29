@@ -92,11 +92,20 @@ class BorrowerList extends Component
 
     public function deleteBorrower($borrowerId)
     {
-        Borrower::destroy($borrowerId);
-
-        $action = 'error';
+        $borrower = Borrower::findOrFail($borrowerId);
+        
+        // Log the deletion activity
+        activity()
+            ->causedBy(auth()->user()) // Assuming you have user authentication
+            ->performedOn($borrower)
+            ->withProperties(['borrower' => $borrower->toArray()])
+            ->log('Borrower deleted');
+    
+        $borrower->delete();
+    
+        $action = 'success';
         $message = 'Successfully Deleted';
-
+    
         $this->emit('flashAction', $action, $message);
         $this->emit('refreshTable');
     }

@@ -28,7 +28,7 @@ class PartForm extends Component
     public function partId($partId)
     {
         $this->partId = $partId;
-        $part = Part::whereId($partId)->first();
+        $part = Part::findOrFail($partId);
         $this->name = $part->name;
         $this->property_number = $part->property_number;
         $this->brand = $part->brand;
@@ -45,7 +45,9 @@ class PartForm extends Component
             'tool_id' => 'nullable',
         ]);
 
+        // Set a default price
         $data['price'] = 1;
+
         // Determine the status_id based on tool_id
         if ($this->tool_id) {
             $data['status_id'] = 20;
@@ -54,11 +56,15 @@ class PartForm extends Component
         }
 
         if ($this->partId) {
-            Part::whereId($this->partId)->first()->update($data);
+            $part = Part::findOrFail($this->partId);
+            $this->logChanges($part, $data); // Log changes
+            $part->update($data);
+          
             $action = 'edit';
             $message = 'Successfully Updated';
         } else {
-            Part::create($data);
+            $part = Part::create($data);
+            $this->logNewPart($part); // Log creation
             $action = 'store';
             $message = 'Successfully Created';
         }
@@ -68,6 +74,50 @@ class PartForm extends Component
         $this->emit('closePartModal');
         $this->emit('refreshParentPart');
         $this->emit('refreshTable');
+    }
+
+    // Log changes
+    private function logChanges($part, $data)
+    {
+        $properties = [];
+        $logMessage = auth()->user()->first_name . ' updated part: ';
+
+        $fields = ['name', 'brand', 'property_number', 'price', 'tool_id'];
+        foreach ($fields as $field) {
+            if ($part->$field != $data[$field]) {
+                $properties["old_$field"] = $part->$field;
+                $properties["new_$field"] = $data[$field];
+                $logMessage .= ucfirst($field) . ": " . $part->$field . " to " . $data[$field] . ", ";
+            }
+        }
+
+        if (!empty($properties)) {
+            activity()
+                ->performedOn($part)
+                ->withProperties($properties)
+                ->event('updated')
+                ->log(rtrim($logMessage, ', '));
+        }
+    }
+
+    // Log new part creation
+    private function logNewPart($part)
+    {
+        $properties = [
+            'name' => $part->name,
+            'brand' => $part->brand,
+            'property_number' => $part->property_number,
+            'price' => $part->price,
+            'tool_id' => $part->tool_id,
+        ];
+
+        $logMessage = auth()->user()->first_name . ' created part: ' . $part->name . '.';
+
+        activity()
+            ->performedOn($part)
+            ->withProperties($properties)
+            ->event('created')
+            ->log($logMessage);
     }
 
     public function render()

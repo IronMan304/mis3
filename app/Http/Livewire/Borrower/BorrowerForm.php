@@ -114,6 +114,14 @@ class BorrowerForm extends Component
         $properties = [
             'new_id_number' => $borrower->id_number,
             'new_first_name' => $borrower->first_name,
+            'new_middle_name' => $borrower->middle_name,
+            'new_last_name' => $borrower->last_name,
+            'new_contact_number' => $borrower->contact_number,
+            'new_sex_id' => $borrower->sex_id,
+            'new_position_id' => $borrower->position_id,
+            'new_college_id' => $borrower->college_id,
+            'new_course_id' => $borrower->course_id,
+            'new_status_id' => $borrower->status_id,
         ];
 
         $logMessage = auth()->user()->first_name . ' created borrower. Id number: ' . $borrower->id_number . ', First name: ' . $borrower->first_name . '.';
@@ -124,6 +132,7 @@ class BorrowerForm extends Component
             ->event('created')
             ->log($logMessage);
     }
+
 
     public function render()
     {
