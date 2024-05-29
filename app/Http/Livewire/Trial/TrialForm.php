@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class TrialForm extends Component
 {
-    #[Url()]
+   
     public $trialId, $description;
 
     public $action = '';  //flash

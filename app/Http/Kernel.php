@@ -23,6 +23,11 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
+    protected $commands = [
+        \App\Console\Commands\ClearAllCache::class,
+    ];
+    
+
     /**
      * The application's route middleware groups.
      *

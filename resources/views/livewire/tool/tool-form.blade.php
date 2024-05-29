@@ -134,6 +134,77 @@
                 </div>
                 @endif
 
+               <div class="col-md-12">
+                    <div class="form-group local-forms">
+                        <label>Part
+                        </label>
+                        <select class="form-control select" wire:model="partItems" multiple id="partItems">
+                            <option value=""  selected>Choose Equipment parts</option>
+                            @foreach ($parts as $part)
+                            <option value="{{ $part->id }}" @if($part->status_id == 20) disabled @endif>
+                                {{ $part->name ?? ''}}   ({{ $part->Status->description ?? '' }})
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                {{--<div class="row mb-2" wire:key="button-group">
+                    <div class="col-md-12">
+                        <button class="btn btn-info" wire:click.prevent="addPart"><i class="fa-solid fa-plus"></i> Add
+                            Part</button>
+                  
+
+                    </div>
+                </div>
+                <div class="row p-1">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <th class="col">TYPE</th>
+                            <th class="col">PROPERTY NUMBER</th>
+                            <th class="col">BRAND</th>
+                            <th class="col">PRICE</th>
+                            <th class="col-md-2"></th>
+                        </thead>
+                        <tbody>
+                            @foreach ($partItems as $partIndex => $part)
+                                <tr>
+                                    <td>
+                                        <select wire:model="partItems.{{ $partIndex }}.part_type_id" name="partItems[{{ $partIndex }}][part_type_id]" class="form-select selectSubProduct" wire:change="setPart($event.target.value)">
+                                            <option selected="" value="">Choose...</option>
+                                            @foreach ($partTypes as $partType)
+                                                <option value="{{ $partType->id }}">
+                                                    {{ $partType->partType_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <input type="text" wire:model="partItems.{{ $partIndex }}.property_number" name="partItems[{{ $partIndex }}][property_number]" class="form-control" >
+                                    </td>
+
+                                    <td>
+                                        <select wire:model="partItems.{{ $partIndex }}.brand_id" name="partItems[{{ $partIndex }}][brand_id]" class="form-select selectSubProduct" wire:change="setBrand($event.target.value)">
+                                            <option selected="" value="">Choose...</option>
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}">
+                                                    {{ $brand->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+
+                                 
+                                    <td>
+                                        <a class="btn btn-info delete-header m-1 btn-sm  justify-content-center " title="Delete Item" wire:click="deletePart({{ $partIndex }})"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>--}}
+
                 {{--<div class="col-md-12">
                     <div class="form-group local-forms">
                         <label>Applicability
@@ -184,11 +255,22 @@
                 console.log(data);
                 @this.set('securityItems', data);
             });
+
+               // securityItems Select2
+               $('#partItems').select2({
+                dropdownParent: $('#toolModal')
+            });
+
+            $('#partItems').on('change', function(e) {
+                let data = $(this).val();
+                console.log(data);
+                @this.set('partItems', data);
+            });
         });
 
         document.addEventListener('livewire:update', function() {
             // Refresh Select2 on Livewire update
-            $('#positionItems, #securityItems').select2({
+            $('#positionItems, #securityItems, #partItems').select2({
                 dropdownParent: $('#toolModal')
             });
         });

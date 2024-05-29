@@ -98,6 +98,7 @@
 						@can('view-tools')
 						<li><a href="/tools">Equipment</a></li>
 						@endcan
+						<li><a href="/parts">Part</a></li>
 					</ul>
 				</li>
 				@endcan

@@ -248,173 +248,68 @@ class RequestController extends Controller
 
     public function count()
     {
-        //$count = Request::count(); // Get the count using your model
-
-
-        // Retrieve requests with status_id equal to 11
-        $requests = Request::all();
-
-        $requestsPending = Request::where('status_id', 11)
-            ->orderBy('id', 'desc')
-           -> with(['status' => function ($query) {
-                $query->select('id', 'description');
-            }, 'borrower' => function ($query) {
-                $query->select('id', 'first_name', 'middle_name', 'last_name');
-            }])
-                
-            ->get();
-
-
-            $requestsPendingAndApproved = Request::where('status_id', 11)
-            ->orWhere('status_id', 10)
+        $statuses = [11, 10, 16];
+        $requestsData = [];
+        foreach ($statuses as $status) {
+            $requests = Request::where('status_id', $status)
+                ->orderBy($status == 10 ? 'updated_at' : 'id', 'desc')
+                ->with([
+                    'status' => function ($query) {
+                        $query->select('id', 'description');
+                    },
+                    'borrower' => function ($query) {
+                        $query->select('id', 'first_name', 'middle_name', 'last_name');
+                    }
+                ])
+                ->get();
+            $requestsData["countStatus{$status}"] = $requests->count();
+            $requestsData["requestsStatus{$status}"] = $requests;
+        }
+    
+        // Special case for pending and approved
+        $requestsPendingAndApproved = Request::whereIn('status_id', [11, 10])
             ->orderBy('updated_at', 'desc')
-           -> with(['status' => function ($query) {
-                $query->select('id', 'description');
-            }, 'borrower' => function ($query) {
-                $query->select('id', 'first_name', 'middle_name', 'last_name');
-            }])
-                
+            ->with([
+                'status' => function ($query) {
+                    $query->select('id', 'description');
+                },
+                'borrower' => function ($query) {
+                    $query->select('id', 'first_name', 'middle_name', 'last_name');
+                }
+            ])
             ->get();
-
-            $requestsReviewed = Request::where('status_id', 16)
-            ->orderBy('id', 'desc')
-           -> with(['status' => function ($query) {
-                $query->select('id', 'description');
-            }, 'borrower' => function ($query) {
-                $query->select('id', 'first_name', 'middle_name', 'last_name');
-            }])
-                
-            ->get();
-
-            $requestsApproved = Request::where('status_id', 10)
-            ->orderBy('id', 'desc')
-           -> with(['status' => function ($query) {
-                $query->select('id', 'description');
-            }, 'borrower' => function ($query) {
-                $query->select('id', 'first_name', 'middle_name', 'last_name');
-            }])
-                
-            ->get();
-
-
-
-        // $requestsReviewed = Request::where('status_id', 16)->get();
-        // $requestsApproved = Request::where('status_id', 10)->get();
-        // $requestsStarted = Request::where('status_id', 6)->get();
-        // $requestsCompleted = Request::where('status_id', 12)->get();
-
-        // Count the number of requests with status_id equal to 11
-        $countRequests = $requests->count();
-
-        $countPending = $requestsPending->count();
-        $countReviewed = $requestsReviewed->count();
-        $countApproved = $requestsApproved->count();
-        // $countStarted = $requestsStarted->count();
-        // $countCompleted = $requestsCompleted->count();
-
-        // Store request numbers in an array
-        $requestNumbers = $requests->sortByDesc('id');
-
-         $requestsPending = $requestsPending->sortByDesc('id');
-        $requestsReviewed = $requestsReviewed->sortByDesc('id');
-         $requestsApproved = $requestsApproved->sortByDesc('id');
-        // $requestsStarted = $requestsStarted->sortByDesc('id');
-        // $requestsCompleted = $requestsCompleted->sortByDesc('id');
-
-        return response()->json([
-            'countRequests' => $countRequests,
-            'countPending' => $countPending,
-            'countReviewed' => $countReviewed,
-            'countApproved' => $countApproved,
-            // 'countStarted' => $countStarted,
-            // 'countCompleted' => $countCompleted,
-            'requestNumbers' => $requestNumbers,
-            'requestsPending' => $requestsPending,
-            'requestsReviewed' => $requestsReviewed,
-            'requestsApproved' => $requestsApproved,
-             'requestsPendingAndApproved' => $requestsPendingAndApproved,
-            // 'requestsCompleted' => $requestsCompleted,
-        ]);
+    
+        $allRequests = Request::all();
+        $requestsData['countRequests'] = $allRequests->count();
+        $requestsData['requestNumbers'] = $allRequests->sortByDesc('id');
+        $requestsData['requestsPendingAndApproved'] = $requestsPendingAndApproved;
+    
+        return response()->json($requestsData);
     }
-
+    
     public function countService()
     {
-        //$count = Request::count(); // Get the count using your model
-
-
-        // Retrieve requests with status_id equal to 11
-        $serviceRequests = ServiceRequest::all();
-
-        $requestsPendingService = ServiceRequest::with(['status' => function ($query) {
-            $query->select('id', 'description');
-        }, 'borrower' => function ($query) {
-            $query->select('id', 'first_name', 'middle_name', 'last_name');
-        }])
-            ->where('status_id', 11) //pending
-            ->orderBy('id', 'desc')
-            ->get();
-
-            $requestsReviewedService = ServiceRequest::with(['status' => function ($query) {
-                $query->select('id', 'description');
-            }, 'borrower' => function ($query) {
-                $query->select('id', 'first_name', 'middle_name', 'last_name');
-            }])
-                ->where('status_id', 16) //pending
+        $statuses = [11, 10, 16];
+        $serviceRequestsData = [];
+        foreach ($statuses as $status) {
+            $requests = ServiceRequest::where('status_id', $status)
                 ->orderBy('id', 'desc')
+                ->with([
+                    'status' => function ($query) {
+                        $query->select('id', 'description');
+                    },
+                    'borrower' => function ($query) {
+                        $query->select('id', 'first_name', 'middle_name', 'last_name');
+                    }
+                ])
                 ->get();
-
-                $requestsApprovedService = ServiceRequest::with(['status' => function ($query) {
-                    $query->select('id', 'description');
-                }, 'borrower' => function ($query) {
-                    $query->select('id', 'first_name', 'middle_name', 'last_name');
-                }])
-                    ->where('status_id', 10) //pending
-                    ->orderBy('id', 'desc')
-                    ->get();
-
-
-
-        // $requestsReviewed = ServiceRequest::where('status_id', 16)->get();
-        // $requestsApproved = ServiceRequest::where('status_id', 10)->get();
-        // $requestsStarted = ServiceRequest::where('status_id', 6)->get();
-        // $requestsCompleted = ServiceRequest::where('status_id', 12)->get();
-
-        // Count the number of requests with status_id equal to 11
-        // $countRequests = $requests->count();
-
-        $countPendingService = $requestsPendingService->count();
-        $countReviewedService = $requestsReviewedService->count();
-        // $countReviewed = $requestsReviewed->count();
-        $countApprovedService = $requestsApprovedService->count();
-        // $countStarted = $requestsStarted->count();
-        // $countCompleted = $requestsCompleted->count();
-
-        // // Store request numbers in an array
-        // $requestNumbers = $requests->sortByDesc('id');
-
-        // $requestsPending = $requestsPending->sortByDesc('id');
-        // $requestsReviewed = $requestsReviewed->sortByDesc('id');
-        // $requestsApproved = $requestsApproved->sortByDesc('id');
-        // $requestsStarted = $requestsStarted->sortByDesc('id');
-        // $requestsCompleted = $requestsCompleted->sortByDesc('id');
-
-        return response()->json([
-            // 'countRequests' => $countRequests,
-            'countPendingService' => $countPendingService,
-            'countReviewedService' => $countReviewedService,
-            // 'countReviewed' => $countReviewed,
-             'countApprovedService' => $countApprovedService,
-            // 'countStarted' => $countStarted,
-            // 'countCompleted' => $countCompleted,
-            // 'requestNumbers' => $requestNumbers,
-            'requestsPendingService' => $requestsPendingService,
-            'requestsReviewedService' => $requestsReviewedService,
-            // 'requestsReviewed' => $requestsReviewed,
-             'requestsApprovedService' => $requestsApprovedService,
-            // 'requestsStarted' => $requestsStarted,
-            // 'requestsCompleted' => $requestsCompleted,
-        ]);
+            $serviceRequestsData["countStatus{$status}Service"] = $requests->count();
+            $serviceRequestsData["requestsStatus{$status}Service"] = $requests;
+        }
+    
+        return response()->json($serviceRequestsData);
     }
+    
 
     // public function tools()
     // {

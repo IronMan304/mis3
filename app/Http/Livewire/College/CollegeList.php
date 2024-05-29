@@ -39,10 +39,30 @@ class CollegeList extends Component
 
     public function deleteCollege($collegeId)
     {
-        College::destroy($collegeId);
+        $college = College::find($collegeId);
 
-        $action = 'error';
-        $message = 'Successfully Deleted';
+        if (!$college) {
+            $action = 'error';
+            $message = 'College not found';
+            $description = ''; // No description available if sex is not found
+        } else {
+            $description = $college->description; // Store the description before deletion
+            $code = $college->code;
+            $college->delete();
+            $action = 'delete';
+            $message = 'Successfully Deleted';
+        }
+
+        // Log the activity
+        activity()
+            ->performedOn($college ?? null) // Pass$college if it exists, otherwise pass null
+            ->event($action)
+            ->withProperties([
+                // 'action' => $action,
+                'deleted_description' => $description, // Pass the description as an additional property
+                'deleted_code' => $code,
+            ])
+            ->log(auth()->user()->first_name . ' ' . $action . 'd ' . $description);
 
         $this->emit('flashAction', $action, $message);
         $this->emit('refreshTable');

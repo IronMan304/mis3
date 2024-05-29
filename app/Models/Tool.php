@@ -34,6 +34,11 @@ class Tool extends Model
         return $this->belongsTo(Type::class, 'type_id', 'id');
     }
 
+    public function Parts()
+    {
+        return $this->hasMany(Part::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

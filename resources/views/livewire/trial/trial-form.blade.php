@@ -26,6 +26,58 @@
                     </select>
                 </div>
 
+                <div class="row mb-2" wire:key="button-group">
+                    <div class="col-md-12">
+                        <button class="btn btn-info" wire:click.prevent="addSubscription" id="addSubscription"><i class="fa-solid fa-plus"></i> Add
+                            Subscription</button>
+                        <button class="btn btn-info" wire:click.prevent="addSubscription" id="  " hidden><i class="fa-solid fa-plus"></i> Add
+                            Subscription</button>
+
+                    </div>
+                </div>
+                <div class="row p-1">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <th class="col">SUBSCRIPTION</th>
+                            <th class="col">DESCRIPTION</th>
+                            <th class="col">PRICE</th>
+                            <th class="col">PERIOD TYPE</th>
+                            <th class="col-md-2"></th>
+                        </thead>
+                        <tbody>
+                            @foreach ($subscriptionItems as $subscriptionIndex => $subscription)
+                                <tr>
+                                    <td>
+                                        <select wire:model="subscriptionItems.{{ $subscriptionIndex }}.subscription_id" name="subscriptionItems[{{ $subscriptionIndex }}][subscription_id]" class="form-select selectSubProduct" wire:change="setSubscription($event.target.value)">
+                                            <option selected="" value="">Choose...</option>
+                                            @foreach ($subscriptions as $subs)
+                                                <option value="{{ $subs->id }}">
+                                                    {{ $subs->subs_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <input type="text" wire:model="subscriptionItems.{{ $subscriptionIndex }}.description" name="subscriptionItems[{{ $subscriptionIndex }}][description]" class="form-control" readonly>
+                                    </td>
+
+                                    <td>
+                                        <input type="text" wire:model="subscriptionItems.{{ $subscriptionIndex }}.price" name="subscriptionItems[{{ $subscriptionIndex }}][price]" class="form-control" readonly>
+                                    </td>
+
+                                    <td>
+                                        <input type="text" wire:model="subscriptionItems.{{ $subscriptionIndex }}.period_type" name="subscriptionItems[{{ $subscriptionIndex }}][period_type]" class="form-control" readonly>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-info delete-header m-1 btn-sm  justify-content-center " title="Delete Item" wire:click="deleteSubscription({{ $subscriptionIndex }})"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
         <div class="modal-footer">
