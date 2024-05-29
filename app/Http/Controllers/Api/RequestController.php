@@ -498,7 +498,6 @@ class RequestController extends Controller
     
     public function countService()
     {
-<<<<<<< HEAD
         //$count = Request::count(); // Get the count using your model
 
         // Retrieve requests with status_id equal to 11
@@ -607,33 +606,4 @@ class RequestController extends Controller
             'requestsCancelledService' => $requestsCancelledService,
         ]);
     }
-=======
-        $statuses = [11, 10, 16];
-        $serviceRequestsData = [];
-        foreach ($statuses as $status) {
-            $requests = ServiceRequest::where('status_id', $status)
-                ->orderBy('id', 'desc')
-                ->with([
-                    'status' => function ($query) {
-                        $query->select('id', 'description');
-                    },
-                    'borrower' => function ($query) {
-                        $query->select('id', 'first_name', 'middle_name', 'last_name');
-                    }
-                ])
-                ->get();
-            $serviceRequestsData["countStatus{$status}Service"] = $requests->count();
-            $serviceRequestsData["requestsStatus{$status}Service"] = $requests;
-        }
-    
-        return response()->json($serviceRequestsData);
-    }
-    
-
-    // public function tools()
-    // {
-    //     $tools = Tool::all();
-    //     return $tools;
-    // }
->>>>>>> develop
 }

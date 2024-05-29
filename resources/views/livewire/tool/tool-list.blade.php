@@ -70,6 +70,7 @@
 									<div class="loading-indicator">Exporting...</div>
 									@endif
 									<div class="col-auto text-end float-end ms-auto download-grp">
+									<div wire:loading wire:target="exportToPdf" class="text-dark">Exporting... Please wait...</div>
 										<a wire:click="exportToPdf" class="btn btn-light ms-2"><img src="assets/img/icons/pdf-icon-01.svg" alt="" title="Export to PDF"></a>
 										<!-- <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-02.svg" alt=""></a>
 											<a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-03.svg" alt=""></a> -->
