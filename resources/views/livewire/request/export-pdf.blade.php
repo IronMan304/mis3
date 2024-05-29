@@ -8,15 +8,40 @@
       font-family: Arial, sans-serif;
     }
 
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f2f2f2;
+            padding: 10px;
+             position: relative;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
+        }
+
+    .logo-container img {
+      width: 200px;
+      margin: 10px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 10px; /* Adjust font size as needed */
+      font-size: 10px;
+      /* Adjust font size as needed */
     }
 
     th,
     td {
-      padding: 6px; /* Reduced padding */
+      padding: 6px;
+      /* Reduced padding */
       text-align: left;
       border-bottom: 1px solid #ddd;
     }
@@ -27,8 +52,10 @@
 
     /* Set page size and layout */
     @page {
-      size: 8.5in 11in; /* Letter size (8.5 x 11 inches) */
-      margin: 0; /* Remove default margins */
+      size: 8.5in 11in;
+      /* Letter size (8.5 x 11 inches) */
+      margin: 0;
+      /* Remove default margins */
     }
 
     /* Ensure table fits within page */
@@ -44,10 +71,20 @@
       page-break-inside: avoid;
       page-break-after: auto;
     }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
   </style>
 </head>
 
 <body>
+  <div class="logo-container">
+    <a href="#"><img src="assets/img/top-logo.png" alt="NORSU Logo" style="width: 410px; margin-left: 140px; margin-bottom: -5px;"></a>
+    <a href="#"><img src="assets/img/ncictso.png" alt="CICTSO Logo" style="width: 120px; margin-bottom: -18px; margin-left: -20px; height: 120px;"></a>
+  </div>
   <h1>Equipment Request Report</h1>
   <table class="table border-0 custom-table comman-table mb-0">
     <thead>
@@ -143,8 +180,8 @@
           @foreach ($request->tool_keys as $toolKey)
           {{ $toolKey->tools->property_number ?? ''}}: {{ $toolKey->status->description ?? ''}} ({{ $toolKey->toolStatus->description ?? ''}})
 
-          @if (!$loop->last)
-          {{-- Add a Space or separator between department names -
+        @if (!$loop->last)
+        {{-- Add a Space or separator between department names -
           <br>
           @endif
           @endforeach

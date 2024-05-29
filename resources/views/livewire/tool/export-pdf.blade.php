@@ -14,7 +14,7 @@
             align-items: center;
             background-color: #f2f2f2;
             padding: 10px;
-             position: relative;
+            position: relative;
             top: 0;
             left: 0;
             right: 0;
@@ -96,6 +96,7 @@
                     <th>Type</th>
                     <th>Property Number</th>
                     <th>Brand</th>
+                    <th>Part</th>
                     <th>Applicability</th>
                     <th>Security</th>
                     <th>Source</th>
@@ -108,6 +109,19 @@
                     <td>{{ $tool->type->description ?? ''}}</td>
                     <td>{{ $tool->property_number ?? ''}}</td>
                     <td>{{ $tool->brand ?? ''}}</td>
+                    <td>
+                        @if ($tool->Parts)
+                        @foreach ($tool->Parts as $part)
+                        - {{ $part->name ?? 'N/A' }}
+
+                        @if (!$loop->last)
+                        {{-- Add a Space or separator between department names --}}
+                        <br>
+                        @endif
+                        @endforeach
+
+                        @endif
+                    </td>
                     <td>
                         @if ($tool->position_keys)
                         @foreach ($tool->position_keys as $positionKey)

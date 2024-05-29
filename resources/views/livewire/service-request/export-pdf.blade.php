@@ -7,6 +7,28 @@
     body {
       font-family: Arial, sans-serif;
     }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f2f2f2;
+            padding: 10px;
+             position: relative;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
+        }
+
+    .logo-container img {
+      width: 200px;
+      margin: 10px;
+    }
 
     table {
       width: 100%;
@@ -52,6 +74,10 @@
 </head>
 
 <body>
+<div class="logo-container">
+    <a href="#"><img src="assets/img/top-logo.png" alt="NORSU Logo" style="width: 410px; margin-left: 140px; margin-bottom: -5px;"></a>
+    <a href="#"><img src="assets/img/ncictso.png" alt="CICTSO Logo" style="width: 120px; margin-bottom: -18px; margin-left: -20px; height: 120px;"></a>
+  </div>
   <h1>Service Request Report</h1>
   <table class="table border-0 custom-table comman-table mb-0">
     <thead>
