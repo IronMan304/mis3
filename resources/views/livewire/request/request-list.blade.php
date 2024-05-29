@@ -272,10 +272,12 @@
 											@endcan
 
 											@can('view-equipment-requests-equipment-approval')
+											@if($request->status_id == 11)
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="approvalRequest({{ $request->id }})" title="Approval" style="background: linear-gradient(to right, red 50%, blue 50%);">
 												<i class="fas fa-toggle-on"></i>
 
 											</button>
+											@endif
 											@endcan
 
 											@endif
@@ -305,15 +307,19 @@
 											@endif -->
 
 											@if($securityButton || auth()->user()->hasRole('admin') || auth()->user()->can('view-equipment-requests-request-approval'))
+											@if($request->status_id == 16)
 											<button type="button" class="btn btn-warning1 btn-sm mx-1" wire:click="securityApprovalForm({{ $request->id }})" title="Letter">
 												<i class="fa-solid fa-envelope"></i>
 											</button>
 											@endif
+											@endif
 
 											@can('view-equipment-requests-start')
+											@if($request->status_id == 10)
 											<button type="button" class="btn btn-success btn-sm mx-1" wire:click="requestStartForm({{ $request->id }})" title="Start" {{--@if ($request->status_id != 10) disabled @endif--}}>
 												<i class="fa-solid fa-play"></i>
 											</button>
+											@endif
 											@endcan
 
 											@can('view-equipment-requests-return')
@@ -322,18 +328,22 @@
 											@foreach ($request->tool_keys as $toolKey)
 											@if(!$returnButtonShown)
 											@php $returnButtonShown = true; @endphp
+											@if($request->status_id == 6)
 											<button type="button" class="btn btn-primary btn-sm mx-1" wire:click="returnRequest({{ $request->id }})" title="Return" style="background: linear-gradient(to right, red 50%, blue 50%);" {{--@if ($toolKey->status_id != 6) disabled @endif--}}>
 												<i class="fa-solid fa-arrow-right-arrow-left"></i>
 											</button>
+											@endif
 											@endif
 											@endforeach
 											@endif
 											@endcan
 											
 											@can('view-equipment-requests-cancel')
+											@if($request->status_id == 11 || $request->status_id == 10 || $request->status_id == 6 || $request->status_id == 16)
 											<button type="button" class="btn btn-danger btn-sm mx-1" wire:click="cancelRequest({{ $request->id }})" title="Cancel"  >
 											<i class="fa-solid fa-rectangle-xmark"></i>
 											</button>
+											@endif
 											@endcan
 										</div>
 									</td>
