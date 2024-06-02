@@ -40,6 +40,7 @@ use Spatie\Permission\Middlewares\RoleMiddleware;
 use App\Http\Controllers\RequesterProfileController;
 use App\Http\Livewire\Authentication\PermissionList;
 use App\Http\Livewire\BorrowerType\BorrowerTypeList;
+use App\Http\Livewire\PartType\PartTypeList;
 use App\Http\Livewire\ServiceRequest\ServiceRequestList;
 use App\Http\Livewire\ServiceRequest\ReportList as ServiceRequestReportList;
 /*
@@ -83,6 +84,7 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::get('services', ServiceList::class);
     Route::get('positions', PositionList::class);
     Route::get('options', OptionList::class);
+    Route::get('part-types', PartTypeList::class);
 
 
     Route::get('venues', VenueList::class);

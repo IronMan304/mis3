@@ -6,11 +6,12 @@ use App\Models\Part;
 use App\Models\Tool;
 use App\Models\Type;
 use App\Models\Source;
+use App\Models\Status;
 use Livewire\Component;
 use App\Models\Borrower;
 use App\Models\Category;
+use App\Models\PartType;
 use App\Models\Position;
-use App\Models\Status;
 use App\Models\ToolPosition;
 use App\Models\ToolSecurity;
 
@@ -69,18 +70,18 @@ class ToolForm extends Component
         }
     }
 
-    // public function addPart()
-    // {
+    public function addPart()
+    {
 
-    //     $this->partItems[] = [
-    //         'part_type_id' => null,
-    //         'property_number' => '',
-    //         'brand_id' => null,
-    //     ];
+        $this->partItems[] = [
+            'part_type_id' => null,
+            'property_number' => '',
+            'brand_id' => null,
+        ];
 
-    //     $this->emit('disableButton1');
-    //     $this->emit('enableButton2');
-    // }
+        $this->emit('disableButton1');
+        $this->emit('enableButton2');
+    }
 
     public function preserveDataTableState()
     {
@@ -124,7 +125,7 @@ class ToolForm extends Component
                 // Delete previous ToolPosition and ToolSecurity entries for the tool
                 $tool->position_keys()->delete();
                 $tool->security_keys()->delete();
-                $tool->parts()->update(['tool_id' => null, 'status_id' => 25]);
+                //$tool->parts()->update(['tool_id' => null, 'status_id' => 25]);
 
                 foreach ($this->positionItems as $positionId) {
                     ToolPosition::updateOrCreate(
@@ -138,14 +139,14 @@ class ToolForm extends Component
                     );
                 }
 
-                foreach ($this->partItems as $partId) {
-                    $part = Part::find($partId);
-                    if ($part) {
-                        $part->tool_id = $tool->id;
-                        $part->status_id = $part->tool_id ? 20 : 25;
-                        $part->update();
-                    }
-                }
+                // foreach ($this->partItems as $partId) {
+                //     $part = Part::find($partId);
+                //     if ($part) {
+                //         $part->tool_id = $tool->id;
+                //         $part->status_id = $part->tool_id ? 20 : 25;
+                //         $part->update();
+                //     }
+                // }
             }
             $action = 'edit';
             $message = 'Successfully Updated';
@@ -312,9 +313,9 @@ class ToolForm extends Component
         $borrower = Borrower::where('user_id', auth()->user()->id)->value('id');
         $borrowers = Borrower::all();
         $parts = Part::all();
-        // $partTypes = PartType::all();
-        // $partTypes = Status::all();
-        // $brands = Status::all();
+        $partTypes = PartType::all();
+        //$partTypes = Status::all();
+        $brands = Status::all();
 
         return view('livewire.tool.tool-form', [
             'categories' => $categories,
@@ -326,8 +327,8 @@ class ToolForm extends Component
             'securities' => $securities,
             'borrowers' => $borrowers,
             'parts' => $parts,
-            // 'partTypes' => $partTypes,
-            // 'brands' => $brands,
+            'partTypes' => $partTypes,
+            'brands' => $brands,
         ]);
     }
 }

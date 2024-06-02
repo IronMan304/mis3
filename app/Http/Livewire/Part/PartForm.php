@@ -32,6 +32,7 @@ class PartForm extends Component
         $this->name = $part->name;
         $this->property_number = $part->property_number;
         $this->brand = $part->brand;
+        $this->tool_id = $part->tool_id;
     }
 
     //store

@@ -580,15 +580,15 @@ $(document).ready(function($) {
 				'<td>' +
 					'<input type="text" class="form-control">' +
 				'</td>' +
-				'<td>' +
-					'<input type="text" class="form-control">' +
-				'</td>' +
-				'<td>' +
-					'<input type="text" class="form-control">' +
-				'</td>' +
+				// '<td>' +
+				// 	'<input type="text" class="form-control">' +
+				// '</td>' +
+				// '<td>' +
+				// 	'<input type="text" class="form-control">' +
+				// '</td>' +
 				'<td class="add-remove text-end">' +
-				' <a href="javascript:void(0);" class="add-btns me-2"><i class="fas fa-plus-circle"></i></a> ' +
-				' <a href="#" class="copy-btn me-2"><i class="fas fa-copy"></i></a>' +
+				// ' <a href="javascript:void(0);" class="add-btns me-2"><i class="fas fa-plus-circle"></i></a> ' +
+				// ' <a href="#" class="copy-btn me-2"><i class="fas fa-copy"></i></a>' +
 				'<a href="javascript:void(0);" class="remove-btn"><i class="fa fa-trash-alt"></i></a>' +
 				'</td>' +
 			'</tr>';
